@@ -1,0 +1,12 @@
+﻿<Window x:Class="SubtitleTools.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"        
+        xmlns:Views="clr-namespace:SubtitleTools.Shell;assembly=SubtitleTools.Shell"
+        Background="#FF393939" FontFamily="Tahoma"        
+        Title="SubtitleTools 1.0" Height="544" Width="900" 
+        WindowState="Maximized"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Views:MainShell />
+    </Grid>
+</Window>

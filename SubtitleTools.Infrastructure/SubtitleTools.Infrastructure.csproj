@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{987CEE47-955A-4BD1-B854-5BC0F852DAD4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SubtitleTools.Infrastructure</RootNamespace>
+    <AssemblyName>SubtitleTools.Infrastructure</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CookComputing.XmlRpcV2">
+      <HintPath>..\..\..\Libs\xml-rpc\bin\CookComputing.XmlRpcV2.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\ChangeEncoding.cs" />
+    <Compile Include="Core\DeleteRow.cs" />
+    <Compile Include="Core\JoinFiles.cs" />
+    <Compile Include="Core\LogWindow.cs" />
+    <Compile Include="Core\Merge.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\API\CheckHashInfo.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\API\DownloadSubtitlesResult.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\API\IOpenSubtitlesDb.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\API\LoginInfo.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\API\SearchInfo.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\API\SubCheckHashResult.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\API\SubtitleDataInfo.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\API\SubtitleInfo.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\API\SubtitlesData.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\API\TryUploadInfo.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\API\TryUploadResult.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\API\UA.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\API\UploadBaseinfo.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\API\UploadCDsInfo.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\API\UploadResult.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\Helper\MovieFileInfo.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\Helper\UploadData.cs" />
+    <Compile Include="Core\OpenSubtitlesOrg\OpenSubtitlesXmlRpc.cs" />
+    <Compile Include="Core\ParseSrt.cs" />
+    <Compile Include="Core\Sync.cs" />
+    <Compile Include="Models\DownloadOpenSubtitlesGui.cs" />
+    <Compile Include="Models\JoinTwoFilesGui.cs" />
+    <Compile Include="Models\Log.cs" />
+    <Compile Include="Models\Logs.cs" />
+    <Compile Include="Models\MainWindowGui.cs" />
+    <Compile Include="Models\OsdbItem.cs" />
+    <Compile Include="Models\OsdbItems.cs" />
+    <Compile Include="Models\SubtitleItem.cs" />
+    <Compile Include="Models\SubtitleItems.cs" />
+    <Compile Include="Models\SyncModel.cs" />
+    <Compile Include="Models\UploadItem.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\AboutViewModel.cs" />
+    <Compile Include="ViewModels\DownloadOpenSubtitlesViewModel.cs" />
+    <Compile Include="ViewModels\JoinTwoFilesViewModel.cs" />
+    <Compile Include="ViewModels\LogsViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\SyncViewModel.cs" />
+    <Compile Include="ViewModels\UploadOpenSubtitlesViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SubtitleTools.Common\SubtitleTools.Common.csproj">
+      <Project>{D2CB3DCA-B77E-44A0-9015-C5385AEB4AA6}</Project>
+      <Name>SubtitleTools.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
