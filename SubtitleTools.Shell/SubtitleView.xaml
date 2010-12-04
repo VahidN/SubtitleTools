@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="SubtitleTools.Shell.SubtitleView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:conv="clr-namespace:SubtitleTools.Common.Converters;assembly=SubtitleTools.Common"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <conv:WaterMarkConverter x:Key="convWaterMarkConverter" />
+        <conv:TimeSpanConverter x:Key="convTimeSpanConverter" />
+        <DataTemplate x:Key="col1">
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock Foreground="#BADC64" HorizontalAlignment="Center" Text="{Binding Number}" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="col2">
+            <Grid>
+                <TextBox Margin="3" FlowDirection="LeftToRight" TextAlignment="Left"
+                         Text="{Binding StartTs, Mode=TwoWay, 
+                                                 Converter={StaticResource convTimeSpanConverter},
+                                                 UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="col4">
+            <Grid>
+                <TextBox Margin="3" FlowDirection="LeftToRight" TextAlignment="Left"
+                         Text="{Binding EndTs, Mode=TwoWay, 
+                                               Converter={StaticResource convTimeSpanConverter},
+                                               UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="col3">
+            <Grid>
+                <TextBox AcceptsReturn="True" Margin="3" 
+                         Text="{Binding Dialog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+    <GroupBox Margin="7,1,7,7" 
+              Header="{Binding MainWindowGuiData.HeaderText}" >
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" 
+                        FlowDirection="{Binding MainWindowGuiData.TableFlowDirection}"
+                        Grid.Row="0" Margin="2">
+                <StackPanel.Visibility>
+                    <MultiBinding Converter="{StaticResource convWaterMarkConverter}">
+                        <Binding ElementName="txtSearch" Path="Text.IsEmpty" />
+                        <Binding ElementName="txtSearch" Path="IsFocused" />
+                    </MultiBinding>
+                </StackPanel.Visibility>
+                <Image Source="Images/toolbar_find.png"                    
+                   Margin="3,2,2,2" Width="16" Height="16" Stretch="UniformToFill" VerticalAlignment="Center" />
+                <TextBlock Margin="2" Text="Search ..."                        
+                       Foreground="DarkGray" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBox Grid.Row="0" Text="{Binding MainWindowGuiData.SearchText, 
+                                                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                   Margin="2" Name="txtSearch" Background="Transparent"
+                   FlowDirection="{Binding MainWindowGuiData.TableFlowDirection}"  />
+            <ListView ItemsSource="{Binding SubtitleItemsDataView}" 
+                  SelectedItem="{Binding MainWindowGuiData.SelectedItem}"
+                  FlowDirection="{Binding MainWindowGuiData.TableFlowDirection}" 
+                  VirtualizingStackPanel.IsVirtualizing="True"
+                  VirtualizingStackPanel.VirtualizationMode="Recycling"                  
+                  Grid.Row="1"
+                  Margin="2">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="90" Header="Number" CellTemplate="{StaticResource col1}"  />
+                        <GridViewColumn Width="120" Header="Start" CellTemplate="{StaticResource col2}" />
+                        <GridViewColumn Width="120" Header="End" CellTemplate="{StaticResource col4}" />
+                        <GridViewColumn Width="320" Header="Dialog" CellTemplate="{StaticResource col3}" />
+                    </GridView>
+                </ListView.View>
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding DoDelete}" Header="Delete row">
+                            <MenuItem.Icon>
+                                <Image Stretch="UniformToFill" Width="16" Height="16" 
+                                   Source="images/delete.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+            </ListView>
+        </Grid>
+    </GroupBox>
+</UserControl>

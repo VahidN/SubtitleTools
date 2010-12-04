@@ -1,0 +1,93 @@
+﻿<UserControl x:Class="SubtitleTools.Shell.MainShell"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:extToolkit="clr-namespace:Microsoft.Windows.Controls;assembly=SubtitleTools.Common"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Views="clr-namespace:SubtitleTools.Shell"
+             xmlns:vm="clr-namespace:SubtitleTools.Infrastructure.ViewModels;assembly=SubtitleTools.Infrastructure"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <vm:MainWindowViewModel x:Key="vmMainWindowViewModel" />
+    </UserControl.Resources>
+    <extToolkit:BusyIndicator IsBusy="{Binding MainWindowGuiData.IsBusy}"                                
+                              DataContext="{Binding Source={StaticResource vmMainWindowViewModel}}"
+                              BusyContent="Loading. Please wait..." 
+                              DisplayAfter="00:00:00">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="200" />
+            </Grid.RowDefinitions>
+            <TabControl Margin="7" Grid.Row="0" Name="tabControl1" TabStripPlacement="Left">
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Margin="1">
+                            <Image Source="Images/configure.png" Margin="1" VerticalAlignment="Center" Width="16" Height="16" HorizontalAlignment="Center" />
+                            <TextBlock Text="Main" Margin="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Views:Toolbar Grid.Row="0" Margin="7" />
+                        <Views:SubtitleView Grid.Row="1" />
+                    </Grid>
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Margin="1">
+                            <Image Source="Images/osdb.png" Margin="1" VerticalAlignment="Center" Width="16" Height="16" HorizontalAlignment="Center" />
+                            <TextBlock Text="OSDB" Margin="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <TabControl TabStripPlacement="Left">
+                        <TabItem>
+                            <TabItem.Header>
+                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Margin="1">
+                                    <Image Source="Images/download.png" Margin="1" VerticalAlignment="Center" Width="16" Height="16" HorizontalAlignment="Center" />
+                                    <TextBlock Text="Download subtitles" Margin="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Views:DownloadOpenSubtitles />
+                        </TabItem>
+                        <TabItem>
+                            <TabItem.Header>
+                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Margin="1">
+                                    <Image Source="Images/upload.png" Margin="1" VerticalAlignment="Center" Width="16" Height="16" HorizontalAlignment="Center" />
+                                    <TextBlock Text="Upload subtitles" Margin="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Views:UploadOpenSubtitles />
+                        </TabItem>
+                    </TabControl>
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Margin="1">
+                            <Image Source="Images/event16.png" Margin="1" VerticalAlignment="Center" Width="16" Height="16" HorizontalAlignment="Center" />
+                            <TextBlock Text="About" Margin="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <Views:About />
+                </TabItem>
+            </TabControl>
+            <GridSplitter
+                        Grid.Row="1"
+                        HorizontalAlignment="Stretch" 
+                        VerticalAlignment="Top"              
+                        ShowsPreview="true"
+                        ResizeDirection="Rows"
+                        Panel.ZIndex="1"
+                        Height="3" />
+            <GroupBox Grid.Row="1" 
+                      Margin="7"
+                      Header="Logs">
+                <Views:Logs />
+            </GroupBox>
+        </Grid>
+    </extToolkit:BusyIndicator>
+</UserControl>

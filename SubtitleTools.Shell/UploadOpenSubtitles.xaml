@@ -1,0 +1,95 @@
+﻿<UserControl x:Class="SubtitleTools.Shell.UploadOpenSubtitles"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:vm="clr-namespace:SubtitleTools.Infrastructure.ViewModels;assembly=SubtitleTools.Infrastructure"
+			 mc:Ignorable="d" FontFamily="Tahoma"
+			 xmlns:b="clr-namespace:SubtitleTools.Common.Behaviors;assembly=SubtitleTools.Common"
+			 xmlns:extToolkit="clr-namespace:Microsoft.Windows.Controls;assembly=SubtitleTools.Common"
+			 xmlns:conv="clr-namespace:SubtitleTools.Common.Converters;assembly=SubtitleTools.Common"
+			 d:DesignHeight="400" d:DesignWidth="400">
+	<UserControl.Resources>
+		<vm:UploadOpenSubtitlesViewModel x:Key="vmUploadOpenSubtitlesViewModel" />
+		<conv:VisibilityConverter x:Key="convVisibilityConverter" />
+        <conv:Iso639Converter x:Key="convIso639Converter" />
+
+        <DataTemplate x:Key="comboRow">
+            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                <Image Width="16" Height="11" Stretch="UniformToFill"
+                       Source="{Binding ISO6393166_1, Converter={StaticResource convIso639Converter}}" Margin="1" />
+                <TextBlock HorizontalAlignment="Left" Text="{Binding LanguageName}" Margin="1" />
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+	<extToolkit:BusyIndicator IsBusy="{Binding UploadItemData.IsBusy}"                                
+							  DataContext="{Binding Source={StaticResource vmUploadOpenSubtitlesViewModel}}"
+							  BusyContent="Please wait..."  
+							  DisplayAfter="00:00:00">
+		<Grid>
+            <GroupBox Margin="5" Header="Upload a subtitle to OpenSubtitles.org">
+				<Grid Margin="5">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
+					<TextBlock Text="Movie file:" Grid.Column="0" Margin="3" />
+					<TextBox Text="{Binding UploadItemData.MoviePath, Mode=TwoWay}"                                 
+								 Grid.Column="1" Margin="3" IsReadOnly="True" />
+					<Button Content="..." Margin="3" 
+								Command="{Binding DoSelectMovieFile}"
+								Width="30" Height="25" Grid.Column="2" />
+
+					<TextBlock Text="Subtitle file:" 
+								   Grid.Column="0" Grid.Row="1" Margin="3"/>
+					<TextBox Text="{Binding UploadItemData.SubtitlePath, Mode=TwoWay}" Grid.Row="1"                                
+								 Grid.Column="1" Margin="3" IsReadOnly="True" />
+					<Button Content="..." Margin="3" 
+								Command="{Binding DoSelectSubtitleFile}" Grid.Row="1"
+								Width="30" Height="25" Grid.Column="2" />
+
+					<TextBlock Text="Subtitle language:" 
+								   Grid.Column="0" Grid.Row="2" Margin="3"/>
+                    <ComboBox Grid.Column="1" Grid.Row="2" 
+								  SelectedValue="{Binding UploadItemData.SelectedSubtitleLanguage}"
+								  ItemsSource="{Binding SubLanguages}"
+								  Width="150" HorizontalAlignment="Left" 
+                                  ItemTemplate="{StaticResource comboRow}"
+								  Margin="3" />                    
+
+                    <ProgressBar Margin="3" 
+									 Grid.Column="1" Grid.Row="3"
+                                     Height="5"
+									 Value="{Binding UploadItemData.Progress}"
+									 Width="150" HorizontalAlignment="Left" />
+					<Button Grid.Row="4" Grid.Column="1" Width="153"
+								HorizontalAlignment="Left"
+								Command="{Binding DoUploadOneFile}"
+								Height="25" Margin="3"
+								Content="Upload subtitle" />
+
+					<TextBlock Text="Result: " Grid.Row="5" Grid.Column="0" />
+					<TextBlock Grid.Row="5" Grid.Column="1"
+							   Foreground="Cyan"
+							   Visibility="{Binding UploadItemData.FinalUrl, Converter={StaticResource convVisibilityConverter}}"
+							   HorizontalAlignment="Left"
+							   Width="Auto"
+							   b:WebHyperlink.LaunchDefaultBrowser="True" VerticalAlignment="Center">  
+						<Hyperlink Foreground="Cyan" NavigateUri="{Binding UploadItemData.FinalUrl}">  
+							<TextBlock Width="Auto" Foreground="Cyan" Text="{Binding UploadItemData.FinalUrl}"/>  
+						</Hyperlink>      
+					</TextBlock>
+				</Grid>
+			</GroupBox>
+		</Grid>
+	</extToolkit:BusyIndicator>
+</UserControl>
