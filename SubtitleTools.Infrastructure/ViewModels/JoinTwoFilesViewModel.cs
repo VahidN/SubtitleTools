@@ -1,6 +1,4 @@
 ﻿using System;
-using Microsoft.Win32;
-using SubtitleTools.Common.Files;
 using SubtitleTools.Common.MVVM;
 using SubtitleTools.Infrastructure.Core;
 using SubtitleTools.Infrastructure.Models;
@@ -35,7 +33,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         // Private Methods (9) 
 
-        bool canDoCloseJoinPopup(string data)
+        static bool canDoCloseJoinPopup(string data)
         {
             return true;
         }
@@ -60,7 +58,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             JoinTwoFilesGuiData.Milliseconds = startTs.Milliseconds;
         }
 
-        void doCloseJoinPopup(string data)
+        static void doCloseJoinPopup(string data)
         {
             App.Messenger.NotifyColleagues("doCloseJoinPopup");
         }
@@ -83,15 +81,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
             if (string.IsNullOrWhiteSpace(firstFilePath))
                 return;
 
-            var dlg = new OpenFileDialog
-            {
-                Filter = Filters.SrtFilter
-            };
-
-            var result = dlg.ShowDialog();
-            if (result != true) return;
-
-            JoinTwoFilesGuiData.SubtitlePath = dlg.FileName;
             detectStartTime(firstFilePath);
             enableButton();
         }

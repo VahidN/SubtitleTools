@@ -12,9 +12,9 @@ namespace SubtitleTools.Infrastructure.Core
 
         #endregion Properties
 
-        #region Methods (2)
+        #region Methods (3)
 
-        // Public Methods (2) 
+        // Public Methods (3) 
 
         public bool FixWindows1256(string path)
         {
@@ -53,6 +53,29 @@ namespace SubtitleTools.Infrastructure.Core
                 //it's a binary file
                 return false;
             }
+        }
+
+        public bool ToUTF8(string path, string fromEnc)
+        {
+            LogWindow.AddMessage(LogType.Info, "ChangeEncoding Start.");
+            if (IsUTF8(path))
+            {
+                LogWindow.AddMessage(LogType.Alert, "This file IsUTF8!");
+                return false;
+            }
+
+            //backup original file
+            var backupFile = string.Format("{0}.bak", path);
+            File.Copy(path, backupFile, overwrite: true);
+            LogWindow.AddMessage(LogType.Info, string.Format("Backup file: {0}", backupFile));
+
+            //convert
+            var data = File.ReadAllText(path, Encoding.GetEncoding(fromEnc));
+            File.WriteAllText(path, data, Encoding.UTF8);
+            //set flowDir
+            IsRtl = File.ReadAllText(path).ContainsFarsi();
+            LogWindow.AddMessage(LogType.Info, "ChangeEncoding End.");
+            return true;
         }
 
         #endregion Methods
