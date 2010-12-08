@@ -5,20 +5,34 @@ namespace SubtitleTools.Infrastructure.Models
 {
     public class MainWindowGui : INotifyPropertyChanged
     {
-        #region Fields (7)
+        #region Fields (11)
 
+        bool _doMergeIsEnabled;
         string _headerText;
         bool _isBusy;
+        string _mergeFilePath;
         string _openedFilePath;
-        string _searchText;
+        bool _popupDoDetectEncodingIsOpen;
         bool _popupDoJoinFilesIsOpen;
         bool _popupDoSyncIsOpen;
+        string _searchText;
         SubtitleItem _selectedItem;
         FlowDirection _tableFlowDirection = FlowDirection.LeftToRight;
 
         #endregion Fields
 
-        #region Properties (7)
+        #region Properties (11)
+
+        public bool DoMergeIsEnabled
+        {
+            get { return _doMergeIsEnabled; }
+            set
+            {
+                if (_doMergeIsEnabled == value) return;
+                _doMergeIsEnabled = value;
+                raisePropertyChanged("DoMergeIsEnabled");
+            }
+        }
 
         public string HeaderText
         {
@@ -28,17 +42,6 @@ namespace SubtitleTools.Infrastructure.Models
                 if (_headerText == value) return;
                 _headerText = value;
                 raisePropertyChanged("HeaderText");
-            }
-        }
-
-        public string SearchText
-        {
-            get { return _searchText; }
-            set
-            {
-                if (_searchText == value) return;
-                _searchText = value;
-                raisePropertyChanged("SearchText");
             }
         }
 
@@ -53,6 +56,17 @@ namespace SubtitleTools.Infrastructure.Models
             }
         }
 
+        public string MergeFilePath
+        {
+            get { return _mergeFilePath; }
+            set
+            {
+                if (_mergeFilePath == value) return;
+                _mergeFilePath = value;
+                raisePropertyChanged("MergeFilePath");
+            }
+        }
+
         public string OpenedFilePath
         {
             get { return _openedFilePath; }
@@ -61,6 +75,17 @@ namespace SubtitleTools.Infrastructure.Models
                 if (_openedFilePath == value) return;
                 _openedFilePath = value;
                 raisePropertyChanged("OpenedFilePath");
+            }
+        }
+
+        public bool PopupDoDetectEncodingIsOpen
+        {
+            get { return _popupDoDetectEncodingIsOpen; }
+            set
+            {
+                if (_popupDoDetectEncodingIsOpen == value) return;
+                _popupDoDetectEncodingIsOpen = value;
+                raisePropertyChanged("PopupDoDetectEncodingIsOpen");
             }
         }
 
@@ -83,6 +108,17 @@ namespace SubtitleTools.Infrastructure.Models
                 if (_popupDoSyncIsOpen == value) return;
                 _popupDoSyncIsOpen = value;
                 raisePropertyChanged("PopupDoSyncIsOpen");
+            }
+        }
+
+        public string SearchText
+        {
+            get { return _searchText; }
+            set
+            {
+                if (_searchText == value) return;
+                _searchText = value;
+                raisePropertyChanged("SearchText");
             }
         }
 

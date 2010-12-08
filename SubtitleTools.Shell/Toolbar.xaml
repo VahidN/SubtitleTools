@@ -1,94 +1,121 @@
 ﻿<UserControl x:Class="SubtitleTools.Shell.Toolbar"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:Views="clr-namespace:SubtitleTools.Shell"  
-             xmlns:Ctrls="clr-namespace:SubtitleTools.Common.Controls;assembly=SubtitleTools.Common"
-             mc:Ignorable="d" FontFamily="Tahoma"
-             d:DesignHeight="63" d:DesignWidth="400">
-    <Grid>
-        <ToolBar>
-            <Button ToolTip="Open" Command="{Binding DoOpenFile}" Margin="2">
-                <StackPanel HorizontalAlignment="Center" Margin="1">
-                    <Image Source="Images/open.png" Width="32" Height="32" HorizontalAlignment="Center" />
-                    <TextBlock Text="Open" HorizontalAlignment="Center" />
-                </StackPanel>
-            </Button>
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:Views="clr-namespace:SubtitleTools.Shell"  
+			 xmlns:Ctrls="clr-namespace:SubtitleTools.Common.Controls;assembly=SubtitleTools.Common"
+			 xmlns:b="clr-namespace:SubtitleTools.Common.Behaviors;assembly=SubtitleTools.Common"
+			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"              
+			 mc:Ignorable="d" FontFamily="Tahoma"
+			 d:DesignHeight="63" d:DesignWidth="400">
+	<Grid>
+		<ToolBar>
+			<Button ToolTip="Open" Margin="2">
+				<StackPanel HorizontalAlignment="Center" Margin="1">
+					<Image Source="Images/open.png" Width="32" Height="32" HorizontalAlignment="Center" />
+					<TextBlock Text="Open" HorizontalAlignment="Center" />
+				</StackPanel>
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="Click">
+						<b:OpenFileDialogBoxBehavior 
+									DialogFilterType="Subtitle"
+									FileDialogDialogResultCommand="{Binding MainWindowGuiData.OpenedFilePath, Mode=TwoWay}"/>
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+			</Button>
 
-            <Button ToolTip="Save" Command="{Binding DoSaveChanges}" Margin="2">
-                <StackPanel HorizontalAlignment="Center" Margin="1">
-                    <Image Source="Images/save.png" Width="32" Height="32" HorizontalAlignment="Center" />
-                    <TextBlock Text="Save" HorizontalAlignment="Center" />
-                </StackPanel>
-            </Button>
+			<Button ToolTip="Save" Command="{Binding DoSaveChanges}" Margin="2">
+				<StackPanel HorizontalAlignment="Center" Margin="1">
+					<Image Source="Images/save.png" Width="32" Height="32" HorizontalAlignment="Center" />
+					<TextBlock Text="Save" HorizontalAlignment="Center" />
+				</StackPanel>
+			</Button>
 
-            <Separator />
+			<Separator />
 
-            <Button ToolTip="Convert To UTF-8" Margin="2" Command="{Binding DoConvertToUTF8}">
-                <StackPanel HorizontalAlignment="Center" Margin="1">
-                    <Image Source="Images/format.png" Width="32" Height="32" HorizontalAlignment="Center" />
-                    <TextBlock Text="To UTF-8" HorizontalAlignment="Center" />
-                </StackPanel>
-            </Button>
-
-            <Separator />
-
-            <Button Margin="2" Command="{Binding DoSync}"
-                    ToolTip="Shift all times">
-                <StackPanel HorizontalAlignment="Center" Margin="1">
-                    <Image Source="Images/sync.png" Width="32" Height="32" HorizontalAlignment="Center" />
-                    <TextBlock Text="Synchronize" HorizontalAlignment="Center" />
+			<Button ToolTip="Convert To UTF-8" Margin="2" Command="{Binding DoConvertToUTF8}">
+				<StackPanel HorizontalAlignment="Center" Margin="1">
+					<Image Source="Images/format.png" Width="32" Height="32" HorizontalAlignment="Center" />
+					<TextBlock Text="To UTF-8" HorizontalAlignment="Center" />
                     <Ctrls:BetterPopup VerticalAlignment="Top" AllowsTransparency="True" 
-                           StaysOpen="True"
-                           IsOpen="{Binding MainWindowGuiData.PopupDoSyncIsOpen}"
-                           IsTopmost="False"
-                           PopupAnimation="Slide" Margin="5">
+						   StaysOpen="True"
+						   IsOpen="{Binding MainWindowGuiData.PopupDoDetectEncodingIsOpen}"
+						   IsTopmost="False"
+						   PopupAnimation="Slide" Margin="5">
                         <Border Background="Gray" 
-                                BorderThickness="2" CornerRadius="6" BorderBrush="Black">
-                            <Views:SyncView  FilePath="{Binding MainWindowGuiData.OpenedFilePath}" />
+								BorderThickness="2" CornerRadius="6" BorderBrush="Black">
+                            <Views:DetectEncodingView FilePath="{Binding MainWindowGuiData.OpenedFilePath}" />
                         </Border>
                     </Ctrls:BetterPopup>
                 </StackPanel>
-            </Button>
+			</Button>
 
-            <Button Margin="2" Command="{Binding DoMerge}"
-                    ToolTip="Replace all times of the opened file by times of a selected file">
-                <StackPanel HorizontalAlignment="Center" Margin="1">
-                    <Image Source="Images/join.png" Width="32" Height="32" HorizontalAlignment="Center" />
-                    <TextBlock Text="Merge Times" HorizontalAlignment="Center" />
-                </StackPanel>
-            </Button>
+			<Separator />
 
-            <Button Margin="2" Command="{Binding DoJoinFiles}"
-                    ToolTip="Combine the opened file with a selected file">
-                <StackPanel HorizontalAlignment="Center" Margin="1">
-                    <Image Source="Images/merge.png" Width="32" Height="32" HorizontalAlignment="Center" />
-                    <TextBlock Text="Join Files" HorizontalAlignment="Center" />
-                    <Ctrls:BetterPopup VerticalAlignment="Top" AllowsTransparency="True" 
-                           StaysOpen="True"                           
-                           IsTopmost="False"
-                           IsOpen="{Binding MainWindowGuiData.PopupDoJoinFilesIsOpen}"
-                           PopupAnimation="Slide" Margin="5">
-                        <Border Background="Gray" Width="300" 
-                                BorderThickness="2" CornerRadius="6" BorderBrush="Black">
-                            <Views:JoinTwoFiles  FirstFilePath="{Binding MainWindowGuiData.OpenedFilePath}" />
-                        </Border>
-                    </Ctrls:BetterPopup>
-                </StackPanel>
-            </Button>
+			<Button Margin="2" Command="{Binding DoSync}"
+					ToolTip="Shift all times">
+				<StackPanel HorizontalAlignment="Center" Margin="1">
+					<Image Source="Images/sync.png" Width="32" Height="32" HorizontalAlignment="Center" />
+					<TextBlock Text="Synchronize" HorizontalAlignment="Center" />
+					<Ctrls:BetterPopup VerticalAlignment="Top" AllowsTransparency="True" 
+						   StaysOpen="True"
+						   IsOpen="{Binding MainWindowGuiData.PopupDoSyncIsOpen}"
+						   IsTopmost="False"
+						   PopupAnimation="Slide" Margin="5">
+						<Border Background="Gray" 
+								BorderThickness="2" CornerRadius="6" BorderBrush="Black">
+							<Views:SyncView  FilePath="{Binding MainWindowGuiData.OpenedFilePath}" />
+						</Border>
+					</Ctrls:BetterPopup>
+				</StackPanel>
+			</Button>
 
-            <Separator />
+			<Button Margin="2" 
+					IsEnabled="{Binding MainWindowGuiData.DoMergeIsEnabled}"
+					ToolTip="Replace all times of the opened file by times of a selected file">
+				<StackPanel HorizontalAlignment="Center" Margin="1">
+					<Image Source="Images/join.png" Width="32" Height="32" HorizontalAlignment="Center" />
+					<TextBlock Text="Merge Times" HorizontalAlignment="Center" />
+				</StackPanel>
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="Click">
+						<b:OpenFileDialogBoxBehavior 
+									DialogFilterType="Subtitle"
+									FileDialogDialogResultCommand="{Binding MainWindowGuiData.MergeFilePath, Mode=TwoWay}"/>
+					</i:EventTrigger>
+				</i:Interaction.Triggers>                
+			</Button>
 
-            <Button Margin="2" Command="{Binding DoDelete}"
-                    ToolTip="Delete selected row of the subtitle.">
-                <StackPanel HorizontalAlignment="Center" Margin="1">
-                    <Image Source="Images/delete.png" Width="32" Height="32" HorizontalAlignment="Center" />
-                    <TextBlock Text="Delete Row" HorizontalAlignment="Center" />
-                </StackPanel>
-            </Button>
+			<Button Margin="2" Command="{Binding DoJoinFiles}"
+					ToolTip="Combine the opened file with a selected file">
+				<StackPanel HorizontalAlignment="Center" Margin="1">
+					<Image Source="Images/merge.png" Width="32" Height="32" HorizontalAlignment="Center" />
+					<TextBlock Text="Join Files" HorizontalAlignment="Center" />
+					<Ctrls:BetterPopup VerticalAlignment="Top" AllowsTransparency="True" 
+						   StaysOpen="True"                           
+						   IsTopmost="False"
+						   IsOpen="{Binding MainWindowGuiData.PopupDoJoinFilesIsOpen}"
+						   PopupAnimation="Slide" Margin="5">
+						<Border Background="Gray" Width="300" 
+								BorderThickness="2" CornerRadius="6" BorderBrush="Black">
+							<Views:JoinTwoFiles  FirstFilePath="{Binding MainWindowGuiData.OpenedFilePath}" />
+						</Border>
+					</Ctrls:BetterPopup>
+				</StackPanel>
+			</Button>
 
-            <Separator/>
-        </ToolBar>
-    </Grid>
+			<Separator />
+
+			<Button Margin="2" Command="{Binding DoDelete}"
+					ToolTip="Delete selected row of the subtitle.">
+				<StackPanel HorizontalAlignment="Center" Margin="1">
+					<Image Source="Images/delete.png" Width="32" Height="32" HorizontalAlignment="Center" />
+					<TextBlock Text="Delete Row" HorizontalAlignment="Center" />
+				</StackPanel>
+			</Button>
+
+			<Separator/>
+		</ToolBar>
+	</Grid>
 </UserControl>

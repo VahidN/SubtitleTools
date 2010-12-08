@@ -21,7 +21,7 @@
 
         <DataTemplate x:Key="col2">
             <StackPanel >
-                <TextBlock  Text="{Binding Time, StringFormat={}{0:MM/dd/yyyy hh:mm:ss}}" />
+                <TextBlock  Text="{Binding Time, StringFormat={}{0:MM/dd/yyyy hh:mm:ss.ff}}" />
             </StackPanel>
         </DataTemplate>
 

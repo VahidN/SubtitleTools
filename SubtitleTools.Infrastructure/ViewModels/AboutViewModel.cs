@@ -109,16 +109,19 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         private static string tryDownloadRss()
         {
-            string rssXml = string.Empty;
+            var rssXml = string.Empty;
             try
             {
-                string url = ConfigSetGet.GetConfigData("ProjectRSSFeed");
+                var url = ConfigSetGet.GetConfigData("ProjectRSSFeed");
                 rssXml = Downloader.FetchWebPage(url);
             }
             catch (Exception ex)
             {
-                ExceptionLogger.LogExceptionToFile(ex);
-                LogWindow.AddMessage(LogType.Error, ex.Message);
+                if (!ex.Message.Contains("The remote name could not be resolved"))
+                {
+                    ExceptionLogger.LogExceptionToFile(ex);
+                    LogWindow.AddMessage(LogType.Error, ex.Message);
+                }
             }
             return rssXml;
         }

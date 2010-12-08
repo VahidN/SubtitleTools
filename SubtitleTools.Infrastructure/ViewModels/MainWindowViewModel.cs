@@ -1,9 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Data;
+using SubtitleTools.Common.Logger;
 using SubtitleTools.Common.MVVM;
+using SubtitleTools.Common.Threading;
 using SubtitleTools.Infrastructure.Core;
 using SubtitleTools.Infrastructure.Models;
 
@@ -28,17 +31,13 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Constructors
 
-        #region Properties (10)
+        #region Properties (8)
 
         public DelegateCommand<string> DoConvertToUTF8 { set; get; }
 
         public DelegateCommand<string> DoDelete { set; get; }
 
         public DelegateCommand<string> DoJoinFiles { set; get; }
-
-        public DelegateCommand<string> DoMerge { set; get; }
-
-        public DelegateCommand<string> DoOpenFile { set; get; }
 
         public DelegateCommand<string> DoSaveChanges { set; get; }
 
@@ -64,9 +63,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Properties
 
-        #region Methods (25)
+        #region Methods (24)
 
-        // Private Methods (25) 
+        // Private Methods (24) 
 
         bool canDoConvertToUTF8(string data)
         {
@@ -83,16 +82,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
             return !string.IsNullOrEmpty(MainWindowGuiData.OpenedFilePath);
         }
 
-        bool canDoMerge(string data)
-        {
-            return !string.IsNullOrEmpty(MainWindowGuiData.OpenedFilePath);
-        }
-
-        static bool canDoOpenFile(string file)
-        {
-            return true;
-        }
-
         bool canDoSaveChanges(string data)
         {
             return !string.IsNullOrEmpty(MainWindowGuiData.OpenedFilePath);
@@ -101,6 +90,11 @@ namespace SubtitleTools.Infrastructure.ViewModels
         bool canDoSync(string data)
         {
             return !string.IsNullOrEmpty(MainWindowGuiData.OpenedFilePath);
+        }
+
+        void doCloseConvertEncodingView()
+        {
+            MainWindowGuiData.PopupDoDetectEncodingIsOpen = false;
         }
 
         void doCloseJoinPopup()
@@ -115,20 +109,21 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         void doConvertToUTF8(string data)
         {
-            try
-            {
-                MainWindowGuiData.IsBusy = true;
-                var changer = new ChangeEncoding();
-                if (changer.FixWindows1256(MainWindowGuiData.OpenedFilePath))
-                {
-                    setFlowDir(changer.IsRtl);
-                    reBind();
-                }
-            }
-            finally
-            {
-                MainWindowGuiData.IsBusy = false;
-            }
+            MainWindowGuiData.PopupDoDetectEncodingIsOpen = true;
+            //try
+            //{
+            //    MainWindowGuiData.IsBusy = true;
+            //    var changer = new ChangeEncoding();
+            //    if (changer.FixWindows1256(MainWindowGuiData.OpenedFilePath))
+            //    {
+            //        setFlowDir(changer.IsRtl);
+            //        reBind();
+            //    }
+            //}
+            //finally
+            //{
+            //    MainWindowGuiData.IsBusy = false;
+            //}
         }
 
         void doDelete(string data)
@@ -141,13 +136,25 @@ namespace SubtitleTools.Infrastructure.ViewModels
             MainWindowGuiData.PopupDoJoinFilesIsOpen = true;
         }
 
-        void doMerge(string data)
+        void doMerge()
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath) ||
+                    string.IsNullOrWhiteSpace(MainWindowGuiData.MergeFilePath))
+                {
+                    return;
+                }
+
                 MainWindowGuiData.IsBusy = true;
-                Merge.StartInteractive(MainWindowGuiData.OpenedFilePath);
+                Merge.WriteMergedList(mainFilePath: MainWindowGuiData.OpenedFilePath,
+                                      fromFilepath: MainWindowGuiData.MergeFilePath);
                 reBind();
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogger.LogExceptionToFile(ex);
+                LogWindow.AddMessage(LogType.Error, ex.Message);
             }
             finally
             {
@@ -155,17 +162,26 @@ namespace SubtitleTools.Infrastructure.ViewModels
             }
         }
 
-        void doOpenFile(string file)
+        void doOpenFile()
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath)) return;
+
                 MainWindowGuiData.IsBusy = true;
+
                 var parser = new ParseSrt();
-                subtitleItemsDataInternal = parser.ToObservableCollectionInteractive();
-                setFlowDir(parser.IsRtl);
-                MainWindowGuiData.OpenedFilePath = parser.FilePath;
-                enableButtons();
+                subtitleItemsDataInternal = parser.ToObservableCollectionFromFile(MainWindowGuiData.OpenedFilePath);
                 MainWindowGuiData.HeaderText = MainWindowGuiData.OpenedFilePath;
+
+                setFlowDir(parser.IsRtl);
+
+                DispatcherHelper.DispatchAction(enableButtons);
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogger.LogExceptionToFile(ex);
+                LogWindow.AddMessage(LogType.Error, ex.Message);
             }
             finally
             {
@@ -221,7 +237,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
         {
             DoConvertToUTF8.CanExecute(MainWindowGuiData.OpenedFilePath);
             DoSync.CanExecute(MainWindowGuiData.OpenedFilePath);
-            DoMerge.CanExecute(MainWindowGuiData.OpenedFilePath);
+            MainWindowGuiData.DoMergeIsEnabled = !string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath);
             DoJoinFiles.CanExecute(MainWindowGuiData.OpenedFilePath);
             DoDelete.CanExecute(MainWindowGuiData.OpenedFilePath);
             DoSaveChanges.CanExecute(MainWindowGuiData.OpenedFilePath);
@@ -229,16 +245,24 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         void mainWindowGuiDataPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "SearchText")
+            switch (e.PropertyName)
             {
-                doSearch(MainWindowGuiData.SearchText);
+                case "SearchText":
+                    doSearch(MainWindowGuiData.SearchText);
+                    break;
+                case "OpenedFilePath":
+                    new Thread(doOpenFile).Start();
+                    break;
+                case "MergeFilePath":
+                    new Thread(doMerge).Start();
+                    break;
             }
         }
 
         private void reBind()
         {
-            subtitleItemsDataInternal.Clear();
-            subtitleItemsDataInternal = new ParseSrt().ToObservableCollectionFromFile(MainWindowGuiData.OpenedFilePath);
+            //subtitleItemsDataInternal = new ParseSrt().ToObservableCollectionFromFile(MainWindowGuiData.OpenedFilePath);
+            new Thread(doOpenFile).Start();
         }
 
         void setFlowDir(bool isRtl)
@@ -248,10 +272,8 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         private void setupCommands()
         {
-            DoOpenFile = new DelegateCommand<string>(doOpenFile, canDoOpenFile);
             DoConvertToUTF8 = new DelegateCommand<string>(doConvertToUTF8, canDoConvertToUTF8);
             DoSync = new DelegateCommand<string>(doSync, canDoSync);
-            DoMerge = new DelegateCommand<string>(doMerge, canDoMerge);
             DoJoinFiles = new DelegateCommand<string>(doJoinFiles, canDoJoinFiles);
             DoDelete = new DelegateCommand<string>(doDelete, canDoDelete);
             DoSaveChanges = new DelegateCommand<string>(doSaveChanges, canDoSaveChanges);
@@ -270,6 +292,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             App.Messenger.Register("reBind", doRebindMsg);
             App.Messenger.Register("doCloseJoinPopup", doCloseJoinPopup);
             App.Messenger.Register("doCloseSyncView", doCloseSyncView);
+            App.Messenger.Register("doCloseConvertEncodingView", doCloseConvertEncodingView);
         }
 
         #endregion Methods

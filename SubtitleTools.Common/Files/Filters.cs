@@ -8,5 +8,8 @@ namespace SubtitleTools.Common.Files
 
         public static string SrtFilter
             = "Subtitle files (*.srt, *.txt)|*.srt;*.txt|All files (*.*)|*.*";
+
+        public static string ImageFilter 
+            = "JPEG Files (*.jpg;*.jpeg)|*.jpg;*.jpeg|PNG Files (*.png)|*.png|All Files (*.*)|*.*";
     }
 }

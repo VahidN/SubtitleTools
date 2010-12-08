@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
-using Microsoft.Win32;
 using SubtitleTools.Common.Files;
 using SubtitleTools.Common.ISO639;
 using SubtitleTools.Common.Logger;
@@ -29,13 +28,14 @@ namespace SubtitleTools.Infrastructure.ViewModels
         public DownloadOpenSubtitlesViewModel()
         {
             DownloadOpenSubtitlesGuiData = new DownloadOpenSubtitlesGui();
+            DownloadOpenSubtitlesGuiData.PropertyChanged += downloadOpenSubtitlesGuiDataPropertyChanged;
             OsdbItemsData = new OsdbItems();
             setupCommands();
         }
 
         #endregion Constructors
 
-        #region Properties (8)
+        #region Properties (7)
 
         public DelegateCommand<string> DoDebugDownloadSelectedItem { set; get; }
 
@@ -44,8 +44,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
         public DelegateCommand<string> DoDownloadSubtitle { set; get; }
 
         public DelegateCommand<string> DoSearch { set; get; }
-
-        public DelegateCommand<string> DoSelectFile { set; get; }
 
         public DownloadOpenSubtitlesGui DownloadOpenSubtitlesGuiData { set; get; }
 
@@ -94,11 +92,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
             return !string.IsNullOrWhiteSpace(DownloadOpenSubtitlesGuiData.MoviePath);
         }
 
-        static bool canDoSelectFile(string path)
-        {
-            return true;
-        }
-
         void doDebugDownloadSelectedItem(string data)
         {
             if (DownloadOpenSubtitlesGuiData.SelectedOsdbItem == null || DownloadOpenSubtitlesGuiData.SelectedOsdbItem.IDSubtitleFile == 0)
@@ -125,19 +118,18 @@ namespace SubtitleTools.Infrastructure.ViewModels
             new Thread(searchGetSubsInfo).Start();
         }
 
-        //todo: apply real mvvm here!
-        void doSelectFile(string path)
+        void doSelectFile()
         {
-            var dlg = new OpenFileDialog
-            {
-                Filter = Filters.MovieFilter
-            };
-
-            var result = dlg.ShowDialog();
-            if (result != true) return;
-
-            DownloadOpenSubtitlesGuiData.MoviePath = dlg.FileName;
+            if (string.IsNullOrWhiteSpace(DownloadOpenSubtitlesGuiData.MoviePath)) return;
             enableButtons();
+        }
+
+        void downloadOpenSubtitlesGuiDataPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "MoviePath")
+            {
+                doSelectFile();
+            }
         }
 
         private void downloadSelectedFiles()
@@ -304,7 +296,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
         private void setupCommands()
         {
             DoDownloadSubtitle = new DelegateCommand<string>(doDownloadSubtitle, canDoDownloadSubtitle);
-            DoSelectFile = new DelegateCommand<string>(doSelectFile, canDoSelectFile);
             DoSearch = new DelegateCommand<string>(doSearch, canDoSearch);
             DoDownloadSelectedItem = new DelegateCommand<string>(doDownloadSelectedItem, canDoDownloadSelectedItem);
             DoDebugDownloadSelectedItem = new DelegateCommand<string>(doDebugDownloadSelectedItem, canDoDebugDownloadSelectedItem);

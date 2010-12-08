@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Microsoft.Win32;
-using SubtitleTools.Common.Files;
 using SubtitleTools.Common.ISO639;
 using SubtitleTools.Common.Logger;
 using SubtitleTools.Common.MVVM;
@@ -28,11 +26,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Constructors
 
-        #region Properties (5)
-
-        public DelegateCommand<string> DoSelectMovieFile { set; get; }
-
-        public DelegateCommand<string> DoSelectSubtitleFile { set; get; }
+        #region Properties (3)
 
         public DelegateCommand<string> DoUploadOneFile { set; get; }
 
@@ -51,19 +45,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Properties
 
-        #region Methods (12)
+        #region Methods (10)
 
-        // Private Methods (12) 
-
-        static bool canDoSelectMovieFile(string data)
-        {
-            return true;
-        }
-
-        static bool canDoSelectSubtitleFile(string data)
-        {
-            return true;
-        }
+        // Private Methods (10) 
 
         bool canDoUploadOneFile(string data)
         {
@@ -73,17 +57,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 && (UploadItemData.SelectedSubtitleLanguage != null);
         }
 
-        void doSelectMovieFile(string data)
+        void doSelectMovieFile()
         {
-            var dlg = new OpenFileDialog
-            {
-                Filter = Filters.MovieFilter
-            };
-
-            var result = dlg.ShowDialog();
-            if (result != true) return;
-
-            UploadItemData.MoviePath = dlg.FileName;
+            if (string.IsNullOrWhiteSpace(UploadItemData.MoviePath)) return;
 
             var subFile = tryToFindSubFile(UploadItemData.MoviePath);
             if (!string.IsNullOrEmpty(subFile))
@@ -92,17 +68,8 @@ namespace SubtitleTools.Infrastructure.ViewModels
             tryEnableButtons();
         }
 
-        void doSelectSubtitleFile(string data)
+        void doSelectSubtitleFile()
         {
-            var dlg = new OpenFileDialog
-            {
-                Filter = Filters.SrtFilter
-            };
-
-            var result = dlg.ShowDialog();
-            if (result != true) return;
-            UploadItemData.SubtitlePath = dlg.FileName;
-
             tryEnableButtons();
         }
 
@@ -145,15 +112,11 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         private void setupCommands()
         {
-            DoSelectMovieFile = new DelegateCommand<string>(doSelectMovieFile, canDoSelectMovieFile);
-            DoSelectSubtitleFile = new DelegateCommand<string>(doSelectSubtitleFile, canDoSelectSubtitleFile);
             DoUploadOneFile = new DelegateCommand<string>(doUploadOneFile, canDoUploadOneFile);
         }
 
         void tryEnableButtons()
         {
-            DoSelectMovieFile.CanExecute(string.Empty);
-            DoSelectSubtitleFile.CanExecute(string.Empty);
             DoUploadOneFile.CanExecute(string.Empty);
         }
 
@@ -165,9 +128,17 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         void uploadItemDataPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "SelectedSubtitleLanguage")
+            switch (e.PropertyName)
             {
-                tryEnableButtons();
+                case "MoviePath":
+                    doSelectMovieFile();
+                    break;
+                case "SubtitlePath":
+                    doSelectSubtitleFile();
+                    break;
+                case "SelectedSubtitleLanguage":
+                    tryEnableButtons();
+                    break;
             }
         }
 

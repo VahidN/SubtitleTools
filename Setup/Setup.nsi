@@ -1,10 +1,10 @@
 ; The name of the installer
-Name "SubtitleTools 1.0"
+Name "SubtitleTools 1.1"
 
 ; The file to write
 
-OutFile "SubtitleTools_1.0_setup.exe"
-Caption "SubtitleTools 1.0 Installer"
+OutFile "SubtitleTools_1.1_setup.exe"
+Caption "SubtitleTools 1.1 Installer"
 XPStyle on
 SetDatablockOptimize on
 CRCCheck force
@@ -42,6 +42,7 @@ Section "" ;No components page, name is not important
   File ..\SubtitleTools\bin\Release\SubtitleTools.exe
   File ..\SubtitleTools\bin\Release\SubtitleTools.Shell.dll
   File ..\SubtitleTools\bin\Release\SubtitleTools.vshost.exe
+  File ..\SubtitleTools\bin\Release\EncodingTools.dll
   File "C:\Program Files\Microsoft SDKs\Expression\Blend\.NETFramework\v4.0\Libraries\Microsoft.Expression.Interactions.dll"
   File "C:\Program Files\Microsoft SDKs\Expression\Blend\.NETFramework\v4.0\Libraries\System.Windows.Interactivity.dll"  
   

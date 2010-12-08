@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using SubtitleTools.Common.Collections;
 
 namespace SubtitleTools.Infrastructure.Models
 {
-    public class SubtitleItems : ObservableCollection<SubtitleItem>
+    public class SubtitleItems : MtObservableCollection<SubtitleItem>
     {
     }
 }
