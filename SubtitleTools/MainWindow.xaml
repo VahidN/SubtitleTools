@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"        
         xmlns:Views="clr-namespace:SubtitleTools.Shell;assembly=SubtitleTools.Shell"
         Background="#FF393939" FontFamily="Tahoma"        
-        Title="SubtitleTools 1.1" Height="544" Width="900" 
+        Title="SubtitleTools 1.2" Height="544" Width="900" 
         WindowState="Maximized"
         WindowStartupLocation="CenterScreen">
     <Grid>

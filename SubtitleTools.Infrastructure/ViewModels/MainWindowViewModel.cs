@@ -9,13 +9,16 @@ using SubtitleTools.Common.MVVM;
 using SubtitleTools.Common.Threading;
 using SubtitleTools.Infrastructure.Core;
 using SubtitleTools.Infrastructure.Models;
+using System.Collections.Specialized;
+using System.Collections.Generic;
 
 namespace SubtitleTools.Infrastructure.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        #region Fields (1)
+        #region Fields (2)
 
+        SortedSet<int> _changedRows;
         SubtitleItems _subtitleItemsDataInternal;
 
         #endregion Fields
@@ -31,11 +34,13 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Constructors
 
-        #region Properties (8)
+        #region Properties (9)
 
         public DelegateCommand<string> DoConvertToUTF8 { set; get; }
 
         public DelegateCommand<string> DoDelete { set; get; }
+
+        public DelegateCommand<string> DoInsertRLE { set; get; }
 
         public DelegateCommand<string> DoJoinFiles { set; get; }
 
@@ -52,6 +57,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 _subtitleItemsDataInternal = value;
                 if (SubtitleItemsDataView != null)
                 {
+                    _changedRows = new SortedSet<int>();
                     SubtitleItemsDataView = CollectionViewSource.GetDefaultView(value);
                     raisePropertyChanged("SubtitleItemsDataView");
                 }
@@ -63,9 +69,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Properties
 
-        #region Methods (24)
+        #region Methods (28)
 
-        // Private Methods (24) 
+        // Private Methods (28) 
 
         bool canDoConvertToUTF8(string data)
         {
@@ -73,6 +79,11 @@ namespace SubtitleTools.Infrastructure.ViewModels
         }
 
         bool canDoDelete(string data)
+        {
+            return !string.IsNullOrEmpty(MainWindowGuiData.OpenedFilePath);
+        }
+
+        bool canDoInsertRLE(string data)
         {
             return !string.IsNullOrEmpty(MainWindowGuiData.OpenedFilePath);
         }
@@ -90,6 +101,35 @@ namespace SubtitleTools.Infrastructure.ViewModels
         bool canDoSync(string data)
         {
             return !string.IsNullOrEmpty(MainWindowGuiData.OpenedFilePath);
+        }
+
+        private void deleteRow()
+        {
+            try
+            {
+                MainWindowGuiData.IsBusy = true;
+
+                var localSubItems = new SubtitleItems();
+                foreach (var item in subtitleItemsDataInternal)
+                    localSubItems.Add(item);
+
+                DeleteRow.DeleteWholeRow(
+                    localSubItems,
+                    MainWindowGuiData.SelectedItem,
+                    MainWindowGuiData.OpenedFilePath
+                    );
+
+                subtitleItemsDataInternal = localSubItems;
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogger.LogExceptionToFile(ex);
+                LogWindow.AddMessage(LogType.Error, ex.Message);
+            }
+            finally
+            {
+                MainWindowGuiData.IsBusy = false;
+            }
         }
 
         void doCloseConvertEncodingView()
@@ -110,25 +150,25 @@ namespace SubtitleTools.Infrastructure.ViewModels
         void doConvertToUTF8(string data)
         {
             MainWindowGuiData.PopupDoDetectEncodingIsOpen = true;
-            //try
-            //{
-            //    MainWindowGuiData.IsBusy = true;
-            //    var changer = new ChangeEncoding();
-            //    if (changer.FixWindows1256(MainWindowGuiData.OpenedFilePath))
-            //    {
-            //        setFlowDir(changer.IsRtl);
-            //        reBind();
-            //    }
-            //}
-            //finally
-            //{
-            //    MainWindowGuiData.IsBusy = false;
-            //}
         }
 
         void doDelete(string data)
         {
-            DeleteRow.DeleteWholeRow(subtitleItemsDataInternal, MainWindowGuiData.SelectedItem, MainWindowGuiData.OpenedFilePath);
+            new Thread(deleteRow).Start();
+        }
+
+        void doInsertRLE(string data)
+        {
+            if (MainWindowGuiData.SelectedItem == null)
+            {
+                LogWindow.AddMessage(LogType.Alert, "Please select a row.");
+                return;
+            }
+
+            MainWindowGuiData.SelectedItem.Dialog =
+                UnicodeRle.InsertBefore(MainWindowGuiData.SelectedItem.Dialog);
+
+            doSaveChanges(string.Empty);
         }
 
         void doJoinFiles(string data)
@@ -208,6 +248,13 @@ namespace SubtitleTools.Infrastructure.ViewModels
             {
                 MainWindowGuiData.IsBusy = true;
 
+                //modify changed rows
+                foreach (var row in _changedRows)
+                {
+                    subtitleItemsDataInternal[row].Dialog
+                        = UnicodeRle.InsertBefore(subtitleItemsDataInternal[row].Dialog);
+                }
+
                 var newContent = ParseSrt.SubitemsToString(subtitleItemsDataInternal);
                 File.WriteAllText(MainWindowGuiData.OpenedFilePath, newContent);
                 LogWindow.AddMessage(LogType.Announcement, string.Format("Saved to:{0}", MainWindowGuiData.OpenedFilePath));
@@ -241,6 +288,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             DoJoinFiles.CanExecute(MainWindowGuiData.OpenedFilePath);
             DoDelete.CanExecute(MainWindowGuiData.OpenedFilePath);
             DoSaveChanges.CanExecute(MainWindowGuiData.OpenedFilePath);
+            DoInsertRLE.CanExecute(MainWindowGuiData.OpenedFilePath);
         }
 
         void mainWindowGuiDataPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -261,7 +309,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         private void reBind()
         {
-            //subtitleItemsDataInternal = new ParseSrt().ToObservableCollectionFromFile(MainWindowGuiData.OpenedFilePath);
             new Thread(doOpenFile).Start();
         }
 
@@ -277,13 +324,16 @@ namespace SubtitleTools.Infrastructure.ViewModels
             DoJoinFiles = new DelegateCommand<string>(doJoinFiles, canDoJoinFiles);
             DoDelete = new DelegateCommand<string>(doDelete, canDoDelete);
             DoSaveChanges = new DelegateCommand<string>(doSaveChanges, canDoSaveChanges);
+            DoInsertRLE = new DelegateCommand<string>(doInsertRLE, canDoInsertRLE);
         }
 
         private void setupItemsData()
         {
+            _changedRows = new SortedSet<int>();
             MainWindowGuiData = new MainWindowGui();
             MainWindowGuiData.PropertyChanged += mainWindowGuiDataPropertyChanged;
             subtitleItemsDataInternal = new SubtitleItems();
+            subtitleItemsDataInternal.CollectionChanged += subtitleItemsDataInternalCollectionChanged;
             SubtitleItemsDataView = CollectionViewSource.GetDefaultView(subtitleItemsDataInternal);
         }
 
@@ -295,8 +345,16 @@ namespace SubtitleTools.Infrastructure.ViewModels
             App.Messenger.Register("doCloseConvertEncodingView", doCloseConvertEncodingView);
         }
 
-        #endregion Methods
+        void subtitleItemsDataInternalCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Remove) return;
+            foreach (SubtitleItem item in e.NewItems)
+            {
+                _changedRows.Add(item.Number);
+            }
+        }
 
+        #endregion Methods
 
 
         #region INotifyPropertyChanged Members

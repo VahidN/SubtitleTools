@@ -6,6 +6,7 @@ using System.Windows.Threading;
 
 namespace SubtitleTools.Common.Collections
 {
+    //from: http://www.julmar.com/blog/mark/2009/04/01/AddingToAnObservableCollectionFromABackgroundThread.aspx
     public class MtObservableCollection<T> : ObservableCollection<T>
     {
         #region Delegates and Events (1)
