@@ -51,7 +51,15 @@
                 </StackPanel>
 			</Button>
 
-			<Separator />
+            <Button ToolTip="Insert RLE (U+202B/RIGHT-TO-LEFT EMBEDDING) Unicode character." 
+                    Command="{Binding DoInsertRLE}" Margin="2">
+                <StackPanel HorizontalAlignment="Center" Margin="1">
+                    <Image Source="Images/format_text_direction_rtl.png" Width="32" Height="32" HorizontalAlignment="Center" />
+                    <TextBlock Text="Insert RLE" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+
+            <Separator />
 
 			<Button Margin="2" Command="{Binding DoSync}"
 					ToolTip="Shift all times">

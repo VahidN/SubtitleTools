@@ -71,8 +71,10 @@ namespace SubtitleTools.Common.Logger
         {
             try
             {
+                string appPath = Path.GetDirectoryName(Application.ExecutablePath);
                 var errs = GetDetailedException(exception as Exception);
-                File.AppendAllText(fileName,
+                File.AppendAllText(
+                    appPath + "\\" + fileName,
                     string.Format(@"+-------------------------------------------------------------------+{0}{1}",
                     Environment.NewLine, errs));
                 //todo: send e-mail

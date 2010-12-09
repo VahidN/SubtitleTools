@@ -72,6 +72,7 @@
     <Compile Include="Core\OpenSubtitlesOrg\OpenSubtitlesXmlRpc.cs" />
     <Compile Include="Core\ParseSrt.cs" />
     <Compile Include="Core\Sync.cs" />
+    <Compile Include="Core\UnicodeRle.cs" />
     <Compile Include="Models\DownloadOpenSubtitlesGui.cs" />
     <Compile Include="Models\JoinTwoFilesGui.cs" />
     <Compile Include="Models\Log.cs" />

@@ -35,7 +35,8 @@
 
         <DataTemplate x:Key="col3">
             <Grid>
-                <TextBox AcceptsReturn="True" Margin="3" 
+                <TextBox AcceptsReturn="True" Margin="3"        
+                         TextAlignment="Center"
                          Text="{Binding Dialog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </DataTemplate>

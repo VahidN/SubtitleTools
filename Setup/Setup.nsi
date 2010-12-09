@@ -1,10 +1,10 @@
 ; The name of the installer
-Name "SubtitleTools 1.1"
+Name "SubtitleTools 1.2"
 
 ; The file to write
 
-OutFile "SubtitleTools_1.1_setup.exe"
-Caption "SubtitleTools 1.1 Installer"
+OutFile "SubtitleTools_1.2_setup.exe"
+Caption "SubtitleTools 1.2 Installer"
 XPStyle on
 SetDatablockOptimize on
 CRCCheck force

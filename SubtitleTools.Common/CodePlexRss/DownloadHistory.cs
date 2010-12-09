@@ -48,8 +48,12 @@ namespace SubtitleTools.Common.CodePlexRss
 
         private static string fixDescription(rssChannelItem item)
         {
-            var desc = item.description.StripHtmlTags();
+            var desc = item.description;
+            if (string.IsNullOrWhiteSpace(desc)) return string.Empty;
+            desc = desc.Replace("<br />", Environment.NewLine).StripHtmlTags();
+
             var lines = desc.Split('\n');
+
             var sb = new StringBuilder();
             foreach (var line in lines)
             {

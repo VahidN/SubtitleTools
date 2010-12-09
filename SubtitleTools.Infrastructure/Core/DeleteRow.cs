@@ -1,5 +1,5 @@
-﻿using SubtitleTools.Infrastructure.Models;
-using System.IO;
+﻿using System.IO;
+using SubtitleTools.Infrastructure.Models;
 
 namespace SubtitleTools.Infrastructure.Core
 {
@@ -21,7 +21,7 @@ namespace SubtitleTools.Infrastructure.Core
             if (data.Remove(toDelete))
             {
                 //fix numbers
-                for (int i = 0; i < data.Count; i++)
+                for (var i = 0; i < data.Count; i++)
                 {
                     data[i].Number = i + 1;
                 }
