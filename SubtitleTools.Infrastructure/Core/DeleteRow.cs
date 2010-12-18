@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using SubtitleTools.Infrastructure.Models;
+using SubtitleTools.Common.Toolkit;
 
 namespace SubtitleTools.Infrastructure.Core
 {
@@ -31,7 +32,7 @@ namespace SubtitleTools.Infrastructure.Core
                 File.Copy(fileNameToSave, backupFile, overwrite: true);
 
                 //write data
-                File.WriteAllText(fileNameToSave, ParseSrt.SubitemsToString(data));
+                File.WriteAllText(fileNameToSave, ParseSrt.SubitemsToString(data).ApplyUnifiedYeKe());
 
                 LogWindow.AddMessage(LogType.Info, string.Format("Line {0} has been deleted.", number));
                 LogWindow.AddMessage(LogType.Info, string.Format("Backup file: {0}", backupFile));

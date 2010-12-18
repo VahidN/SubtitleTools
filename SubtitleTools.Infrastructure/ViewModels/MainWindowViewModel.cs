@@ -11,6 +11,7 @@ using SubtitleTools.Infrastructure.Core;
 using SubtitleTools.Infrastructure.Models;
 using System.Collections.Specialized;
 using System.Collections.Generic;
+using SubtitleTools.Common.Toolkit;
 
 namespace SubtitleTools.Infrastructure.ViewModels
 {
@@ -30,6 +31,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             setupItemsData();
             setupCommands();
             setupMessenger();
+            processCommandLineArguments();
         }
 
         #endregion Constructors
@@ -69,9 +71,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Properties
 
-        #region Methods (28)
+        #region Methods (29)
 
-        // Private Methods (28) 
+        // Private Methods (29) 
 
         bool canDoConvertToUTF8(string data)
         {
@@ -256,7 +258,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 }
 
                 var newContent = ParseSrt.SubitemsToString(subtitleItemsDataInternal);
-                File.WriteAllText(MainWindowGuiData.OpenedFilePath, newContent);
+                File.WriteAllText(MainWindowGuiData.OpenedFilePath, newContent.ApplyUnifiedYeKe());
                 LogWindow.AddMessage(LogType.Announcement, string.Format("Saved to:{0}", MainWindowGuiData.OpenedFilePath));
             }
             finally
@@ -296,7 +298,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             switch (e.PropertyName)
             {
                 case "SearchText":
-                    doSearch(MainWindowGuiData.SearchText);
+                    doSearch(MainWindowGuiData.SearchText.ApplyUnifiedYeKe());
                     break;
                 case "OpenedFilePath":
                     new Thread(doOpenFile).Start();
@@ -305,6 +307,16 @@ namespace SubtitleTools.Infrastructure.ViewModels
                     new Thread(doMerge).Start();
                     break;
             }
+        }
+
+        private void processCommandLineArguments()
+        {
+            var startupFileName = Application.Current.Properties["StartupFileName"];
+            if (startupFileName == null) return;
+            if (string.IsNullOrEmpty(startupFileName.ToString())) return;
+            if (!File.Exists(startupFileName.ToString())) return;
+            MainWindowGuiData.OpenedFilePath = startupFileName.ToString();
+            new Thread(doOpenFile).Start();
         }
 
         private void reBind()
@@ -355,6 +367,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
         }
 
         #endregion Methods
+
 
 
         #region INotifyPropertyChanged Members

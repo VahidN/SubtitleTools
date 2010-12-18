@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using SubtitleTools.Common.Regex;
+using SubtitleTools.Common.Toolkit;
 
 namespace SubtitleTools.Infrastructure.Core
 {
@@ -51,7 +52,7 @@ namespace SubtitleTools.Infrastructure.Core
             var delta = new TimeSpan(0, hour, minutes, seconds, milliseconds);
             var lines = File.ReadAllLines(srtFile);
             var newContent = ShiftAllTimeLines(lines, delta, add);
-            File.WriteAllText(srtFile, newContent);
+            File.WriteAllText(srtFile, newContent.ApplyUnifiedYeKe());
 
             LogWindow.AddMessage(LogType.Info, "ShiftFileTimeLines End.");
         }

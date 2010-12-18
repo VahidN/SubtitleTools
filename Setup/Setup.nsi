@@ -1,10 +1,12 @@
+!include "FileAssociation.nsh"
+
 ; The name of the installer
-Name "SubtitleTools 1.2"
+Name "SubtitleTools 1.3"
 
 ; The file to write
 
-OutFile "SubtitleTools_1.2_setup.exe"
-Caption "SubtitleTools 1.2 Installer"
+OutFile "SubtitleTools_1.3_setup.exe"
+Caption "SubtitleTools 1.3 Installer"
 XPStyle on
 SetDatablockOptimize on
 CRCCheck force
@@ -50,6 +52,9 @@ Section "" ;No components page, name is not important
   
   ;create desktop shortcut
   CreateShortCut "$DESKTOP\SubtitleTools.lnk" "$INSTDIR\SubtitleTools.exe" ""
+  
+  ;Set File Association
+  ${registerExtension} "$INSTDIR\SubtitleTools.exe" ".srt" "Subtitle_File"
   
   MessageBox MB_OK "You have successfully installed SubtitleTools. Please use the desktop icon to start the program."
   

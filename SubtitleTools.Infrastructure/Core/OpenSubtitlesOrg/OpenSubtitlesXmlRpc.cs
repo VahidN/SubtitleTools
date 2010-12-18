@@ -54,16 +54,16 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
 
         public void DownloadSubtitle(string id, string subFileName, string lang, Action<int> progress, bool debugMode = false)
         {
-            progress(10);
+            if (progress != null) progress(10);
 
             tryLogin();
 
-            progress(40);
+            if (progress != null) progress(40);
 
             LogWindow.AddMessage(LogType.Info, string.Format("DownloadSubtitle({0})", id));
             var result = _client.DownloadSubtitles(_loginToken, new[] { id });
 
-            progress(75);
+            if (progress != null) progress(75);
 
             if (result.status == "200 OK")
             {
@@ -94,7 +94,7 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
                 throw new Exception(string.Format("Status: {0}. It's not possible to download {1}", result.status, subFileName));
             }
 
-            progress(100);
+            if (progress != null) progress(100);
         }
 
         public SubtitlesSearchResult GetListOfAllSubtitles(Action<int> progress, string subLanguageId = "all")
@@ -106,12 +106,12 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
             var fileLen = fileInfo.MovieFileLength;
 
             //login
-            progress(25);
+            if (progress != null) progress(25);
 
             LogWindow.AddMessage(LogType.Info, "TryLogin ...");
             tryLogin();
 
-            progress(50);
+            if (progress != null) progress(50);
 
             //has any subtitle?
             var token = _loginToken;
@@ -122,7 +122,7 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
                 throw new Exception("This movie has not any subtitle.");
             }
 
-            progress(75);
+            if (progress != null) progress(75);
 
             LogWindow.AddMessage(LogType.Info, "SearchSubtitles ... ");
 
@@ -148,7 +148,7 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
             {
                 ExceptionLogger.LogExceptionToFile(ex);
                 LogWindow.AddMessage(LogType.Alert, "Found Nothing!");
-                progress(100);
+                if (progress != null) progress(100);
                 return null;
             }
 
@@ -161,7 +161,7 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
                 LogWindow.AddMessage(LogType.Alert, "Found Nothing!");
             }
 
-            progress(100);
+            if (progress != null) progress(100);
 
             return result;
         }
@@ -169,14 +169,15 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
         public string UploadSubtitle(string subLanguageId, string subFileNamePath, Action<int> progress)
         {
             string finalUrl;
+            subFileNamePath = new ChangeEncoding().TryReduceRtlLargeFileContent(subFileNamePath);
             var fileInfo = new MovieFileInfo(_movieFileName, subFileNamePath);
             //login            
-            progress(10);
+            if (progress != null) progress(10);
 
             LogWindow.AddMessage(LogType.Info, "TryLogin ...");
             tryLogin();
 
-            progress(25);
+            if (progress != null) progress(25);
 
             LogWindow.AddMessage(LogType.Info, "TryUploadSubtitle ...");
             var res = _client.TryUploadSubtitles(_loginToken,
@@ -193,7 +194,7 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
                 }
                 );
 
-            progress(50);
+            if (progress != null) progress(50);
 
             if (res.status != "200 OK")
             {
@@ -210,7 +211,7 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
                 LogWindow.AddMessage(LogType.Info, string.Format("CheckSubHash({0})", fileInfo.SubtitleHash));
                 var checkSubHashRes = _client.CheckSubHash(_loginToken, new[] { fileInfo.SubtitleHash });
 
-                progress(75);
+                if (progress != null) progress(75);
 
                 var idSubtitleFile = int.Parse(checkSubHashRes.data[fileInfo.SubtitleHash].ToString());
                 if (idSubtitleFile > 0)
@@ -253,7 +254,7 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
                 throw new Exception("Duplicate file, alreadyindb");
             }
 
-            progress(100);
+            if (progress != null) progress(100);
             return finalUrl.Trim();
         }
         // Private Methods (1) 
