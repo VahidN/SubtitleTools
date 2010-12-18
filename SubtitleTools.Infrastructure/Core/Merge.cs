@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using SubtitleTools.Infrastructure.Models;
 using SubtitleTools.Common.Files;
+using SubtitleTools.Common.Toolkit;
 
 namespace SubtitleTools.Infrastructure.Core
 {
@@ -54,7 +55,7 @@ namespace SubtitleTools.Infrastructure.Core
             //toString
             var content = ParseSrt.SubitemsToString(mainItems);
             //write to file
-            File.WriteAllText(mainFilePath, content);
+            File.WriteAllText(mainFilePath, content.ApplyUnifiedYeKe());
             LogWindow.AddMessage(LogType.Info, "WriteMergedList End.");
         }
 

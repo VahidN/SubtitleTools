@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Text;
 using SubtitleTools.Common.Regex;
+using SubtitleTools.Common.Toolkit;
+using href.Utils;
 
 namespace SubtitleTools.Infrastructure.Core
 {
@@ -12,9 +14,9 @@ namespace SubtitleTools.Infrastructure.Core
 
         #endregion Properties
 
-        #region Methods (3)
+        #region Methods (4)
 
-        // Public Methods (3) 
+        // Public Methods (4) 
 
         public bool FixWindows1256(string path)
         {
@@ -32,7 +34,7 @@ namespace SubtitleTools.Infrastructure.Core
 
             //convert
             var data = File.ReadAllText(path, Encoding.GetEncoding("windows-1256"));
-            File.WriteAllText(path, data, Encoding.UTF8);
+            File.WriteAllText(path, data.ApplyUnifiedYeKe(), Encoding.UTF8);
             //set flowDir
             IsRtl = File.ReadAllText(path).ContainsFarsi();
             LogWindow.AddMessage(LogType.Info, "ChangeEncoding End.");
@@ -71,11 +73,42 @@ namespace SubtitleTools.Infrastructure.Core
 
             //convert
             var data = File.ReadAllText(path, Encoding.GetEncoding(fromEnc));
-            File.WriteAllText(path, data, Encoding.UTF8);
+            File.WriteAllText(path, data.ApplyUnifiedYeKe(), Encoding.UTF8);
             //set flowDir
             IsRtl = File.ReadAllText(path).ContainsFarsi();
             LogWindow.AddMessage(LogType.Info, "ChangeEncoding End.");
             return true;
+        }
+
+        public string TryReduceRtlLargeFileContent(string fileName)
+        {
+            // OSDB's PHP server can't accept subtitle files larger than 100KB!
+            // LTR languages are fine (most of the times), but RTL languages with utf-8 encoding have problems,
+            // because utf-8 means larger files than original windows-1256 files.               
+            if (new FileInfo(fileName).Length < 102400)
+            {
+                //it's fine for OSDB upload
+                return fileName;
+            }
+
+            var content = File.ReadAllText(fileName);
+            if (!content.ContainsFarsi())
+            {
+                //it's not RTL
+                return fileName;
+            }
+
+            var mostEfficientEncoding = EncodingTools.DetectInputCodepage(File.ReadAllBytes(fileName));
+            if (mostEfficientEncoding.CodePage != 65001)
+            {
+                //don't corrupt it.
+                return fileName;
+            }
+
+            var newFilePath = string.Format("{0}\\sub-{1}", Path.GetDirectoryName(fileName), Path.GetFileName(fileName));
+            File.WriteAllText(newFilePath, content, Encoding.GetEncoding("windows-1256"));
+            LogWindow.AddMessage(LogType.Info, "Saved a new file with windows-1256 encoding to reduce the size of the sub file @ " + newFilePath);
+            return newFilePath;
         }
 
         #endregion Methods

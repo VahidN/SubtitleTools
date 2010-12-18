@@ -81,6 +81,7 @@
     <Compile Include="EncodingHelper\DetectEncoding.cs" />
     <Compile Include="EncodingHelper\Model\EncodingInf.cs" />
     <Compile Include="EncodingHelper\Model\EncodingsInf.cs" />
+    <Compile Include="Files\FileAssociation.cs" />
     <Compile Include="Files\Filters.cs" />
     <Compile Include="Files\Info.cs" />
     <Compile Include="Files\Xml.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Regex\RegexHelper.cs" />
     <Compile Include="ResourceFiles\ResourceUtils.cs" />
     <Compile Include="Threading\DispatcherHelper.cs" />
+    <Compile Include="Toolkit\Rtl.cs" />
     <Compile Include="Toolkit\SafeClipboard.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,4 +5,7 @@
     <Application.Resources>
         <ResourceDictionary Source="/SubtitleTools.Common;component/Themes/ExpressionDark.xaml"/>
     </Application.Resources>
+    <JumpList.JumpList>
+        <JumpList ShowRecentCategory="True"/>
+    </JumpList.JumpList>
 </Application>

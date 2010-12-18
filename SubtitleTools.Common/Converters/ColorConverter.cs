@@ -13,8 +13,7 @@ namespace SubtitleTools.Common.Converters
             switch (value.ToString().ToLower())
             {
                 case "announcement":
-                    return new SolidColorBrush(Color.FromRgb(165, 239, 161));
-                    break;
+                    return new SolidColorBrush(Color.FromRgb(165, 239, 161));                    
                 case "alert":
                     return new SolidColorBrush(Color.FromRgb(239, 137, 5));
                 case "info":

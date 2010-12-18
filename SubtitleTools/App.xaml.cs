@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
 using SubtitleTools.Infrastructure.Core;
 using SubtitleTools.Common.Logger;
+using SubtitleTools.Common.Files;
+using System.Reflection;
 
 namespace SubtitleTools
 {
@@ -25,16 +28,18 @@ namespace SubtitleTools
                 this.Shutdown();
             }
 
+            this.Startup += appStartup;
             this.Exit += appExit;
             this.DispatcherUnhandledException += appDispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += currentDomainUnhandledException;
+            createFileAssociation();
         }
 
         #endregion Constructors
 
-        #region Methods (3)
+        #region Methods (5)
 
-        // Private Methods (3) 
+        // Private Methods (5) 
 
         private static void appDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
@@ -45,6 +50,22 @@ namespace SubtitleTools
 
         static void appExit(object sender, ExitEventArgs e)
         {
+        }
+
+        void appStartup(object sender, StartupEventArgs e)
+        {
+            if (e.Args.Any())
+            {
+                this.Properties["StartupFileName"] = e.Args[0];
+            }
+        }
+
+        private static void createFileAssociation()
+        {
+            var appPath = Assembly.GetExecutingAssembly().Location;
+            FileAssociation.CreateFileAssociation(".srt", "Sub", "Subtitle File",
+                appPath
+                );
         }
 
         static void currentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
