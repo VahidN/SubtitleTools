@@ -71,9 +71,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Properties
 
-        #region Methods (29)
+        #region Methods (30)
 
-        // Private Methods (29) 
+        // Private Methods (30) 
 
         bool canDoConvertToUTF8(string data)
         {
@@ -204,6 +204,32 @@ namespace SubtitleTools.Infrastructure.ViewModels
             }
         }
 
+        void doMix()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath) ||
+                    string.IsNullOrWhiteSpace(MainWindowGuiData.MixFilePath))
+                {
+                    return;
+                }
+
+                MainWindowGuiData.IsBusy = true;
+                MixFiles.WriteMixedList(mainFilePath: MainWindowGuiData.OpenedFilePath,
+                                       fromFilepath: MainWindowGuiData.MixFilePath);
+                reBind();
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogger.LogExceptionToFile(ex);
+                LogWindow.AddMessage(LogType.Error, ex.Message);
+            }
+            finally
+            {
+                MainWindowGuiData.IsBusy = false;
+            }
+        }
+
         void doOpenFile()
         {
             try
@@ -287,6 +313,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             DoConvertToUTF8.CanExecute(MainWindowGuiData.OpenedFilePath);
             DoSync.CanExecute(MainWindowGuiData.OpenedFilePath);
             MainWindowGuiData.DoMergeIsEnabled = !string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath);
+            MainWindowGuiData.DoMixIsEnabled = !string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath);
             DoJoinFiles.CanExecute(MainWindowGuiData.OpenedFilePath);
             DoDelete.CanExecute(MainWindowGuiData.OpenedFilePath);
             DoSaveChanges.CanExecute(MainWindowGuiData.OpenedFilePath);
@@ -305,6 +332,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
                     break;
                 case "MergeFilePath":
                     new Thread(doMerge).Start();
+                    break;
+                case "MixFilePath":
+                    new Thread(doMix).Start();
                     break;
             }
         }

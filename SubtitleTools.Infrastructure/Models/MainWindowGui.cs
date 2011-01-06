@@ -5,12 +5,14 @@ namespace SubtitleTools.Infrastructure.Models
 {
     public class MainWindowGui : INotifyPropertyChanged
     {
-        #region Fields (11)
+        #region Fields (13)
 
         bool _doMergeIsEnabled;
+        bool _doMixIsEnabled;
         string _headerText;
         bool _isBusy;
         string _mergeFilePath;
+        string _mixFilePath;
         string _openedFilePath;
         bool _popupDoDetectEncodingIsOpen;
         bool _popupDoJoinFilesIsOpen;
@@ -21,7 +23,7 @@ namespace SubtitleTools.Infrastructure.Models
 
         #endregion Fields
 
-        #region Properties (11)
+        #region Properties (13)
 
         public bool DoMergeIsEnabled
         {
@@ -31,6 +33,17 @@ namespace SubtitleTools.Infrastructure.Models
                 if (_doMergeIsEnabled == value) return;
                 _doMergeIsEnabled = value;
                 raisePropertyChanged("DoMergeIsEnabled");
+            }
+        }
+
+        public bool DoMixIsEnabled
+        {
+            get { return _doMixIsEnabled; }
+            set
+            {
+                if (_doMixIsEnabled == value) return;
+                _doMixIsEnabled = value;
+                raisePropertyChanged("DoMixIsEnabled");
             }
         }
 
@@ -64,6 +77,17 @@ namespace SubtitleTools.Infrastructure.Models
                 if (_mergeFilePath == value) return;
                 _mergeFilePath = value;
                 raisePropertyChanged("MergeFilePath");
+            }
+        }
+
+        public string MixFilePath
+        {
+            get { return _mixFilePath; }
+            set
+            {
+                if (_mixFilePath == value) return;
+                _mixFilePath = value;
+                raisePropertyChanged("MixFilePath");
             }
         }
 

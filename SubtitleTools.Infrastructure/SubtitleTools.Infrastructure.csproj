@@ -56,6 +56,7 @@
     <Compile Include="Core\JoinFiles.cs" />
     <Compile Include="Core\LogWindow.cs" />
     <Compile Include="Core\Merge.cs" />
+    <Compile Include="Core\MixFiles.cs" />
     <Compile Include="Core\OpenSubtitlesOrg\API\CheckHashInfo.cs" />
     <Compile Include="Core\OpenSubtitlesOrg\API\DownloadSubtitlesResult.cs" />
     <Compile Include="Core\OpenSubtitlesOrg\API\IOpenSubtitlesDb.cs" />

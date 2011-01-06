@@ -113,7 +113,23 @@
 				</StackPanel>
 			</Button>
 
-			<Separator />
+            <Button Margin="2" 
+					IsEnabled="{Binding MainWindowGuiData.DoMixIsEnabled}"
+					ToolTip="Combine all dialogs of the opened file with dialogs of a selected file">
+                <StackPanel HorizontalAlignment="Center" Margin="1">
+                    <Image Source="Images/books.png" Width="32" Height="32" HorizontalAlignment="Center" />
+                    <TextBlock Text="Mix Dialogs" HorizontalAlignment="Center" />
+                </StackPanel>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <b:OpenFileDialogBoxBehavior 
+									DialogFilterType="Subtitle"
+									FileDialogDialogResultCommand="{Binding MainWindowGuiData.MixFilePath, Mode=TwoWay}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+
+            <Separator />
 
 			<Button Margin="2" Command="{Binding DoDelete}"
 					ToolTip="Delete selected row of the subtitle.">

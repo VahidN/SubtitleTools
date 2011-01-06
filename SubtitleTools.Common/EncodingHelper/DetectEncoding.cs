@@ -42,9 +42,21 @@ namespace SubtitleTools.Common.EncodingHelper
                 addAllEncodings(result);
             }
 
+            addWindows1256IfNotExists(result);
+
             return result;
         }
-        // Private Methods (1) 
+
+        // Private Methods (2) 
+
+        private static void addWindows1256IfNotExists(EncodingsInf result)
+        {
+            var windows1256 = result.FirstOrDefault(r => r.BodyName == "windows-1256");
+            if (windows1256 == null)
+            {
+                result.Add(new EncodingInf { BodyName = "windows-1256", Name = "Arabic (Windows)" });
+            }
+        }
 
         private static void addAllEncodings(EncodingsInf result)
         {

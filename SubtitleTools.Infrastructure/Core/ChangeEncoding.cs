@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Text;
+using href.Utils;
 using SubtitleTools.Common.Regex;
 using SubtitleTools.Common.Toolkit;
-using href.Utils;
 
 namespace SubtitleTools.Infrastructure.Core
 {
@@ -43,6 +43,10 @@ namespace SubtitleTools.Infrastructure.Core
 
         public bool IsUTF8(string filePath)
         {
+            var mostEfficientEncoding = EncodingTools.DetectInputCodepage(File.ReadAllBytes(filePath));
+            if (mostEfficientEncoding.CodePage == 65001)
+                return true;
+
             using (var file = new FileStream(filePath,
                 FileMode.Open, FileAccess.Read, FileShare.Read))
             {

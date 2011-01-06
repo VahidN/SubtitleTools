@@ -9,6 +9,7 @@ using SubtitleTools.Common.Logger;
 using SubtitleTools.Common.Net;
 using SubtitleTools.Infrastructure.Core;
 
+
 namespace SubtitleTools.Infrastructure.ViewModels
 {
     public class AboutViewModel : INotifyPropertyChanged
@@ -61,7 +62,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         private static string cacheManager(string rssXml)
         {
-            const string localCacheFile = "rss.xml";
+            string localCacheFile = SubtitleTools.Common.Files.Path.AppPath + "\\rss.xml";
 
             if (string.IsNullOrWhiteSpace(rssXml))
             {
