@@ -51,7 +51,7 @@ namespace SubtitleTools.Common.Logger
 
             //Get callerInfo
             var stackTrace = new StackTrace();
-            var stackFrame = stackTrace.GetFrame(1);
+            var stackFrame = stackTrace.GetFrame(2); //caller of LogExceptionToFile
             var methodBase = stackFrame.GetMethod();
             var callingType = methodBase.DeclaringType;
             result.AppendLine(string.Format("Url: {0} -> {1}", callingType.Assembly.Location, callingType.Assembly.FullName));

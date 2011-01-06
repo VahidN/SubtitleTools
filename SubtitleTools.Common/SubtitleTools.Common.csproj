@@ -84,6 +84,7 @@
     <Compile Include="Files\FileAssociation.cs" />
     <Compile Include="Files\Filters.cs" />
     <Compile Include="Files\Info.cs" />
+    <Compile Include="Files\Path.cs" />
     <Compile Include="Files\Xml.cs" />
     <Compile Include="ISO639\Language.cs" />
     <Compile Include="ISO639\LanguagesCodes.cs" />
