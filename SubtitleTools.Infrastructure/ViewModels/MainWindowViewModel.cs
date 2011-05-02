@@ -52,7 +52,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         public MainWindowGui MainWindowGuiData { set; get; }
 
-        private SubtitleItems subtitleItemsDataInternal
+        private SubtitleItems subtitleItemsDataInternal //todo: move to MainWindowGui
         {
             set
             {
@@ -67,7 +67,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             get { return _subtitleItemsDataInternal; }
         }
 
-        public ICollectionView SubtitleItemsDataView { set; get; }
+        public ICollectionView SubtitleItemsDataView { set; get; } //todo: move to MainWindowGui
 
         #endregion Properties
 
@@ -297,9 +297,10 @@ namespace SubtitleTools.Infrastructure.ViewModels
         {
             SubtitleItemsDataView.Filter = new Predicate<object>(obj =>
                 {
+				    if (obj == null) return false;
                     var subtitleItem = obj as SubtitleItem;
-                    if (obj == null) return false;
-                    return subtitleItem != null && subtitleItem.Dialog.Contains(data);
+                    if (subtitleItem == null) return false;
+                    return subtitleItem != null && subtitleItem.Dialog.ToLower().Contains(data.ToLower());
                 });
         }
 

@@ -82,6 +82,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
                 var openSubtitlesXmlRpc = new OpenSubtitlesXmlRpc(UploadItemData.MoviePath);
                 var finalUrl = openSubtitlesXmlRpc.UploadSubtitle(
+                    UploadItemData.ImdbId,
                     UploadItemData.SelectedSubtitleLanguage.IdSubLanguage.ToLower(),
                     UploadItemData.SubtitlePath,
                     e => UploadItemData.Progress = e);

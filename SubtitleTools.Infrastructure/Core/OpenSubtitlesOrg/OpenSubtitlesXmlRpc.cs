@@ -166,7 +166,7 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
             return result;
         }
 
-        public string UploadSubtitle(string subLanguageId, string subFileNamePath, Action<int> progress)
+        public string UploadSubtitle(long userImdbId, string subLanguageId, string subFileNamePath, Action<int> progress)
         {
             string finalUrl;
             subFileNamePath = new ChangeEncoding().TryReduceRtlLargeFileContent(subFileNamePath);
@@ -180,19 +180,42 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
             if (progress != null) progress(25);
 
             LogWindow.AddMessage(LogType.Info, "TryUploadSubtitle ...");
-            var res = _client.TryUploadSubtitles(_loginToken,
-                new[]
-                { 
-                    new TryUploadInfo
-                    {
-                       subhash = fileInfo.SubtitleHash,
-                       subfilename = fileInfo.SubFileName,
-                       moviehash = fileInfo.MovieHash,
-                       moviebytesize = fileInfo.MovieFileLength,
-                       moviefilename = fileInfo.MovieFileName
-                    }
+
+            TryUploadResult res = null;
+            try
+            {
+                res = _client.TryUploadSubtitles(_loginToken,
+                    new[]
+                        { 
+                            new TryUploadInfo
+                            {
+                               subhash = fileInfo.SubtitleHash,
+                               subfilename = fileInfo.SubFileName,
+                               moviehash = fileInfo.MovieHash,
+                               moviebytesize = fileInfo.MovieFileLength,
+                               moviefilename = fileInfo.MovieFileName
+                            }
+                        }
+                    );
+            }
+            catch (Exception ex)
+            {
+                if (userImdbId != 0 && ex.Message.Contains("response contains boolean value where array expected")) // what did you expect from PHP developers?!
+                {
+                    //it's a new movie file and site's db has no info (IDMovieImdb val) about it.                    
+                    res = new TryUploadResult();
+                    res.data = null;
+                    res.status = "200 OK";
+                    res.alreadyindb = 0;
                 }
-                );
+                else
+                    throw;
+            }
+
+            if (res == null)
+            {
+                throw new InvalidOperationException("Bad response ...");
+            }
 
             if (progress != null) progress(50);
 
@@ -203,7 +226,7 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
 
             if (res.alreadyindb == 0)
             {
-                if (res.data == null || res.data.Length == 0)
+                if ((userImdbId == 0) && (res.data == null || res.data.Length == 0))
                 {
                     throw new Exception("Bad format ...");
                 }
@@ -226,7 +249,7 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
                      UploadData.CreateUploadXml(_loginToken,
                      new UploadBaseinfo
                      {
-                         idmovieimdb = res.data[0]["IDMovieImdb"].ToString(),
+                         idmovieimdb = res.data != null ? res.data[0]["IDMovieImdb"].ToString() : userImdbId.ToString(),
                          sublanguageid = subLanguageId,
                          movieaka = string.Empty,
                          moviereleasename = fileInfo.MovieReleaseName,
