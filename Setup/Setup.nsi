@@ -1,12 +1,12 @@
 !include "FileAssociation.nsh"
 
 ; The name of the installer
-Name "SubtitleTools 1.4"
+Name "SubtitleTools 1.5"
 
 ; The file to write
 
-OutFile "SubtitleTools_1.4_setup.exe"
-Caption "SubtitleTools 1.4 Installer"
+OutFile "SubtitleTools_1.5_setup.exe"
+Caption "SubtitleTools 1.5 Installer"
 XPStyle on
 SetDatablockOptimize on
 CRCCheck force

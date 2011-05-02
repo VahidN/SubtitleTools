@@ -13,7 +13,7 @@
         <Setter Property="OverlayStyle">
             <Setter.Value>
                 <Style TargetType="Rectangle">
-                    <Setter Property="Fill" Value="Gray"/>
+                    <Setter Property="Fill" Value="Black"/>
                     <Setter Property="Opacity" Value="0.5"/>
                 </Style>
             </Setter.Value>

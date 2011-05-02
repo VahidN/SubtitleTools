@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using SubtitleTools.Infrastructure.Core;
 using SubtitleTools.Common.Logger;
@@ -54,11 +55,20 @@ namespace SubtitleTools
 
         void appStartup(object sender, StartupEventArgs e)
         {
+		    ReducingCpuConsumptionForAnimations();
             if (e.Args.Any())
             {
                 this.Properties["StartupFileName"] = e.Args[0];
             }
         }
+		
+		void ReducingCpuConsumptionForAnimations()
+		{
+           Timeline.DesiredFrameRateProperty.OverrideMetadata(
+                typeof(Timeline),
+                new FrameworkPropertyMetadata { DefaultValue = 20 }
+                );
+		}
 
         private static void createFileAssociation()
         {

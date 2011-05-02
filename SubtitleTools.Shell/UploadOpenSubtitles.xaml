@@ -37,13 +37,15 @@
 						<RowDefinition Height="Auto"/>
 						<RowDefinition Height="Auto"/>
 						<RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto" />
 						<ColumnDefinition Width="*" />
 						<ColumnDefinition Width="Auto" />
 					</Grid.ColumnDefinitions>
-					<TextBlock Text="Movie file:" Grid.Column="0" Margin="3" />
+					<TextBlock Text="Movie file:" Grid.Column="0" Margin="3" VerticalAlignment="Center" />
 					<TextBox Text="{Binding UploadItemData.MoviePath, Mode=TwoWay}"                                 
 								 Grid.Column="1" Margin="3" IsReadOnly="True" />
 					<Button Content="..." Margin="3" 								
@@ -58,7 +60,7 @@
 					</Button>
 
 					<TextBlock Text="Subtitle file:" 
-								   Grid.Column="0" Grid.Row="1" Margin="3"/>
+								   Grid.Column="0" Grid.Row="1" Margin="3" VerticalAlignment="Center" />
 					<TextBox Text="{Binding UploadItemData.SubtitlePath, Mode=TwoWay}" Grid.Row="1"                                
 								 Grid.Column="1" Margin="3" IsReadOnly="True" />
 					<Button Content="..." Margin="3" Grid.Row="1"
@@ -72,8 +74,13 @@
 						</i:Interaction.Triggers>
 					</Button>
 
+                    <TextBlock Text="IMDB Id:" Grid.Column="0" Grid.Row="4" Margin="3" VerticalAlignment="Center" />
+                    <TextBox Grid.Column="1" Grid.Row="4" Width="100" 
+                             Text="{Binding UploadItemData.ImdbId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="3" HorizontalAlignment="Left" />
+                    
 					<TextBlock Text="Subtitle language:" 
-								   Grid.Column="0" Grid.Row="2" Margin="3"/>
+								   Grid.Column="0" Grid.Row="2" Margin="3" VerticalAlignment="Center" />
 					<ComboBox Grid.Column="1" Grid.Row="2" 
 								  SelectedValue="{Binding UploadItemData.SelectedSubtitleLanguage}"
 								  ItemsSource="{Binding SubLanguages}"
@@ -82,18 +89,18 @@
 								  Margin="3" />                    
 
 					<ProgressBar Margin="3" 
-									 Grid.Column="1" Grid.Row="3"
+									 Grid.Column="1" Grid.Row="5"
 									 Height="5"
 									 Value="{Binding UploadItemData.Progress}"
 									 Width="150" HorizontalAlignment="Left" />
-					<Button Grid.Row="4" Grid.Column="1" Width="153"
+					<Button Grid.Row="6" Grid.Column="1" Width="153"
 								HorizontalAlignment="Left"
 								Command="{Binding DoUploadOneFile}"
 								Height="25" Margin="3"
 								Content="Upload subtitle" />
 
-					<TextBlock Text="Result: " Grid.Row="5" Grid.Column="0" />
-					<TextBlock Grid.Row="5" Grid.Column="1"
+					<TextBlock Text="Result: " Grid.Row="8" Grid.Column="0" />
+					<TextBlock Grid.Row="8" Grid.Column="1"
 							   Foreground="Cyan"
 							   Visibility="{Binding UploadItemData.FinalUrl, Converter={StaticResource convVisibilityConverter}}"
 							   HorizontalAlignment="Left"

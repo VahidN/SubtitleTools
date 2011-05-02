@@ -13,6 +13,7 @@ namespace SubtitleTools.Infrastructure.Models
         int _progress;
         Language _selectedSubtitleLanguage;
         string _subtitlePath;
+        long _imdbId;
 
         #endregion Fields
 
@@ -26,6 +27,17 @@ namespace SubtitleTools.Infrastructure.Models
                 if (_finalUrl == value) return;
                 _finalUrl = value;
                 raisePropertyChanged("FinalUrl");
+            }
+        }
+
+        public long ImdbId
+        {
+            get { return _imdbId; }
+            set
+            {
+                if (_imdbId == value) return;
+                _imdbId = value;
+                raisePropertyChanged("ImdbId");
             }
         }
 
