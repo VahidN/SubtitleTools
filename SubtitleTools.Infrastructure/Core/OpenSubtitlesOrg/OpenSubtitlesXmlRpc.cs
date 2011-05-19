@@ -8,6 +8,7 @@ using SubtitleTools.Common.Net;
 using SubtitleTools.Common.Regex;
 using SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg.API;
 using SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg.Helper;
+using SubtitleTools.Common.Toolkit;
 
 namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
 {
@@ -200,15 +201,7 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
             }
             catch (Exception ex)
             {
-                if (userImdbId != 0 && ex.Message.Contains("response contains boolean value where array expected")) // what did you expect from PHP developers?!
-                {
-                    //it's a new movie file and site's db has no info (IDMovieImdb val) about it.                    
-                    res = new TryUploadResult();
-                    res.data = null;
-                    res.status = "200 OK";
-                    res.alreadyindb = 0;
-                }
-                else
+                if (!ProcessNewMovieFile(ref userImdbId, fileInfo, ref res, ex))
                     throw;
             }
 
@@ -280,7 +273,32 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
             if (progress != null) progress(100);
             return finalUrl.Trim();
         }
-        // Private Methods (1) 
+
+        // Private Methods (2) 
+
+        private static bool ProcessNewMovieFile(ref long userImdbId, MovieFileInfo fileInfo, ref TryUploadResult res, Exception ex)
+        {
+            if (ex.Message.Contains("response contains boolean value where array expected")) // what did you expect from PHP developers?!
+            {
+                if (userImdbId == 0)
+                {
+                    userImdbId = Imdb.GetImdbId(Path.GetFileNameWithoutExtension(fileInfo.MovieFileName));
+                    if (userImdbId == 0)
+                    {
+                        throw new NotSupportedException("It's a new movie file. Please find/fill its IMDB Id first.");
+                    }
+                    LogWindow.AddMessage(LogType.Info, string.Format("ImdbId: {0}", userImdbId));
+                }
+
+                //it's a new movie file and site's db has no info (IDMovieImdb val) about it.
+                res = new TryUploadResult();
+                res.data = null;
+                res.status = "200 OK";
+                res.alreadyindb = 0;
+                return true;
+            }
+            return false;
+        }
 
         void tryLogin()
         {

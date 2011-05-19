@@ -99,6 +99,7 @@
     <Compile Include="Regex\RegexHelper.cs" />
     <Compile Include="ResourceFiles\ResourceUtils.cs" />
     <Compile Include="Threading\DispatcherHelper.cs" />
+    <Compile Include="Toolkit\Imdb.cs" />
     <Compile Include="Toolkit\Rtl.cs" />
     <Compile Include="Toolkit\SafeClipboard.cs" />
   </ItemGroup>
