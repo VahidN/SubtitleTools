@@ -201,7 +201,7 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
             }
             catch (Exception ex)
             {
-                if (!ProcessNewMovieFile(ref userImdbId, fileInfo, ref res, ex))
+                if (!processNewMovieFile(ref userImdbId, fileInfo, ref res, ex))
                     throw;
             }
 
@@ -276,7 +276,7 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
 
         // Private Methods (2) 
 
-        private static bool ProcessNewMovieFile(ref long userImdbId, MovieFileInfo fileInfo, ref TryUploadResult res, Exception ex)
+        private static bool processNewMovieFile(ref long userImdbId, MovieFileInfo fileInfo, ref TryUploadResult res, Exception ex)
         {
             if (ex.Message.Contains("response contains boolean value where array expected")) // what did you expect from PHP developers?!
             {
@@ -291,10 +291,7 @@ namespace SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg
                 }
 
                 //it's a new movie file and site's db has no info (IDMovieImdb val) about it.
-                res = new TryUploadResult();
-                res.data = null;
-                res.status = "200 OK";
-                res.alreadyindb = 0;
+                res = new TryUploadResult { data = null, status = "200 OK", alreadyindb = 0 };
                 return true;
             }
             return false;

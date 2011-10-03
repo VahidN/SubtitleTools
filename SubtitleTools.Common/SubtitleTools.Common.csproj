@@ -59,7 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\AutoScrollListView.cs" />
+    <Compile Include="Behaviors\MediaElementBehavior.cs" />
     <Compile Include="Behaviors\OpenFileDialogBoxBehavior.cs" />
+    <Compile Include="Behaviors\ScrollToIndexBehavior.cs" />
+    <Compile Include="Behaviors\SliderBehavior.cs" />
     <Compile Include="Controls\BetterPopup.cs" />
     <Compile Include="Behaviors\WebHyperlink.cs" />
     <Compile Include="CodePlexRss\DownloadHistory.cs" />
@@ -73,8 +76,11 @@
     <Compile Include="Controls\BusyIndicator.cs" />
     <Compile Include="Controls\VisualStates.BusyIndicator.cs" />
     <Compile Include="Converters\ColorConverter.cs" />
+    <Compile Include="Converters\FileNameConverter.cs" />
     <Compile Include="Converters\ImageConverter.cs" />
     <Compile Include="Converters\Iso639Converter.cs" />
+    <Compile Include="Converters\NumberToTimeSpanConverter.cs" />
+    <Compile Include="Converters\PlayBtnImageConverter.cs" />
     <Compile Include="Converters\TimeSpanConverter.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="Converters\WaterMarkConverter.cs" />

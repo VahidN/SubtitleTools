@@ -1,4 +1,5 @@
-﻿
+﻿using System.Windows.Forms;
+
 namespace SubtitleTools.Common.MVVM
 {
     public class App
@@ -8,6 +9,11 @@ namespace SubtitleTools.Common.MVVM
         public static Messenger Messenger
         {
             get { return _messenger; }
-        }   
+        }
+
+        public static string Path
+        {
+            get { return Application.StartupPath; }
+        }
     }
 }

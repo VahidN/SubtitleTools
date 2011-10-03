@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PersianProofWriter.Lib</name>
+    </assembly>
+    <members>
+        <member name="T:PersianProofWriter.Lib.NamespaceDoc">
+            <summary>    
+            The <see cref="N:PersianProofWriter.Lib"/> namespace contains classes for cleaning up Persian text!
+            </summary>
+        </member>
+        <member name="T:PersianProofWriter.Lib.FixRle">
+            <summary>
+            RLE or U+202B is the RIGHT-TO-LEFT EMBEDDING character
+            http://www.w3.org/International/questions/qa-bidi-controls
+            </summary>
+        </member>
+        <member name="M:PersianProofWriter.Lib.FixRle.ApplyRle(System.String)">
+            <summary>
+            Makes the text inside right-to-left by surrounding it with RLE
+            </summary>
+            <param name="text">Text to process</param>
+            <returns>Processed Text</returns>
+        </member>
+        <member name="T:PersianProofWriter.Lib.FixDots">
+            <summary>
+            Replaces three dots with ellipsis
+            </summary>
+        </member>
+        <member name="M:PersianProofWriter.Lib.FixDots.ConvertDotsToEllipsis(System.String)">
+            <summary>
+            Replaces three dots with ellipsis
+            </summary>
+            <param name="text">Text to process</param>
+            <returns>Processed Text</returns>
+        </member>
+        <member name="T:PersianProofWriter.Lib.LanguageIdentifier">
+            <summary>
+            Determines whether the current language is Persian or not
+            </summary>
+        </member>
+        <member name="M:PersianProofWriter.Lib.LanguageIdentifier.ContainsFarsi(System.String)">
+            <summary>
+            Does text contain Persian characters?
+            </summary>
+            <param name="text">Text to process</param>
+            <returns>true/false</returns>
+        </member>
+        <member name="T:PersianProofWriter.Lib.FixHamzeh">
+            <summary>
+            Converts ه ی to ه
+            </summary>
+        </member>
+        <member name="M:PersianProofWriter.Lib.FixHamzeh.ConvertYeHeToHamzeh(System.String)">
+            <summary>
+            Converts ه ی to ه
+            </summary>
+            <param name="text">Text to process</param>
+            <returns>Processed Text</returns>
+        </member>
+        <member name="T:PersianProofWriter.Lib.AggressiveEditing">
+            <summary>
+            Replaces more than one ! or ? marks with just one or removes all extra kashida and spaces
+            </summary>
+        </member>
+        <member name="M:PersianProofWriter.Lib.AggressiveEditing.CleanupExtraMarks(System.String)">
+            <summary>
+            Replaces more than one ! or ? mark with just one
+            </summary>
+            <param name="text">Text to process</param>
+            <returns>Processed Text</returns>
+        </member>
+        <member name="M:PersianProofWriter.Lib.AggressiveEditing.RemoveAllKashida(System.String)">
+            <summary>
+            Removes all kashida
+            </summary>
+            <param name="text">Text to process</param>
+            <returns>Processed Text</returns>
+        </member>
+        <member name="M:PersianProofWriter.Lib.AggressiveEditing.CleanupSpacingAndLineBreaks(System.String)">
+            <summary>
+            Replaces more than one space or line break with just a single one
+            </summary>
+            <param name="text">Text to process</param>
+            <returns>Processed Text</returns>
+        </member>
+        <member name="M:PersianProofWriter.Lib.AggressiveEditing.RemoveOutsideInsideSpacing(System.String)">
+            <summary>
+            Fixes outside and inside spacing for () [] {}  “” «»
+            </summary>
+            <param name="text">Text to process</param>
+            <returns>Processed Text</returns>
+        </member>
+        <member name="T:PersianProofWriter.Lib.FixDash">
+            <summary>
+            Replaces double dash to ndash and triple dash to mdash
+            </summary>
+        </member>
+        <member name="M:PersianProofWriter.Lib.FixDash.FixDashes(System.String)">
+            <summary>
+            Replaces double dash to ndash and triple dash to mdash
+            </summary>
+            <param name="text">Text to process</param>
+            <returns>Processed Text</returns>
+        </member>
+        <member name="T:PersianProofWriter.Lib.FixArabicYeKe">
+            <summary>
+            Fixes common writing mistakes caused by using a bad keyboard layout.
+            </summary>
+        </member>
+        <member name="M:PersianProofWriter.Lib.FixArabicYeKe.ApplyPersianYeKe(System.String)">
+            <summary>
+            Fixes common writing mistakes caused by using a bad keyboard layout,
+            such as replacing Arabic Ye with Persian one and so on ...
+            </summary>
+            <param name="text">Text to process</param>
+            <returns>Processed Text</returns>
+        </member>
+        <member name="T:PersianProofWriter.Lib.FixZwnj">
+            <summary>
+            Puts zwnj char/half space between word and prefix/suffix
+            </summary>
+        </member>
+        <member name="M:PersianProofWriter.Lib.FixZwnj.ApplyHalfSpaceRule(System.String)">
+            <summary>
+            Adds zwnj char between word and prefix/suffix
+            </summary>
+            <param name="text">Text to process</param>
+            <returns>Processed Text</returns>
+        </member>
+        <member name="M:PersianProofWriter.Lib.FixZwnj.CleanupZwnj(System.String)">
+            <summary>
+            Removes unnecessary zwnj char that are succeeded/preceded by a space
+            </summary>
+            <param name="text">Text to process</param>
+            <returns>Processed Text</returns>
+        </member>
+        <member name="T:PersianProofWriter.Lib.ProofWriter">
+            <summary>
+            Main entry point of the library
+            </summary>
+        </member>
+        <member name="M:PersianProofWriter.Lib.ProofWriter.ApplyAllPersianRules(System.String)">
+            <summary>
+            Applies all of the available rules of the current library
+            </summary>
+            <param name="text">Text to process</param>
+            <returns>Processed Text</returns>
+        </member>
+        <member name="M:PersianProofWriter.Lib.ProofWriter.ApplyAllPersianRulesPlusRle(System.String)">
+            <summary>
+            Applies all of the available rules of the current library plus adding RLE char
+            </summary>
+            <param name="text">Text to process</param>
+            <returns>Processed Text</returns>
+        </member>
+        <member name="T:PersianProofWriter.Lib.FixEnglishQuotes">
+            <summary>
+            Replaces English quotes with their Persian equivalent
+            </summary>
+        </member>
+        <member name="M:PersianProofWriter.Lib.FixEnglishQuotes.ConvertEnglishQuotes(System.String)">
+            <summary>
+            Replaces English quotes with their Persian equivalent
+            </summary>
+            <param name="text">Text to process</param>
+            <returns>Processed Text</returns>
+        </member>
+    </members>
+</doc>

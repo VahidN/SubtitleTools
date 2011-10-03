@@ -38,6 +38,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\OthersPpl\DetectEncoding_src\DetectEncoding_src\EncodingTools\bin\Release\EncodingTools.dll</HintPath>
     </Reference>
+    <Reference Include="PersianProofWriter.Lib">
+      <HintPath>..\..\..\1390\PersianProofWriter\PersianProofWriter.Lib\bin\Release\PersianProofWriter.Lib.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -85,6 +88,7 @@
     <Compile Include="Models\MainWindowGui.cs" />
     <Compile Include="Models\OsdbItem.cs" />
     <Compile Include="Models\OsdbItems.cs" />
+    <Compile Include="Models\PreviewModel.cs" />
     <Compile Include="Models\SubtitleItem.cs" />
     <Compile Include="Models\SubtitleItems.cs" />
     <Compile Include="Models\SyncModel.cs" />
@@ -96,6 +100,7 @@
     <Compile Include="ViewModels\JoinTwoFilesViewModel.cs" />
     <Compile Include="ViewModels\LogsViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\PreviewViewModel.cs" />
     <Compile Include="ViewModels\SyncViewModel.cs" />
     <Compile Include="ViewModels\UploadOpenSubtitlesViewModel.cs" />
   </ItemGroup>

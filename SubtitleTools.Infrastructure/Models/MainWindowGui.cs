@@ -1,29 +1,32 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
 
 namespace SubtitleTools.Infrastructure.Models
 {
     public class MainWindowGui : INotifyPropertyChanged
     {
-        #region Fields (13)
+        #region Fields (15)
 
         bool _doMergeIsEnabled;
         bool _doMixIsEnabled;
         string _headerText;
         bool _isBusy;
+        Uri _mediaFilePath = new Uri(@"MediaFile://");
         string _mergeFilePath;
         string _mixFilePath;
         string _openedFilePath;
         bool _popupDoDetectEncodingIsOpen;
         bool _popupDoJoinFilesIsOpen;
         bool _popupDoSyncIsOpen;
+        int _scrollToIndex;
         string _searchText;
         SubtitleItem _selectedItem;
         FlowDirection _tableFlowDirection = FlowDirection.LeftToRight;
 
         #endregion Fields
 
-        #region Properties (13)
+        #region Properties (15)
 
         public bool DoMergeIsEnabled
         {
@@ -66,6 +69,18 @@ namespace SubtitleTools.Infrastructure.Models
                 if (_isBusy == value) return;
                 _isBusy = value;
                 raisePropertyChanged("IsBusy");
+            }
+        }
+
+        //just a not null value
+        public Uri MediaFilePath
+        {
+            get { return _mediaFilePath; }
+            set
+            {
+                if (_mediaFilePath == value) return;
+                _mediaFilePath = value;
+                raisePropertyChanged("MediaFilePath");
             }
         }
 
@@ -132,6 +147,17 @@ namespace SubtitleTools.Infrastructure.Models
                 if (_popupDoSyncIsOpen == value) return;
                 _popupDoSyncIsOpen = value;
                 raisePropertyChanged("PopupDoSyncIsOpen");
+            }
+        }
+
+        public int ScrollToIndex
+        {
+            get { return _scrollToIndex; }
+            set
+            {
+                if (_scrollToIndex == value) return;
+                _scrollToIndex = value;
+                raisePropertyChanged("ScrollToIndex");
             }
         }
 

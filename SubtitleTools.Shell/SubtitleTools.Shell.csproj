@@ -76,6 +76,9 @@
     <Compile Include="MainShell.xaml.cs">
       <DependentUpon>MainShell.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Preview.xaml.cs">
+      <DependentUpon>Preview.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -142,6 +145,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Preview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SubtitleView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -498,6 +505,17 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\books.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\debug-pause-icon.png" />
+    <Resource Include="Images\debug-run-icon.png" />
+    <Resource Include="Images\debug-stop-icon.png" />
+    <Resource Include="Images\delete16.png" />
+    <Resource Include="Images\film_link.png" />
+    <Resource Include="Images\refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\movies.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
