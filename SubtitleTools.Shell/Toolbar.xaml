@@ -11,10 +11,10 @@
 			 d:DesignHeight="63" d:DesignWidth="400">
 	<Grid>
 		<ToolBar>
-			<Button ToolTip="Open" Margin="2">
+			<Button ToolTip="Open a subtitle file" Margin="2">
 				<StackPanel HorizontalAlignment="Center" Margin="1">
 					<Image Source="Images/open.png" Width="32" Height="32" HorizontalAlignment="Center" />
-					<TextBlock Text="Open" HorizontalAlignment="Center" />
+                    <TextBlock Text="Open Subtitle" HorizontalAlignment="Center" />
 				</StackPanel>
 				<i:Interaction.Triggers>
 					<i:EventTrigger EventName="Click">
@@ -25,16 +25,32 @@
 				</i:Interaction.Triggers>
 			</Button>
 
-			<Button ToolTip="Save" Command="{Binding DoSaveChanges}" Margin="2">
-				<StackPanel HorizontalAlignment="Center" Margin="1">
-					<Image Source="Images/save.png" Width="32" Height="32" HorizontalAlignment="Center" />
-					<TextBlock Text="Save" HorizontalAlignment="Center" />
-				</StackPanel>
-			</Button>
+            <Button ToolTip="Open a movie file" Margin="2">
+                <StackPanel HorizontalAlignment="Center" Margin="1">
+                    <Image Source="Images/movies.png" Width="32" Height="32" HorizontalAlignment="Center" />
+                    <TextBlock Text="Open Media" HorizontalAlignment="Center" />
+                </StackPanel>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <b:OpenFileDialogBoxBehavior 
+									DialogFilterType="Movie"
+									FileDialogDialogResultCommand="{Binding MainWindowGuiData.MediaFilePath, Mode=TwoWay}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
 
 			<Separator />
 
-			<Button ToolTip="Convert To UTF-8" Margin="2" Command="{Binding DoConvertToUTF8}">
+            <Button ToolTip="Save" Command="{Binding DoSaveChanges}" Margin="2">
+                <StackPanel HorizontalAlignment="Center" Margin="1">
+                    <Image Source="Images/save.png" Width="32" Height="32" HorizontalAlignment="Center" />
+                    <TextBlock Text="Save" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+
+            <Separator />
+
+            <Button ToolTip="Convert To UTF-8" Margin="2" Command="{Binding DoConvertToUTF8}">
 				<StackPanel HorizontalAlignment="Center" Margin="1">
 					<Image Source="Images/format.png" Width="32" Height="32" HorizontalAlignment="Center" />
 					<TextBlock Text="To UTF-8" HorizontalAlignment="Center" />

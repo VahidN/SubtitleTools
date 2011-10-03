@@ -1,14 +1,16 @@
 ﻿using System.ComponentModel;
 using System;
 using SubtitleTools.Infrastructure.Core;
+using System.Windows;
 
 namespace SubtitleTools.Infrastructure.Models
 {
     public class SubtitleItem : INotifyPropertyChanged
     {
-        #region Fields (5)
+        #region Fields (6)
 
         string _dialog;
+        FlowDirection _dialogFlowDirection = FlowDirection.LeftToRight;
         TimeSpan _endTs;
         int _number;
         TimeSpan _startTs;
@@ -16,7 +18,7 @@ namespace SubtitleTools.Infrastructure.Models
 
         #endregion Fields
 
-        #region Properties (5)
+        #region Properties (6)
 
         public string Dialog
         {
@@ -28,7 +30,19 @@ namespace SubtitleTools.Infrastructure.Models
             }
             get
             {
+                if (string.IsNullOrWhiteSpace(_dialog)) return string.Empty;
                 return _dialog;
+            }
+        }
+
+        public FlowDirection DialogFlowDirection
+        {
+            get { return _dialogFlowDirection; }
+            set
+            {
+                if (_dialogFlowDirection == value) return;
+                _dialogFlowDirection = value;
+                raisePropertyChanged("DialogFlowDirection");
             }
         }
 
@@ -78,7 +92,7 @@ namespace SubtitleTools.Infrastructure.Models
             }
             get
             {
-                return _time;
+                return string.IsNullOrWhiteSpace(this._time) ? string.Empty : this._time;
             }
         }
 

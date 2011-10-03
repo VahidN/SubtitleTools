@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.IO;
 using System.Text;
 using Microsoft.Win32;
@@ -19,9 +20,9 @@ namespace SubtitleTools.Infrastructure.Core
 
         #endregion Properties
 
-        #region Methods (7)
+        #region Methods (8)
 
-        // Public Methods (7) 
+        // Public Methods (8) 
 
         public static TimeSpan ConvertStringToTimeSpan(string line)
         {
@@ -46,15 +47,25 @@ namespace SubtitleTools.Infrastructure.Core
             return new Tuple<TimeSpan, TimeSpan>(tsStart, tsEnd);
         }
 
+        public static SubtitleItem GetCurrentSubtile(SubtitleItems subtitleItems, TimeSpan currentMediaPosition)
+        {
+            if (subtitleItems == null || !subtitleItems.Any()) return null;
+            return subtitleItems.Where(x => x.StartTs <= currentMediaPosition &&
+                                            x.EndTs >= currentMediaPosition)
+                                        .FirstOrDefault();
+        }
+
         public static string SubitemsToString(SubtitleItems mainItems)
         {
             var sb = new StringBuilder();
-            foreach (var item in mainItems)
+            int i = 1;
+            foreach (var item in mainItems.OrderBy(x => x.StartTs))
             {
-                sb.AppendLine(item.Number.ToString());
+                sb.AppendLine(i.ToString());
                 sb.AppendLine(item.Time);
                 sb.AppendLine(item.Dialog.Trim());
                 sb.AppendLine(string.Empty);
+                i++;
             }
             return sb.ToString();
         }
@@ -70,7 +81,7 @@ namespace SubtitleTools.Infrastructure.Core
 
             IsRtl = srtFileContent.ContainsFarsi();
 
-            var res = new SubtitleItems();
+            var res = new List<SubtitleItem>();
 
             var lines = srtFileContent.Split('\n');
 
@@ -135,8 +146,16 @@ namespace SubtitleTools.Infrastructure.Core
                     });
             }
 
+            var result = new SubtitleItems();
+            var i = 1;
+            foreach (var item in res.OrderBy(x => x.StartTs))
+            {
+                item.Number = i++;
+                result.Add(item);
+            }
+
             LogWindow.AddMessage(LogType.Info, "ParseSrt End.");
-            return res;
+            return result;
         }
 
         public SubtitleItems ToObservableCollectionFromFile(string filePath)

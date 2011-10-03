@@ -4,11 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:conv="clr-namespace:SubtitleTools.Common.Converters;assembly=SubtitleTools.Common"
+             xmlns:b="clr-namespace:SubtitleTools.Common.Behaviors;assembly=SubtitleTools.Common"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="600" d:DesignWidth="800">
     <UserControl.Resources>
         <conv:WaterMarkConverter x:Key="convWaterMarkConverter" />
         <conv:TimeSpanConverter x:Key="convTimeSpanConverter" />
+        <conv:FileNameConverter x:Key="convFileNameConverter" />
         <DataTemplate x:Key="col1">
             <StackPanel HorizontalAlignment="Center">
                 <TextBlock Foreground="#BADC64" HorizontalAlignment="Center" Text="{Binding Number}" />
@@ -42,7 +44,7 @@
         </DataTemplate>
     </UserControl.Resources>
     <GroupBox Margin="7,1,7,7" 
-              Header="{Binding MainWindowGuiData.HeaderText}" >
+              Header="{Binding MainWindowGuiData.HeaderText, Converter={StaticResource convFileNameConverter}}" >
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -70,14 +72,15 @@
                   SelectedItem="{Binding MainWindowGuiData.SelectedItem}"
                   FlowDirection="{Binding MainWindowGuiData.TableFlowDirection}" 
                   VirtualizingStackPanel.IsVirtualizing="True"
+                  b:ScrollToIndexBehavior.ScrollToIndex="{Binding MainWindowGuiData.ScrollToIndex}"
                   VirtualizingStackPanel.VirtualizationMode="Recycling"                  
                   Grid.Row="1"
                   Margin="2">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Width="90" Header="Number" CellTemplate="{StaticResource col1}"  />
-                        <GridViewColumn Width="120" Header="Start" CellTemplate="{StaticResource col2}" />
-                        <GridViewColumn Width="120" Header="End" CellTemplate="{StaticResource col4}" />
+                        <GridViewColumn Width="70" Header="Number" CellTemplate="{StaticResource col1}"  />
+                        <GridViewColumn Width="105" Header="Start" CellTemplate="{StaticResource col2}" />
+                        <GridViewColumn Width="105" Header="End" CellTemplate="{StaticResource col4}" />
                         <GridViewColumn Width="320" Header="Dialog" CellTemplate="{StaticResource col3}" />
                     </GridView>
                 </ListView.View>

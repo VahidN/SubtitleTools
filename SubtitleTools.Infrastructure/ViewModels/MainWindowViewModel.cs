@@ -1,17 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using SubtitleTools.Common.Logger;
 using SubtitleTools.Common.MVVM;
+using SubtitleTools.Common.Regex;
 using SubtitleTools.Common.Threading;
+using SubtitleTools.Common.Toolkit;
 using SubtitleTools.Infrastructure.Core;
 using SubtitleTools.Infrastructure.Models;
-using System.Collections.Specialized;
-using System.Collections.Generic;
-using SubtitleTools.Common.Toolkit;
 
 namespace SubtitleTools.Infrastructure.ViewModels
 {
@@ -52,7 +55,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         public MainWindowGui MainWindowGuiData { set; get; }
 
-        private SubtitleItems subtitleItemsDataInternal //todo: move to MainWindowGui
+        private SubtitleItems subtitleItemsDataInternal
         {
             set
             {
@@ -62,18 +65,19 @@ namespace SubtitleTools.Infrastructure.ViewModels
                     _changedRows = new SortedSet<int>();
                     SubtitleItemsDataView = CollectionViewSource.GetDefaultView(value);
                     raisePropertyChanged("SubtitleItemsDataView");
+                    App.Messenger.NotifyColleagues("SubtitleItems", _subtitleItemsDataInternal);
                 }
             }
             get { return _subtitleItemsDataInternal; }
         }
 
-        public ICollectionView SubtitleItemsDataView { set; get; } //todo: move to MainWindowGui
+        public ICollectionView SubtitleItemsDataView { set; get; }
 
         #endregion Properties
 
-        #region Methods (30)
+        #region Methods (33)
 
-        // Private Methods (30) 
+        // Private Methods (33) 
 
         bool canDoConvertToUTF8(string data)
         {
@@ -134,6 +138,41 @@ namespace SubtitleTools.Infrastructure.ViewModels
             }
         }
 
+        void doAddSubtitle(SubtitleItem subtitleItem)
+        {
+            if (string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath))
+            {
+                LogWindow.AddMessage(LogType.Error, "Please open an empty subtitle file first.");
+                return;
+            }
+
+            var localSubItems = new List<SubtitleItem>();
+            foreach (var item in subtitleItemsDataInternal)
+                localSubItems.Add(item);
+
+            var newItem = new SubtitleItem
+            {
+                Dialog = subtitleItem.Dialog,
+                EndTs = subtitleItem.EndTs,
+                StartTs = subtitleItem.StartTs
+            };
+
+            localSubItems.Add(newItem);
+            localSubItems = localSubItems.OrderBy(x => x.StartTs).ToList();
+
+            int i = 1;
+            var finalItems = new SubtitleItems();
+            foreach (var item in localSubItems)
+            {
+                item.Number = i++;
+                finalItems.Add(item);
+            }
+
+            subtitleItemsDataInternal = finalItems;
+            setFlowDir(subtitleItem.Dialog.ContainsFarsi());
+            saveToFile();
+        }
+
         void doCloseConvertEncodingView()
         {
             MainWindowGuiData.PopupDoDetectEncodingIsOpen = false;
@@ -161,16 +200,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         void doInsertRLE(string data)
         {
-            if (MainWindowGuiData.SelectedItem == null)
-            {
-                LogWindow.AddMessage(LogType.Alert, "Please select a row.");
-                return;
-            }
-
-            MainWindowGuiData.SelectedItem.Dialog =
-                UnicodeRle.InsertBefore(MainWindowGuiData.SelectedItem.Dialog);
-
-            doSaveChanges(string.Empty);
+            Task.Factory.StartNew(() => doSaveChanges("All"));
         }
 
         void doJoinFiles(string data)
@@ -243,8 +273,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 MainWindowGuiData.HeaderText = MainWindowGuiData.OpenedFilePath;
 
                 setFlowDir(parser.IsRtl);
-
-                DispatcherHelper.DispatchAction(enableButtons);
             }
             catch (Exception ex)
             {
@@ -253,6 +281,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             }
             finally
             {
+                DispatcherHelper.DispatchAction(enableButtons);
                 MainWindowGuiData.IsBusy = false;
             }
         }
@@ -276,16 +305,35 @@ namespace SubtitleTools.Infrastructure.ViewModels
             {
                 MainWindowGuiData.IsBusy = true;
 
-                //modify changed rows
-                foreach (var row in _changedRows)
+                if (data == "All")
                 {
-                    subtitleItemsDataInternal[row].Dialog
-                        = UnicodeRle.InsertBefore(subtitleItemsDataInternal[row].Dialog);
+                    var localSubItems = new SubtitleItems();
+                    foreach (var item in subtitleItemsDataInternal)
+                        localSubItems.Add(item);
+
+                    foreach (var row in localSubItems)
+                    {
+                        row.Dialog = row.Dialog.InsertRle();
+                    }
+
+                    subtitleItemsDataInternal = localSubItems;
+                }
+                else
+                {
+                    //modify changed rows
+                    foreach (var row in _changedRows)
+                    {
+                        subtitleItemsDataInternal[row].Dialog
+                            = subtitleItemsDataInternal[row].Dialog.InsertRle();
+                    }
                 }
 
-                var newContent = ParseSrt.SubitemsToString(subtitleItemsDataInternal);
-                File.WriteAllText(MainWindowGuiData.OpenedFilePath, newContent.ApplyUnifiedYeKe());
-                LogWindow.AddMessage(LogType.Announcement, string.Format("Saved to:{0}", MainWindowGuiData.OpenedFilePath));
+                saveToFile();
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogger.LogExceptionToFile(ex);
+                LogWindow.AddMessage(LogType.Error, ex.Message);
             }
             finally
             {
@@ -293,15 +341,19 @@ namespace SubtitleTools.Infrastructure.ViewModels
             }
         }
 
+        void doScrollToIndex(int idx)
+        {
+            MainWindowGuiData.ScrollToIndex = idx;
+        }
+
         private void doSearch(string data)
         {
-            SubtitleItemsDataView.Filter = new Predicate<object>(obj =>
+            SubtitleItemsDataView.Filter = obj =>
                 {
-				    if (obj == null) return false;
+                    if (obj == null) return false;
                     var subtitleItem = obj as SubtitleItem;
-                    if (subtitleItem == null) return false;
                     return subtitleItem != null && subtitleItem.Dialog.ToLower().Contains(data.ToLower());
-                });
+                };
         }
 
         void doSync(string data)
@@ -355,6 +407,14 @@ namespace SubtitleTools.Infrastructure.ViewModels
             new Thread(doOpenFile).Start();
         }
 
+        private void saveToFile()
+        {
+            var newContent = ParseSrt.SubitemsToString(subtitleItemsDataInternal);
+            File.WriteAllText(MainWindowGuiData.OpenedFilePath, newContent.ApplyUnifiedYeKe());
+            LogWindow.AddMessage(LogType.Announcement, string.Format("Saved to:{0}", MainWindowGuiData.OpenedFilePath));
+            setFlowDir(newContent.ContainsFarsi());
+        }
+
         void setFlowDir(bool isRtl)
         {
             MainWindowGuiData.TableFlowDirection = isRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
@@ -386,6 +446,8 @@ namespace SubtitleTools.Infrastructure.ViewModels
             App.Messenger.Register("doCloseJoinPopup", doCloseJoinPopup);
             App.Messenger.Register("doCloseSyncView", doCloseSyncView);
             App.Messenger.Register("doCloseConvertEncodingView", doCloseConvertEncodingView);
+            App.Messenger.Register<SubtitleItem>("doAddSubtitle", doAddSubtitle);
+            App.Messenger.Register<int>("doScrollToIndex", doScrollToIndex);
         }
 
         void subtitleItemsDataInternalCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -398,8 +460,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
         }
 
         #endregion Methods
-
-
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
