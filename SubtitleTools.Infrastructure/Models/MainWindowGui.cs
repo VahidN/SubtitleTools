@@ -6,12 +6,13 @@ namespace SubtitleTools.Infrastructure.Models
 {
     public class MainWindowGui : INotifyPropertyChanged
     {
-        #region Fields (15)
+        #region Fields (16)
 
         bool _doMergeIsEnabled;
         bool _doMixIsEnabled;
         string _headerText;
         bool _isBusy;
+        bool _isLoaded;
         Uri _mediaFilePath = new Uri(@"MediaFile://");
         string _mergeFilePath;
         string _mixFilePath;
@@ -26,7 +27,7 @@ namespace SubtitleTools.Infrastructure.Models
 
         #endregion Fields
 
-        #region Properties (15)
+        #region Properties (16)
 
         public bool DoMergeIsEnabled
         {
@@ -69,6 +70,16 @@ namespace SubtitleTools.Infrastructure.Models
                 if (_isBusy == value) return;
                 _isBusy = value;
                 raisePropertyChanged("IsBusy");
+            }
+        }
+
+        public bool IsLoaded
+        {
+            get { return _isLoaded; }
+            set
+            {
+                _isLoaded = value;
+                raisePropertyChanged("IsLoaded");
             }
         }
 

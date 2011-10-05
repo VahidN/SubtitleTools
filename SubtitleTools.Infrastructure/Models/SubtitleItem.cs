@@ -1,24 +1,36 @@
-﻿using System.ComponentModel;
-using System;
-using SubtitleTools.Infrastructure.Core;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
+using SubtitleTools.Infrastructure.Core;
 
 namespace SubtitleTools.Infrastructure.Models
 {
     public class SubtitleItem : INotifyPropertyChanged
     {
-        #region Fields (6)
+        #region Fields (7)
 
+        int _caretIndex;
         string _dialog;
         FlowDirection _dialogFlowDirection = FlowDirection.LeftToRight;
-        TimeSpan _endTs;
+        TimeSpan _endTs = TimeSpan.Zero;
         int _number;
-        TimeSpan _startTs;
+        TimeSpan _startTs = TimeSpan.Zero;
         string _time;
 
         #endregion Fields
 
-        #region Properties (6)
+        #region Properties (7)
+
+        public int CaretIndex
+        {
+            get { return _caretIndex; }
+            set
+            {
+                if (_caretIndex == value) return;
+                _caretIndex = value;
+                raisePropertyChanged("CaretIndex");
+            }
+        }
 
         public string Dialog
         {
@@ -48,7 +60,7 @@ namespace SubtitleTools.Infrastructure.Models
 
         public TimeSpan EndTs
         {
-            get { return _endTs; }
+            get { return _endTs == TimeSpan.Zero ? new TimeSpan(0, 0, 0, 0, 310) : _endTs; }
             set
             {
                 _endTs = value;
@@ -73,7 +85,7 @@ namespace SubtitleTools.Infrastructure.Models
 
         public TimeSpan StartTs
         {
-            get { return _startTs; }
+            get { return _startTs == TimeSpan.Zero ? new TimeSpan(0, 0, 0, 0, 310) : _startTs; }
             set
             {
                 _startTs = value;

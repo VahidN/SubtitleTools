@@ -47,9 +47,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Properties
 
-        #region Methods (26)
+        #region Methods (27)
 
-        // Private Methods (26) 
+        // Private Methods (27) 
 
         static bool canClearSubtitle(string data)
         {
@@ -135,8 +135,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
             PreviewModelData.PlayImage = "play";
             PreviewModelData.DragCompleted = true;
-            PreviewModelData.PropertyChanged += this.previewModelDataPropertyChanged;
-            SubtitleItemData.PropertyChanged += this.subtitleItemDataPropertyChanged;
+            PreviewModelData.PropertyChanged += previewModelDataPropertyChanged;
+            SubtitleItemData.PropertyChanged += subtitleItemDataPropertyChanged;
+            SubtitleItemData.CaretIndex = 1;
         }
 
         private void initMessenger()
@@ -169,8 +170,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
                     case "MediaError":
                         showError();
                         break;
-                    default:
-                        break;
                 }
             });
         }
@@ -178,6 +177,17 @@ namespace SubtitleTools.Infrastructure.ViewModels
         void setFlowDir()
         {
             SubtitleItemData.DialogFlowDirection = SubtitleItemData.Dialog.ContainsFarsi() ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+        }
+
+        private void setMaxWordsPerLine()
+        {
+            var originalValue = SubtitleItemData.Dialog.Trim();
+            var newValue = ParseSrt.SetMaxWordsPerLine(SubtitleItemData.Dialog);
+            if (originalValue != newValue)
+            {
+                SubtitleItemData.Dialog = newValue;
+                SubtitleItemData.CaretIndex = newValue.Length;
+            }
         }
 
         private void setMediaPosition()
@@ -195,10 +205,10 @@ namespace SubtitleTools.Infrastructure.ViewModels
         {
             if (_seekBarMaximumIsSet) return;
 
-            var ts = this.PreviewModelData.MediaNaturalDuration;
-            this.PreviewModelData.SeekBarMaximum = ts.TotalSeconds;
-            this.PreviewModelData.SeekBarLargeChange = Math.Min(10, ts.Seconds / 10);
-            this._seekBarMaximumIsSet = true;
+            var ts = PreviewModelData.MediaNaturalDuration;
+            PreviewModelData.SeekBarMaximum = ts.TotalSeconds;
+            PreviewModelData.SeekBarLargeChange = Math.Min(10, ts.Seconds / 10);
+            _seekBarMaximumIsSet = true;
         }
 
         private void setSeekBarMediaPosition()
@@ -250,9 +260,8 @@ namespace SubtitleTools.Infrastructure.ViewModels
             switch (e.PropertyName)
             {
                 case "Dialog":
+                    setMaxWordsPerLine();
                     setFlowDir();
-                    break;
-                default:
                     break;
             }
         }

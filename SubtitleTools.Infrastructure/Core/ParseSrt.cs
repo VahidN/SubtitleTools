@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Microsoft.Win32;
 using SubtitleTools.Common.Files;
 using SubtitleTools.Common.Regex;
 using SubtitleTools.Infrastructure.Models;
-using System.Collections.Generic;
 
 namespace SubtitleTools.Infrastructure.Core
 {
@@ -20,9 +20,34 @@ namespace SubtitleTools.Infrastructure.Core
 
         #endregion Properties
 
-        #region Methods (8)
+        #region Methods (11)
 
-        // Public Methods (8) 
+        // Public Methods (11) 
+
+        public static SubtitleItems AddSubtitleItemToList(SubtitleItems subtitleItemsDataInternal, SubtitleItem subtitleItem)
+        {
+            var localSubItems = subtitleItemsDataInternal.ToList();
+
+            var newItem = new SubtitleItem
+            {
+                Dialog = subtitleItem.Dialog,
+                EndTs = subtitleItem.EndTs,
+                StartTs = subtitleItem.StartTs
+            };
+
+            localSubItems.Add(newItem);
+            localSubItems = localSubItems.OrderBy(x => x.StartTs).ToList();
+
+            var i = 1;
+            var finalItems = new SubtitleItems();
+            foreach (var item in localSubItems)
+            {
+                item.Number = i++;
+                finalItems.Add(item);
+            }
+
+            return finalItems;
+        }
 
         public static TimeSpan ConvertStringToTimeSpan(string line)
         {
@@ -47,12 +72,56 @@ namespace SubtitleTools.Infrastructure.Core
             return new Tuple<TimeSpan, TimeSpan>(tsStart, tsEnd);
         }
 
+        public static IList<string> FindConflicts(SubtitleItems subtitleItems)
+        {
+            var result = new List<string>();
+
+            for (var i = 1; i < subtitleItems.Count; i++)
+            {
+                if (subtitleItems[i].StartTs < subtitleItems[i - 1].EndTs)
+                    result.Add(string.Format("Conflict in #{0}: Start({1})<End({2})", i, (i + 1), (i)));
+            }
+            return result;
+        }
+
         public static SubtitleItem GetCurrentSubtile(SubtitleItems subtitleItems, TimeSpan currentMediaPosition)
         {
             if (subtitleItems == null || !subtitleItems.Any()) return null;
             return subtitleItems.Where(x => x.StartTs <= currentMediaPosition &&
                                             x.EndTs >= currentMediaPosition)
                                         .FirstOrDefault();
+        }
+
+        public static string SetMaxWordsPerLine(string dialog)
+        {
+            if (string.IsNullOrWhiteSpace(dialog)) return string.Empty;
+
+            var lines = dialog.Trim().Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var words = lines[i].Trim().Split(new[] { " " }, StringSplitOptions.None);
+                if (words.Length > 6)
+                {
+                    int count = 1;
+                    var result = new StringBuilder();
+
+                    foreach (var word in words)
+                    {
+                        result.Append(word);
+                        result.Append(count % 7 == 0 ? Environment.NewLine : " ");
+
+                        count++;
+                    }
+
+                    lines[i] = result.ToString().Trim();
+                }
+            }
+
+            var finalResult = new StringBuilder();
+            foreach (var line in lines)
+                finalResult.AppendLine(line);
+
+            return finalResult.ToString().Trim();
         }
 
         public static string SubitemsToString(SubtitleItems mainItems)

@@ -6,14 +6,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Views="clr-namespace:SubtitleTools.Shell"
              xmlns:vm="clr-namespace:SubtitleTools.Infrastructure.ViewModels;assembly=SubtitleTools.Infrastructure"
-             mc:Ignorable="d" 
+             xmlns:b="clr-namespace:SubtitleTools.Common.Behaviors;assembly=SubtitleTools.Common"                          
+             mc:Ignorable="d"              
              d:DesignHeight="600" d:DesignWidth="800">
     <UserControl.Resources>
         <vm:MainWindowViewModel x:Key="vmMainWindowViewModel" />
     </UserControl.Resources>
-    <extToolkit:BusyIndicator IsBusy="{Binding MainWindowGuiData.IsBusy}"                                
+    <extToolkit:BusyIndicator IsBusy="{Binding MainWindowGuiData.IsBusy}"                                                              
                               DataContext="{Binding Source={StaticResource vmMainWindowViewModel}}"
                               BusyContent="Loading. Please wait..." 
+                              b:LoadedBehavior.ControlLoaded="{Binding Path=MainWindowGuiData.IsLoaded, Mode=TwoWay}"
                               DisplayAfter="00:00:00">
         <Grid>
             <Grid.RowDefinitions>
