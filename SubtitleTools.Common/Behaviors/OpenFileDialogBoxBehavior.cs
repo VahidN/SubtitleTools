@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Interactivity;
 using Microsoft.Win32;
 using SubtitleTools.Common.Files;
+using SubtitleTools.Common.MVVM;
 
 namespace SubtitleTools.Common.Behaviors
 {
@@ -74,6 +75,9 @@ namespace SubtitleTools.Common.Behaviors
 
             if (string.IsNullOrEmpty(objOpenFileDialog.Filter))
                 objOpenFileDialog.Filter = Filters.ImageFilter;
+
+            if (!string.IsNullOrWhiteSpace(App.StartupFileName))
+                objOpenFileDialog.InitialDirectory = System.IO.Path.GetDirectoryName(App.StartupFileName);
 
             var result = objOpenFileDialog.ShowDialog();
             if (!result.Value) return;

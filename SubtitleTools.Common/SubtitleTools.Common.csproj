@@ -59,9 +59,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\AutoScrollListView.cs" />
+    <Compile Include="Behaviors\LoadedBehavior.cs" />
     <Compile Include="Behaviors\MediaElementBehavior.cs" />
     <Compile Include="Behaviors\OpenFileDialogBoxBehavior.cs" />
     <Compile Include="Behaviors\ScrollToIndexBehavior.cs" />
+    <Compile Include="Behaviors\SetCaretIndexBehavior.cs" />
     <Compile Include="Behaviors\SliderBehavior.cs" />
     <Compile Include="Controls\BetterPopup.cs" />
     <Compile Include="Behaviors\WebHyperlink.cs" />

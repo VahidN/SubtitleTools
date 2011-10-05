@@ -73,12 +73,7 @@
                     <StackPanel 
                         Grid.Row="2"
                         Orientation="Horizontal"  
-                        HorizontalAlignment="Center">
-                        <TextBox 
-                            MinWidth="85"
-                            Margin="5"   
-                            Text="{Binding Path=PreviewModelData.MediaLen, Mode=TwoWay}"  />
-
+                        HorizontalAlignment="Center">                      
                         <Button ToolTip="Play/Pause" 
                                 Margin="5" 
                                 Command="{Binding DoPlay}" Width="25" Height="25">
@@ -100,6 +95,15 @@
                             Maximum="1" 
                             Value="{Binding Path=PreviewModelData.VolumeSliderValue, Mode=TwoWay}" 
                             Width="70"/>
+
+                        <TextBox 
+                            MinWidth="85"
+                            Margin="5"   
+                            Text="{Binding Path=PreviewModelData.MediaLen, Mode=TwoWay}" VerticalAlignment="Center" />
+
+                        <TextBlock Foreground="Cyan" 
+                                   Margin="5" 
+                                   Text="{Binding Path=PreviewModelData.MediaNaturalDuration,Converter={StaticResource convTimeSpanConverter}}" VerticalAlignment="Center" />
                     </StackPanel>
                     <TextBlock 
                         Grid.Row="3"    
@@ -124,24 +128,25 @@
                     </Grid.ColumnDefinitions>
 
                     <Button Grid.Row="0" Grid.Column="0"
-                                    VerticalAlignment="Center" Content="Start" 
-                                    Command="{Binding DoPlay}"
-                                    Margin="5,5,1,5" Width="35" Height="22" />
+                            VerticalAlignment="Center" Content="Start" 
+                            Command="{Binding DoPlay}"
+                            Margin="5,5,1,5" Width="35" Height="22" />
                     <TextBox Grid.Row="0" Grid.Column="1"
-                                     Text="{Binding Path=SubtitleItemData.StartTs, Mode=TwoWay, Converter={StaticResource convTimeSpanConverter}}"
-                                Width="95" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                             Text="{Binding Path=SubtitleItemData.StartTs, Mode=TwoWay, Converter={StaticResource convTimeSpanConverter}}"
+                             Width="95" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" />
 
                     <Button Grid.Row="1" Grid.Column="0"
-                                    Command="{Binding DoPause}"
-                                Content="End" Margin="5,5,1,5" VerticalAlignment="Center" Width="35" Height="22" />
+                            Command="{Binding DoPause}"
+                            Content="End" Margin="5,5,1,5" VerticalAlignment="Center" Width="35" Height="22" />
                     <TextBox Grid.Row="1" Grid.Column="1"
-                                     Text="{Binding Path=SubtitleItemData.EndTs, Mode=TwoWay, Converter={StaticResource convTimeSpanConverter}}"
-                                Width="95" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                             Text="{Binding Path=SubtitleItemData.EndTs, Mode=TwoWay, Converter={StaticResource convTimeSpanConverter}}"
+                             Width="95" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" />
 
                     <TextBlock Grid.Row="2" Grid.Column="0"
-                                Text="Dialog:" Margin="5,5,1,5" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                               Text="Dialog:" Margin="5,5,1,5" VerticalAlignment="Center" HorizontalAlignment="Center" />
                     <TextBox Grid.Row="2" Grid.Column="1" 
-                             TextAlignment="Center"
+                             TextAlignment="Center"                             
+                             b:SetCaretIndexBehavior.CurrentCaretIndex="{Binding Path=SubtitleItemData.CaretIndex, Mode=TwoWay}"
                              FlowDirection="{Binding Path=SubtitleItemData.DialogFlowDirection, Mode=TwoWay}"
                              Text="{Binding Path=SubtitleItemData.Dialog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Width="Auto" Margin="5" VerticalAlignment="Stretch" AcceptsReturn="True" HorizontalAlignment="Stretch" />
@@ -151,7 +156,6 @@
                                 Content="Add"  VerticalAlignment="Center" Width="50" HorizontalAlignment="Left" Height="22" />
                         <Button Command="{Binding DoClearSubtitle}"
                                 Content="Clear" VerticalAlignment="Center" Width="50" HorizontalAlignment="Left" Height="22" />
-
                     </StackPanel>
                 </Grid>
             </GroupBox>

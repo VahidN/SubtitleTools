@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+﻿using System.IO;
 
 namespace SubtitleTools.Common.MVVM
 {
@@ -13,7 +13,19 @@ namespace SubtitleTools.Common.MVVM
 
         public static string Path
         {
-            get { return Application.StartupPath; }
+            get { return System.Windows.Forms.Application.StartupPath; }
+        }
+
+        public static string StartupFileName
+        {
+            get
+            {
+                var startupFileName = System.Windows.Application.Current.Properties["StartupFileName"];
+                if (startupFileName == null) return string.Empty;
+                if (string.IsNullOrEmpty(startupFileName.ToString())) return string.Empty;
+                if (!File.Exists(startupFileName.ToString())) return string.Empty;
+                return startupFileName.ToString();
+            }
         }
     }
 }

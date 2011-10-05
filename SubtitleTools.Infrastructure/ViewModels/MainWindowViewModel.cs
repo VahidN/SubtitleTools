@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -66,6 +66,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
                     SubtitleItemsDataView = CollectionViewSource.GetDefaultView(value);
                     raisePropertyChanged("SubtitleItemsDataView");
                     App.Messenger.NotifyColleagues("SubtitleItems", _subtitleItemsDataInternal);
+                    Task.Factory.StartNew(showConflicts);
                 }
             }
             get { return _subtitleItemsDataInternal; }
@@ -75,9 +76,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Properties
 
-        #region Methods (33)
+        #region Methods (38)
 
-        // Private Methods (33) 
+        // Private Methods (38) 
 
         bool canDoConvertToUTF8(string data)
         {
@@ -107,6 +108,17 @@ namespace SubtitleTools.Infrastructure.ViewModels
         bool canDoSync(string data)
         {
             return !string.IsNullOrEmpty(MainWindowGuiData.OpenedFilePath);
+        }
+
+        private void createEmptySubtitleFile(string mediaPath)
+        {
+            var subtitleFilePath = Path.ChangeExtension(mediaPath, ".srt");
+            if (!File.Exists(subtitleFilePath))
+            {
+                File.WriteAllText(subtitleFilePath, string.Empty);
+                LogWindow.AddMessage(LogType.Info, "An empty subtitle file @" + subtitleFilePath + " has been created.");
+            }
+            MainWindowGuiData.OpenedFilePath = subtitleFilePath;
         }
 
         private void deleteRow()
@@ -142,35 +154,22 @@ namespace SubtitleTools.Infrastructure.ViewModels
         {
             if (string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath))
             {
-                LogWindow.AddMessage(LogType.Error, "Please open an empty subtitle file first.");
-                return;
+                var mediaPath = MainWindowGuiData.MediaFilePath.LocalPath;
+                if (!string.IsNullOrWhiteSpace(mediaPath))
+                {
+                    createEmptySubtitleFile(mediaPath);
+                }
+                else
+                {
+                    LogWindow.AddMessage(LogType.Error, "Please open an empty subtitle file first.");
+                    return;
+                }
             }
 
-            var localSubItems = new List<SubtitleItem>();
-            foreach (var item in subtitleItemsDataInternal)
-                localSubItems.Add(item);
-
-            var newItem = new SubtitleItem
-            {
-                Dialog = subtitleItem.Dialog,
-                EndTs = subtitleItem.EndTs,
-                StartTs = subtitleItem.StartTs
-            };
-
-            localSubItems.Add(newItem);
-            localSubItems = localSubItems.OrderBy(x => x.StartTs).ToList();
-
-            int i = 1;
-            var finalItems = new SubtitleItems();
-            foreach (var item in localSubItems)
-            {
-                item.Number = i++;
-                finalItems.Add(item);
-            }
-
-            subtitleItemsDataInternal = finalItems;
+            subtitleItemsDataInternal = ParseSrt.AddSubtitleItemToList(subtitleItemsDataInternal, subtitleItem);
             setFlowDir(subtitleItem.Dialog.ContainsFarsi());
             saveToFile();
+            doScrollToIndex(subtitleItemsDataInternal.Count - 1);
         }
 
         void doCloseConvertEncodingView()
@@ -373,6 +372,12 @@ namespace SubtitleTools.Infrastructure.ViewModels
             DoInsertRLE.CanExecute(MainWindowGuiData.OpenedFilePath);
         }
 
+        private void mainWidowIsLoaded()
+        {
+            if (subtitleItemsDataInternal == null || subtitleItemsDataInternal.Count == 0) return;
+            App.Messenger.NotifyColleagues("SubtitleItems", subtitleItemsDataInternal);
+        }
+
         void mainWindowGuiDataPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -381,7 +386,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
                     doSearch(MainWindowGuiData.SearchText.ApplyUnifiedYeKe());
                     break;
                 case "OpenedFilePath":
-                    new Thread(doOpenFile).Start();
+                    openSubtitleFile();
                     break;
                 case "MergeFilePath":
                     new Thread(doMerge).Start();
@@ -389,17 +394,29 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 case "MixFilePath":
                     new Thread(doMix).Start();
                     break;
+                case "MediaFilePath":
+                    setMediaFilePathOpenSubTitle();
+                    break;
+                case "IsLoaded":
+                    mainWidowIsLoaded();
+                    break;
             }
+        }
+
+        private void openSubtitleFile()
+        {
+            if (string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath)) return;
+            MainWindowGuiData.HeaderText = MainWindowGuiData.OpenedFilePath;
+            if (new FileInfo(MainWindowGuiData.OpenedFilePath).Length == 0) return;
+
+            new Thread(doOpenFile).Start();
         }
 
         private void processCommandLineArguments()
         {
-            var startupFileName = Application.Current.Properties["StartupFileName"];
-            if (startupFileName == null) return;
-            if (string.IsNullOrEmpty(startupFileName.ToString())) return;
-            if (!File.Exists(startupFileName.ToString())) return;
-            MainWindowGuiData.OpenedFilePath = startupFileName.ToString();
-            new Thread(doOpenFile).Start();
+            var startupFileName = App.StartupFileName;
+            if (string.IsNullOrEmpty(startupFileName)) return;
+            MainWindowGuiData.OpenedFilePath = startupFileName;
         }
 
         private void reBind()
@@ -420,6 +437,17 @@ namespace SubtitleTools.Infrastructure.ViewModels
             MainWindowGuiData.TableFlowDirection = isRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
         }
 
+        private void setMediaFilePathOpenSubTitle()
+        {
+            if (MainWindowGuiData.MediaFilePath == null ||
+                string.IsNullOrWhiteSpace(MainWindowGuiData.MediaFilePath.LocalPath)) return;
+
+            var subtitleFilePath = Path.ChangeExtension(MainWindowGuiData.MediaFilePath.LocalPath, ".srt");
+            if (!File.Exists(subtitleFilePath)) return;
+
+            MainWindowGuiData.OpenedFilePath = subtitleFilePath;
+        }
+
         private void setupCommands()
         {
             DoConvertToUTF8 = new DelegateCommand<string>(doConvertToUTF8, canDoConvertToUTF8);
@@ -438,6 +466,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             subtitleItemsDataInternal = new SubtitleItems();
             subtitleItemsDataInternal.CollectionChanged += subtitleItemsDataInternalCollectionChanged;
             SubtitleItemsDataView = CollectionViewSource.GetDefaultView(subtitleItemsDataInternal);
+            MainWindowGuiData.IsLoaded = true;
         }
 
         private void setupMessenger()
@@ -450,6 +479,17 @@ namespace SubtitleTools.Infrastructure.ViewModels
             App.Messenger.Register<int>("doScrollToIndex", doScrollToIndex);
         }
 
+        private void showConflicts()
+        {
+            var conflicts = ParseSrt.FindConflicts(_subtitleItemsDataInternal);
+            if (!conflicts.Any()) return;
+
+            foreach (var item in conflicts)
+            {
+                LogWindow.AddMessage(LogType.Alert, item);
+            }
+        }
+
         void subtitleItemsDataInternalCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Remove) return;
@@ -460,6 +500,8 @@ namespace SubtitleTools.Infrastructure.ViewModels
         }
 
         #endregion Methods
+
+
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
