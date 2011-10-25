@@ -101,6 +101,7 @@
     <Compile Include="MVVM\DelegateCommand.cs" />
     <Compile Include="MVVM\Designer.cs" />
     <Compile Include="MVVM\Messenger.cs" />
+    <Compile Include="MVVM\ViewModelBase.cs" />
     <Compile Include="Net\Downloader.cs" />
     <Compile Include="Net\PostXML.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

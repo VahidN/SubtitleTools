@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel;
 using SubtitleTools.Common.ISO639;
+using SubtitleTools.Common.MVVM;
 
 namespace SubtitleTools.Infrastructure.Models
 {
-    public class DownloadOpenSubtitlesGui : INotifyPropertyChanged
+    public class DownloadOpenSubtitlesGui : ViewModelBase
     {
         #region Fields (4)
 
@@ -24,7 +25,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_isBusy == value) return;
                 _isBusy = value;
-                raisePropertyChanged("IsBusy");
+                RaisePropertyChanged("IsBusy");
             }
         }
 
@@ -34,7 +35,7 @@ namespace SubtitleTools.Infrastructure.Models
             set
             {
                 _selectedOsdbItem = value;
-                raisePropertyChanged("SelectedOsdbItem");
+                RaisePropertyChanged("SelectedOsdbItem");
             }
         }
 
@@ -44,7 +45,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_moviePath == value) return;
                 _moviePath = value;
-                raisePropertyChanged("MoviePath");
+                RaisePropertyChanged("MoviePath");
             }
             get { return _moviePath; }
         }
@@ -56,7 +57,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_progress == value) return;
                 _progress = value;
-                raisePropertyChanged("Progress");
+                RaisePropertyChanged("Progress");
             }
         }
 
@@ -66,7 +67,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_subLanguageId == value) return;
                 _subLanguageId = value;
-                raisePropertyChanged("SubLanguageId");
+                RaisePropertyChanged("SubLanguageId");
             }
             get { return _subLanguageId; }
         }
@@ -78,7 +79,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_movieName == value) return;
                 _movieName = value;
-                raisePropertyChanged("MovieName");
+                RaisePropertyChanged("MovieName");
             }
             get { return _movieName; }
         }
@@ -90,7 +91,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_movieYear == value) return;
                 _movieYear = value;
-                raisePropertyChanged("MovieYear");
+                RaisePropertyChanged("MovieYear");
             }
             get { return _movieYear; }
         }
@@ -102,7 +103,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_imdbRating == value) return;
                 _imdbRating = value;
-                raisePropertyChanged("ImdbRating");
+                RaisePropertyChanged("ImdbRating");
             }
             get { return _imdbRating; }
         }
@@ -114,7 +115,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_osdbUrl == value) return;
                 _osdbUrl = value;
-                raisePropertyChanged("OsdbUrl");
+                RaisePropertyChanged("OsdbUrl");
             }
             get { return _osdbUrl; }
         }
@@ -126,21 +127,11 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_imdbUrl == value) return;
                 _imdbUrl = value;
-                raisePropertyChanged("ImdbUrl");
+                RaisePropertyChanged("ImdbUrl");
             }
             get { return _imdbUrl; }
         }
 
         #endregion Properties
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        void raisePropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler == null) return;
-            handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

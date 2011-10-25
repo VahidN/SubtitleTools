@@ -2,10 +2,11 @@
 using System.ComponentModel;
 using System.Windows;
 using SubtitleTools.Infrastructure.Core;
+using SubtitleTools.Common.MVVM;
 
 namespace SubtitleTools.Infrastructure.Models
 {
-    public class SubtitleItem : INotifyPropertyChanged
+    public class SubtitleItem : ViewModelBase
     {
         #region Fields (7)
 
@@ -28,7 +29,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_caretIndex == value) return;
                 _caretIndex = value;
-                raisePropertyChanged("CaretIndex");
+                RaisePropertyChanged("CaretIndex");
             }
         }
 
@@ -38,7 +39,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_dialog == value) return;
                 _dialog = value;
-                raisePropertyChanged("Dialog");
+                RaisePropertyChanged("Dialog");
             }
             get
             {
@@ -54,7 +55,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_dialogFlowDirection == value) return;
                 _dialogFlowDirection = value;
-                raisePropertyChanged("DialogFlowDirection");
+                RaisePropertyChanged("DialogFlowDirection");
             }
         }
 
@@ -65,7 +66,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 _endTs = value;
                 Time = string.Format("{0} --> {1}", ParseSrt.TimeSpanToString(StartTs), ParseSrt.TimeSpanToString(EndTs));
-                raisePropertyChanged("EndTs");
+                RaisePropertyChanged("EndTs");
             }
         }
 
@@ -75,7 +76,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_number == value) return;
                 _number = value;
-                raisePropertyChanged("Number");
+                RaisePropertyChanged("Number");
             }
             get
             {
@@ -90,7 +91,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 _startTs = value;
                 Time = string.Format("{0} --> {1}", ParseSrt.TimeSpanToString(StartTs), ParseSrt.TimeSpanToString(EndTs));
-                raisePropertyChanged("StartTs");
+                RaisePropertyChanged("StartTs");
             }
         }
 
@@ -100,7 +101,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_time == value) return;
                 _time = value;
-                raisePropertyChanged("Time");
+                RaisePropertyChanged("Time");
             }
             get
             {
@@ -109,17 +110,5 @@ namespace SubtitleTools.Infrastructure.Models
         }
 
         #endregion Properties
-
-
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        void raisePropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler == null) return;
-            handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

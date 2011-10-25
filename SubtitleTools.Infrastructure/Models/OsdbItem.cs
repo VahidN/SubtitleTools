@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel;
+using SubtitleTools.Common.MVVM;
 
 namespace SubtitleTools.Infrastructure.Models
 {
-    public class OsdbItem : INotifyPropertyChanged
+    public class OsdbItem : ViewModelBase
     {
         #region Fields (7)
 
@@ -26,7 +27,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_iDSubtitleFile == value) return;
                 _iDSubtitleFile = value;
-                raisePropertyChanged("IDSubtitleFile");
+                RaisePropertyChanged("IDSubtitleFile");
             }
             get { return _iDSubtitleFile; }
         }
@@ -37,7 +38,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_iso639 == value) return;
                 _iso639 = value;
-                raisePropertyChanged("ISO639");
+                RaisePropertyChanged("ISO639");
             }
             get { return _iso639; }
         }
@@ -49,7 +50,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_iso6393166_1 == value) return;
                 _iso6393166_1 = value;
-                raisePropertyChanged("ISO6393166_1");
+                RaisePropertyChanged("ISO6393166_1");
             }
         }
 
@@ -59,7 +60,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_isSelected == value) return;
                 _isSelected = value;
-                raisePropertyChanged("IsSelected");
+                RaisePropertyChanged("IsSelected");
             }
             get { return _isSelected; }
         }
@@ -70,7 +71,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_languageName == value) return;
                 _languageName = value;
-                raisePropertyChanged("LanguageName");
+                RaisePropertyChanged("LanguageName");
             }
             get { return _languageName; }
         }
@@ -82,7 +83,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_progress == value) return;
                 _progress = value;
-                raisePropertyChanged("Progress");
+                RaisePropertyChanged("Progress");
             }
         }
 
@@ -92,7 +93,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_subAddDate == value) return;
                 _subAddDate = value;
-                raisePropertyChanged("SubAddDate");
+                RaisePropertyChanged("SubAddDate");
             }
             get { return _subAddDate; }
         }
@@ -103,7 +104,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_subFileName == value) return;
                 _subFileName = value;
-                raisePropertyChanged("SubFileName");
+                RaisePropertyChanged("SubFileName");
             }
             get { return _subFileName; }
         }
@@ -114,23 +115,11 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_subSize == value) return;
                 _subSize = value;
-                raisePropertyChanged("SubSize");
+                RaisePropertyChanged("SubSize");
             }
             get { return _subSize; }
         }
 
         #endregion Properties
-
-
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        void raisePropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler == null) return;
-            handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

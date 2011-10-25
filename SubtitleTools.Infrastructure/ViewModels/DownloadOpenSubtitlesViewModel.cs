@@ -14,7 +14,7 @@ using SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg.API;
 
 namespace SubtitleTools.Infrastructure.ViewModels
 {
-    public class DownloadOpenSubtitlesViewModel : INotifyPropertyChanged
+    public class DownloadOpenSubtitlesViewModel : ViewModelBase
     {
         #region Fields (2)
 
@@ -52,7 +52,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             set
             {
                 _osdbItemsData = value;
-                raisePropertyChanged("OsdbItemsData");
+                RaisePropertyChanged("OsdbItemsData");
             }
             get { return _osdbItemsData; }
         }
@@ -220,7 +220,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 DownloadOpenSubtitlesGuiData.Progress = 0;
 
                 OsdbItemsData.Clear();
-                raisePropertyChanged("OsdbItemsData");
+                RaisePropertyChanged("OsdbItemsData");
 
                 var osdb = new OpenSubtitlesXmlRpc(DownloadOpenSubtitlesGuiData.MoviePath);
 
@@ -256,7 +256,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
                     });
                 }
 
-                raisePropertyChanged("OsdbItemsData");
+                RaisePropertyChanged("OsdbItemsData");
             }
             catch (Exception ex)
             {
@@ -302,17 +302,5 @@ namespace SubtitleTools.Infrastructure.ViewModels
         }
 
         #endregion Methods
-
-
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        void raisePropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler == null) return;
-            handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

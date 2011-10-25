@@ -1,9 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
+using SubtitleTools.Common.MVVM;
 
 namespace SubtitleTools.Common.CodePlexRss.Model
 {
-    public class VersionInfo : INotifyPropertyChanged
+    public class VersionInfo : ViewModelBase
     {
         #region Fields (5)
 
@@ -23,7 +23,7 @@ namespace SubtitleTools.Common.CodePlexRss.Model
             {
                 if (_author == value) return;
                 _author = value;
-                raisePropertyChanged("Author");
+                RaisePropertyChanged("Author");
             }
             get { return _author; }
         }
@@ -34,7 +34,7 @@ namespace SubtitleTools.Common.CodePlexRss.Model
             {
                 if (_description == value) return;
                 _description = value;
-                raisePropertyChanged("Description");
+                RaisePropertyChanged("Description");
             }
             get { return _description; }
         }
@@ -45,7 +45,7 @@ namespace SubtitleTools.Common.CodePlexRss.Model
             {
                 if (_link == value) return;
                 _link = value;
-                raisePropertyChanged("Link");
+                RaisePropertyChanged("Link");
             }
             get { return _link; }
         }
@@ -56,7 +56,7 @@ namespace SubtitleTools.Common.CodePlexRss.Model
             {
                 if (_pubDate == value) return;
                 _pubDate = value;
-                raisePropertyChanged("PubDate");
+                RaisePropertyChanged("PubDate");
             }
             get { return _pubDate; }
         }
@@ -67,23 +67,11 @@ namespace SubtitleTools.Common.CodePlexRss.Model
             {
                 if (_title == value) return;
                 _title = value;
-                raisePropertyChanged("Title");
+                RaisePropertyChanged("Title");
             }
             get { return _title; }
         }
 
         #endregion Properties
-
-
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        void raisePropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler == null) return;
-            handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using SubtitleTools.Common.MVVM;
 
 namespace SubtitleTools.Infrastructure.Models
 {
-    public class MainWindowGui : INotifyPropertyChanged
+    public class MainWindowGui : ViewModelBase
     {
         #region Fields (16)
 
@@ -36,7 +37,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_doMergeIsEnabled == value) return;
                 _doMergeIsEnabled = value;
-                raisePropertyChanged("DoMergeIsEnabled");
+                RaisePropertyChanged("DoMergeIsEnabled");
             }
         }
 
@@ -47,7 +48,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_doMixIsEnabled == value) return;
                 _doMixIsEnabled = value;
-                raisePropertyChanged("DoMixIsEnabled");
+                RaisePropertyChanged("DoMixIsEnabled");
             }
         }
 
@@ -58,7 +59,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_headerText == value) return;
                 _headerText = value;
-                raisePropertyChanged("HeaderText");
+                RaisePropertyChanged("HeaderText");
             }
         }
 
@@ -69,7 +70,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_isBusy == value) return;
                 _isBusy = value;
-                raisePropertyChanged("IsBusy");
+                RaisePropertyChanged("IsBusy");
             }
         }
 
@@ -79,7 +80,7 @@ namespace SubtitleTools.Infrastructure.Models
             set
             {
                 _isLoaded = value;
-                raisePropertyChanged("IsLoaded");
+                RaisePropertyChanged("IsLoaded");
             }
         }
 
@@ -91,7 +92,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_mediaFilePath == value) return;
                 _mediaFilePath = value;
-                raisePropertyChanged("MediaFilePath");
+                RaisePropertyChanged("MediaFilePath");
             }
         }
 
@@ -102,7 +103,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_mergeFilePath == value) return;
                 _mergeFilePath = value;
-                raisePropertyChanged("MergeFilePath");
+                RaisePropertyChanged("MergeFilePath");
             }
         }
 
@@ -113,7 +114,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_mixFilePath == value) return;
                 _mixFilePath = value;
-                raisePropertyChanged("MixFilePath");
+                RaisePropertyChanged("MixFilePath");
             }
         }
 
@@ -124,7 +125,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_openedFilePath == value) return;
                 _openedFilePath = value;
-                raisePropertyChanged("OpenedFilePath");
+                RaisePropertyChanged("OpenedFilePath");
             }
         }
 
@@ -135,7 +136,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_popupDoDetectEncodingIsOpen == value) return;
                 _popupDoDetectEncodingIsOpen = value;
-                raisePropertyChanged("PopupDoDetectEncodingIsOpen");
+                RaisePropertyChanged("PopupDoDetectEncodingIsOpen");
             }
         }
 
@@ -146,7 +147,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_popupDoJoinFilesIsOpen == value) return;
                 _popupDoJoinFilesIsOpen = value;
-                raisePropertyChanged("PopupDoJoinFilesIsOpen");
+                RaisePropertyChanged("PopupDoJoinFilesIsOpen");
             }
         }
 
@@ -157,7 +158,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_popupDoSyncIsOpen == value) return;
                 _popupDoSyncIsOpen = value;
-                raisePropertyChanged("PopupDoSyncIsOpen");
+                RaisePropertyChanged("PopupDoSyncIsOpen");
             }
         }
 
@@ -168,7 +169,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_scrollToIndex == value) return;
                 _scrollToIndex = value;
-                raisePropertyChanged("ScrollToIndex");
+                RaisePropertyChanged("ScrollToIndex");
             }
         }
 
@@ -179,7 +180,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_searchText == value) return;
                 _searchText = value;
-                raisePropertyChanged("SearchText");
+                RaisePropertyChanged("SearchText");
             }
         }
 
@@ -189,7 +190,7 @@ namespace SubtitleTools.Infrastructure.Models
             set
             {
                 _selectedItem = value;
-                raisePropertyChanged("SelectedItem");
+                RaisePropertyChanged("SelectedItem");
             }
         }
 
@@ -200,22 +201,10 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_tableFlowDirection == value) return;
                 _tableFlowDirection = value;
-                raisePropertyChanged("TableFlowDirection");
+                RaisePropertyChanged("TableFlowDirection");
             }
         }
 
         #endregion Properties
-
-
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        void raisePropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler == null) return;
-            handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

@@ -6,7 +6,7 @@ using SubtitleTools.Infrastructure.Core;
 
 namespace SubtitleTools.Infrastructure.ViewModels
 {
-    public class DetectEncodingViewModel : INotifyPropertyChanged
+    public class DetectEncodingViewModel : ViewModelBase
     {
         #region Fields (3)
 
@@ -37,7 +37,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             set
             {
                 _encodingsInfData = value;
-                raisePropertyChanged("EncodingsInfData");
+                RaisePropertyChanged("EncodingsInfData");
             }
             get { return _encodingsInfData; }
         }
@@ -50,7 +50,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 if (string.IsNullOrWhiteSpace(value)) return;
                 if (_filePath == value) return;
                 _filePath = value;
-                raisePropertyChanged("FilePath");
+                RaisePropertyChanged("FilePath");
                 EncodingsInfData = DetectEncoding.DetectProbableFileCodepages(value);
             }
         }
@@ -62,7 +62,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             {
                 if (value == null) return;
                 _selectedEncoding = value;
-                raisePropertyChanged("SelectedEncoding");
+                RaisePropertyChanged("SelectedEncoding");
                 enableButton();
             }
         }
@@ -111,15 +111,5 @@ namespace SubtitleTools.Infrastructure.ViewModels
         }
 
         #endregion Methods
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        void raisePropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler == null) return;
-            handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

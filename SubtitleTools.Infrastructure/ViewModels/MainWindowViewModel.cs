@@ -15,10 +15,11 @@ using SubtitleTools.Common.Threading;
 using SubtitleTools.Common.Toolkit;
 using SubtitleTools.Infrastructure.Core;
 using SubtitleTools.Infrastructure.Models;
+using System.Text;
 
 namespace SubtitleTools.Infrastructure.ViewModels
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : ViewModelBase
     {
         #region Fields (2)
 
@@ -64,7 +65,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 {
                     _changedRows = new SortedSet<int>();
                     SubtitleItemsDataView = CollectionViewSource.GetDefaultView(value);
-                    raisePropertyChanged("SubtitleItemsDataView");
+                    RaisePropertyChanged("SubtitleItemsDataView");
                     App.Messenger.NotifyColleagues("SubtitleItems", _subtitleItemsDataInternal);
                     Task.Factory.StartNew(showConflicts);
                 }
@@ -115,7 +116,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             var subtitleFilePath = Path.ChangeExtension(mediaPath, ".srt");
             if (!File.Exists(subtitleFilePath))
             {
-                File.WriteAllText(subtitleFilePath, string.Empty);
+                File.WriteAllText(subtitleFilePath, string.Empty, Encoding.UTF8);
                 LogWindow.AddMessage(LogType.Info, "An empty subtitle file @" + subtitleFilePath + " has been created.");
             }
             MainWindowGuiData.OpenedFilePath = subtitleFilePath;
@@ -427,7 +428,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
         private void saveToFile()
         {
             var newContent = ParseSrt.SubitemsToString(subtitleItemsDataInternal);
-            File.WriteAllText(MainWindowGuiData.OpenedFilePath, newContent.ApplyUnifiedYeKe());
+            File.WriteAllText(MainWindowGuiData.OpenedFilePath, newContent.ApplyUnifiedYeKe(), Encoding.UTF8);
             LogWindow.AddMessage(LogType.Announcement, string.Format("Saved to:{0}", MainWindowGuiData.OpenedFilePath));
             setFlowDir(newContent.ContainsFarsi());
         }
@@ -500,17 +501,5 @@ namespace SubtitleTools.Infrastructure.ViewModels
         }
 
         #endregion Methods
-
-
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        void raisePropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler == null) return;
-            handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }
