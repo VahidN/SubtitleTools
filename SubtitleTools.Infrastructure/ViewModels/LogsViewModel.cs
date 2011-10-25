@@ -6,7 +6,7 @@ using SubtitleTools.Infrastructure.Models;
 
 namespace SubtitleTools.Infrastructure.ViewModels
 {
-    public class LogsViewModel : INotifyPropertyChanged
+    public class LogsViewModel : ViewModelBase
     {
         #region Fields (1)
 
@@ -41,7 +41,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             set
             {
                 _selectedItem = value;
-                raisePropertyChanged("SelectedItem");
+                RaisePropertyChanged("SelectedItem");
             }
         }
 
@@ -101,17 +101,5 @@ namespace SubtitleTools.Infrastructure.ViewModels
         }
 
         #endregion Methods
-
-
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        void raisePropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler == null) return;
-            handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

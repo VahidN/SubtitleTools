@@ -76,7 +76,7 @@ namespace SubtitleTools.Common.Logger
                 File.AppendAllText(
                     appPath + "\\" + fileName,
                     string.Format(@"+-------------------------------------------------------------------+{0}{1}",
-                    Environment.NewLine, errs));
+                    Environment.NewLine, errs), Encoding.UTF8);
                 //todo: send e-mail
             }
             catch

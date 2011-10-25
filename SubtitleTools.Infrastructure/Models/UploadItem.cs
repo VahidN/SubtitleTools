@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel;
 using SubtitleTools.Common.ISO639;
+using SubtitleTools.Common.MVVM;
 
 namespace SubtitleTools.Infrastructure.Models
 {
-    public class UploadItem : INotifyPropertyChanged
+    public class UploadItem : ViewModelBase
     {
         #region Fields (6)
 
@@ -26,7 +27,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_finalUrl == value) return;
                 _finalUrl = value;
-                raisePropertyChanged("FinalUrl");
+                RaisePropertyChanged("FinalUrl");
             }
         }
 
@@ -37,7 +38,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_imdbId == value) return;
                 _imdbId = value;
-                raisePropertyChanged("ImdbId");
+                RaisePropertyChanged("ImdbId");
             }
         }
 
@@ -48,7 +49,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_isBusy == value) return;
                 _isBusy = value;
-                raisePropertyChanged("IsBusy");
+                RaisePropertyChanged("IsBusy");
             }
         }
 
@@ -59,7 +60,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_moviePath == value) return;
                 _moviePath = value;
-                raisePropertyChanged("MoviePath");
+                RaisePropertyChanged("MoviePath");
             }
         }
 
@@ -70,7 +71,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_progress == value) return;
                 _progress = value;
-                raisePropertyChanged("Progress");
+                RaisePropertyChanged("Progress");
             }
         }
 
@@ -81,7 +82,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_selectedSubtitleLanguage == value) return;
                 _selectedSubtitleLanguage = value;
-                raisePropertyChanged("SelectedSubtitleLanguage");
+                RaisePropertyChanged("SelectedSubtitleLanguage");
             }
         }
 
@@ -92,22 +93,10 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_subtitlePath == value) return;
                 _subtitlePath = value;
-                raisePropertyChanged("SubtitlePath");
+                RaisePropertyChanged("SubtitlePath");
             }
         }
 
         #endregion Properties
-
-
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        void raisePropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler == null) return;
-            handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

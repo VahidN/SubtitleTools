@@ -52,7 +52,7 @@ namespace SubtitleTools.Infrastructure.Core
             var delta = new TimeSpan(0, hour, minutes, seconds, milliseconds);
             var lines = File.ReadAllLines(srtFile);
             var newContent = ShiftAllTimeLines(lines, delta, add);
-            File.WriteAllText(srtFile, newContent.ApplyUnifiedYeKe());
+            File.WriteAllText(srtFile, newContent.ApplyUnifiedYeKe(), Encoding.UTF8);
 
             LogWindow.AddMessage(LogType.Info, "ShiftFileTimeLines End.");
         }

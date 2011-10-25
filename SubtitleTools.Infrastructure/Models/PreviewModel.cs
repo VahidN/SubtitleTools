@@ -1,10 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using SubtitleTools.Common.MVVM;
 
 namespace SubtitleTools.Infrastructure.Models
 {
-    public class PreviewModel : INotifyPropertyChanged
+    public class PreviewModel : ViewModelBase
     {
         #region Fields (16)
 
@@ -35,7 +36,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_dialog == value) return;
                 _dialog = value;
-                raisePropertyChanged("Dialog");
+                RaisePropertyChanged("Dialog");
             }
             get
             {
@@ -50,7 +51,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_dialogFlowDirection == value) return;
                 _dialogFlowDirection = value;
-                raisePropertyChanged("DialogFlowDirection");
+                RaisePropertyChanged("DialogFlowDirection");
             }
         }
 
@@ -60,7 +61,7 @@ namespace SubtitleTools.Infrastructure.Models
             set
             {
                 _dragCompleted = value;
-                raisePropertyChanged("DragCompleted");
+                RaisePropertyChanged("DragCompleted");
             }
         }
 
@@ -70,7 +71,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_mediaError == value) return;
                 _mediaError = value;
-                raisePropertyChanged("MediaError");
+                RaisePropertyChanged("MediaError");
             }
             get { return _mediaError; }
         }
@@ -81,7 +82,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_mediaLen == value) return;
                 _mediaLen = value;
-                raisePropertyChanged("MediaLen");
+                RaisePropertyChanged("MediaLen");
             }
             get { return _mediaLen; }
         }
@@ -92,7 +93,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_mediaManualPosition.TotalSeconds == value.TotalSeconds) return;
                 _mediaManualPosition = value;
-                raisePropertyChanged("MediaManualPosition");
+                RaisePropertyChanged("MediaManualPosition");
             }
             get { return _mediaManualPosition; }
         }
@@ -103,7 +104,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_mediaNaturalDuration.TotalSeconds == value.TotalSeconds) return;
                 _mediaNaturalDuration = value;
-                raisePropertyChanged("MediaNaturalDuration");
+                RaisePropertyChanged("MediaNaturalDuration");
             }
             get { return _mediaNaturalDuration; }
         }
@@ -114,7 +115,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_mediaPosition.TotalSeconds == value.TotalSeconds) return;
                 _mediaPosition = value;
-                raisePropertyChanged("MediaPosition");
+                RaisePropertyChanged("MediaPosition");
             }
             get { return _mediaPosition; }
         }
@@ -124,7 +125,7 @@ namespace SubtitleTools.Infrastructure.Models
             set
             {
                 _pauseMedia = value;
-                raisePropertyChanged("PauseMedia");
+                RaisePropertyChanged("PauseMedia");
             }
             get { return _pauseMedia; }
         }
@@ -136,7 +137,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_playImage == value) return;
                 _playImage = value;
-                raisePropertyChanged("PlayImage");
+                RaisePropertyChanged("PlayImage");
             }
         }
 
@@ -145,7 +146,7 @@ namespace SubtitleTools.Infrastructure.Models
             set
             {
                 _playMedia = value;
-                raisePropertyChanged("PlayMedia");
+                RaisePropertyChanged("PlayMedia");
             }
             get { return _playMedia; }
         }
@@ -157,7 +158,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_seekBarLargeChange == value) return;
                 _seekBarLargeChange = value;
-                raisePropertyChanged("SeekBarLargeChange");
+                RaisePropertyChanged("SeekBarLargeChange");
             }
         }
 
@@ -168,7 +169,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_seekBarMaximum == value) return;
                 _seekBarMaximum = value;
-                raisePropertyChanged("SeekBarMaximum");
+                RaisePropertyChanged("SeekBarMaximum");
             }
         }
 
@@ -178,7 +179,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_seekBarValue == value) return;
                 _seekBarValue = value;
-                raisePropertyChanged("SeekBarValue");
+                RaisePropertyChanged("SeekBarValue");
             }
             get { return _seekBarValue; }
         }
@@ -188,7 +189,7 @@ namespace SubtitleTools.Infrastructure.Models
             set
             {
                 _stopMedia = value;
-                raisePropertyChanged("StopMedia");
+                RaisePropertyChanged("StopMedia");
             }
             get { return _stopMedia; }
         }
@@ -199,24 +200,11 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_volumeSliderValue == value) return;
                 _volumeSliderValue = value;
-                raisePropertyChanged("VolumeSliderValue");
+                RaisePropertyChanged("VolumeSliderValue");
             }
             get { return _volumeSliderValue; }
         }
 
         #endregion Properties
-
-
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        void raisePropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler == null) return;
-            handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

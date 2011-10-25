@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel;
+using SubtitleTools.Common.MVVM;
 
 namespace SubtitleTools.Common.EncodingHelper.Model
 {
-    public class EncodingInf : INotifyPropertyChanged
+    public class EncodingInf : ViewModelBase
     {
         #region Fields (2)
 
@@ -19,6 +20,7 @@ namespace SubtitleTools.Common.EncodingHelper.Model
             {
                 if (_bodyName == value) return;
                 _bodyName = value;
+                RaisePropertyChanged("BodyName");
             }
             get { return _bodyName; }
         }
@@ -29,22 +31,11 @@ namespace SubtitleTools.Common.EncodingHelper.Model
             {
                 if (_name == value) return;
                 _name = value;
+                RaisePropertyChanged("Name");
             }
             get { return _name; }
         }
 
         #endregion Properties
-
-
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        void raisePropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler == null) return;
-            handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel;
+using SubtitleTools.Common.MVVM;
 
 namespace SubtitleTools.Infrastructure.Models
 {
-    public class JoinTwoFilesGui : INotifyPropertyChanged
+    public class JoinTwoFilesGui : ViewModelBase
     {
         #region Fields (5)
 
@@ -22,7 +23,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_hour == value) return;
                 _hour = value;
-                raisePropertyChanged("Hour");
+                RaisePropertyChanged("Hour");
             }
             get
             {
@@ -36,7 +37,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_milliseconds == value) return;
                 _milliseconds = value;
-                raisePropertyChanged("Milliseconds");
+                RaisePropertyChanged("Milliseconds");
             }
             get
             {
@@ -50,7 +51,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_minutes == value) return;
                 _minutes = value;
-                raisePropertyChanged("Minutes");
+                RaisePropertyChanged("Minutes");
             }
             get
             {
@@ -64,7 +65,7 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_seconds == value) return;
                 _seconds = value;
-                raisePropertyChanged("Seconds");
+                RaisePropertyChanged("Seconds");
             }
             get
             {
@@ -79,22 +80,10 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 if (_subtitlePath == value) return;
                 _subtitlePath = value;
-                raisePropertyChanged("SubtitlePath");
+                RaisePropertyChanged("SubtitlePath");
             }
         }
 
         #endregion Properties
-
-
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        void raisePropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler == null) return;
-            handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

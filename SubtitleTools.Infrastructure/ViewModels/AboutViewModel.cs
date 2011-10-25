@@ -8,11 +8,13 @@ using SubtitleTools.Common.Config;
 using SubtitleTools.Common.Logger;
 using SubtitleTools.Common.Net;
 using SubtitleTools.Infrastructure.Core;
+using SubtitleTools.Common.MVVM;
+using System.Text;
 
 
 namespace SubtitleTools.Infrastructure.ViewModels
 {
-    public class AboutViewModel : INotifyPropertyChanged
+    public class AboutViewModel : ViewModelBase
     {
         #region Fields (2)
 
@@ -40,7 +42,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             {
                 if (_isBusy == value) return;
                 _isBusy = value;
-                raisePropertyChanged("IsBusy");
+                RaisePropertyChanged("IsBusy");
             }
         }
 
@@ -49,7 +51,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             set
             {
                 _versionsInfoData = value;
-                raisePropertyChanged("VersionsInfoData");
+                RaisePropertyChanged("VersionsInfoData");
             }
             get { return _versionsInfoData; }
         }
@@ -73,7 +75,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             else
             {
                 //cache it
-                File.WriteAllText(localCacheFile, rssXml);
+                File.WriteAllText(localCacheFile, rssXml, Encoding.UTF8);
             }
 
             return rssXml;
@@ -128,17 +130,5 @@ namespace SubtitleTools.Infrastructure.ViewModels
         }
 
         #endregion Methods
-
-
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-        void raisePropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler == null) return;
-            handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }
