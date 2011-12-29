@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows;
 using SubtitleTools.Common.MVVM;
 
@@ -24,7 +23,7 @@ namespace SubtitleTools.Infrastructure.Models
         double _seekBarMaximum;
         double _seekBarValue;
         bool _stopMedia;
-        double _volumeSliderValue = 0.5;
+        double _volumeSliderValue = 0.2;
 
         #endregion Fields
 
@@ -91,7 +90,7 @@ namespace SubtitleTools.Infrastructure.Models
         {
             set
             {
-                if (_mediaManualPosition.TotalSeconds == value.TotalSeconds) return;
+                if (_mediaManualPosition == value) return;
                 _mediaManualPosition = value;
                 RaisePropertyChanged("MediaManualPosition");
             }
@@ -102,7 +101,7 @@ namespace SubtitleTools.Infrastructure.Models
         {
             set
             {
-                if (_mediaNaturalDuration.TotalSeconds == value.TotalSeconds) return;
+                if (_mediaNaturalDuration == value) return;
                 _mediaNaturalDuration = value;
                 RaisePropertyChanged("MediaNaturalDuration");
             }
@@ -113,7 +112,7 @@ namespace SubtitleTools.Infrastructure.Models
         {
             set
             {
-                if (_mediaPosition.TotalSeconds == value.TotalSeconds) return;
+                if (_mediaPosition == value) return;
                 _mediaPosition = value;
                 RaisePropertyChanged("MediaPosition");
             }

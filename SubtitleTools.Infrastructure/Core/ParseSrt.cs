@@ -10,6 +10,8 @@ using SubtitleTools.Infrastructure.Models;
 
 namespace SubtitleTools.Infrastructure.Core
 {
+    using System.Globalization;
+
     public class ParseSrt
     {
         #region Properties (2)
@@ -89,6 +91,7 @@ namespace SubtitleTools.Infrastructure.Core
             if (subtitleItems == null || !subtitleItems.Any()) return null;
             return subtitleItems.Where(x => x.StartTs <= currentMediaPosition &&
                                             x.EndTs >= currentMediaPosition)
+                                        .OrderByDescending(x => x.Number)
                                         .FirstOrDefault();
         }
 
@@ -102,7 +105,7 @@ namespace SubtitleTools.Infrastructure.Core
                 var words = lines[i].Trim().Split(new[] { " " }, StringSplitOptions.None);
                 if (words.Length > 6)
                 {
-                    int count = 1;
+                    var count = 1;
                     var result = new StringBuilder();
 
                     foreach (var word in words)
@@ -127,10 +130,10 @@ namespace SubtitleTools.Infrastructure.Core
         public static string SubitemsToString(SubtitleItems mainItems)
         {
             var sb = new StringBuilder();
-            int i = 1;
+            var i = 1;
             foreach (var item in mainItems.OrderBy(x => x.StartTs))
             {
-                sb.AppendLine(i.ToString());
+                sb.AppendLine(i.ToString(CultureInfo.InvariantCulture));
                 sb.AppendLine(item.Time);
                 sb.AppendLine(item.Dialog.Trim());
                 sb.AppendLine(string.Empty);

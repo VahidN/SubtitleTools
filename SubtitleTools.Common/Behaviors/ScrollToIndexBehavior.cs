@@ -41,7 +41,7 @@ namespace SubtitleTools.Common.Behaviors
             if (listView.Items == null) return;
 
             var idx = (int)eventArgs.NewValue;
-            if (idx > listView.Items.Count - 1) return;
+            if (idx > listView.Items.Count - 1 || idx < 0) return;
 
             listView.SelectedItem = listView.Items.GetItemAt(idx);
             listView.ScrollIntoView(listView.SelectedItem);

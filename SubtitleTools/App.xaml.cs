@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Linq;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-using SubtitleTools.Infrastructure.Core;
-using SubtitleTools.Common.Logger;
 using SubtitleTools.Common.Files;
-using System.Reflection;
+using SubtitleTools.Common.Logger;
+using SubtitleTools.Common.Toolkit;
+using SubtitleTools.Infrastructure.Core;
 
 namespace SubtitleTools
 {
@@ -28,12 +29,17 @@ namespace SubtitleTools
                     MessageBoxImage.Information);
                 this.Shutdown();
             }
-
+            this.Deactivated += appDeactivated;
             this.Startup += appStartup;
             this.Exit += appExit;
             this.DispatcherUnhandledException += appDispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += currentDomainUnhandledException;
             createFileAssociation();
+        }
+
+        void appDeactivated(object sender, EventArgs e)
+        {
+            Memory.ReEvaluatedWorkingSet();
         }
 
         #endregion Constructors
@@ -55,20 +61,20 @@ namespace SubtitleTools
 
         void appStartup(object sender, StartupEventArgs e)
         {
-		    ReducingCpuConsumptionForAnimations();
+            ReducingCpuConsumptionForAnimations();
             if (e.Args.Any())
             {
                 this.Properties["StartupFileName"] = e.Args[0];
             }
         }
-		
-		void ReducingCpuConsumptionForAnimations()
-		{
-           Timeline.DesiredFrameRateProperty.OverrideMetadata(
-                typeof(Timeline),
-                new FrameworkPropertyMetadata { DefaultValue = 20 }
-                );
-		}
+
+        void ReducingCpuConsumptionForAnimations()
+        {
+            Timeline.DesiredFrameRateProperty.OverrideMetadata(
+                 typeof(Timeline),
+                 new FrameworkPropertyMetadata { DefaultValue = 20 }
+                 );
+        }
 
         private static void createFileAssociation()
         {

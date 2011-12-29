@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using SubtitleTools.Common.Files;
@@ -14,6 +13,8 @@ using SubtitleTools.Infrastructure.Core.OpenSubtitlesOrg.API;
 
 namespace SubtitleTools.Infrastructure.ViewModels
 {
+    using System.Globalization;
+
     public class DownloadOpenSubtitlesViewModel : ViewModelBase
     {
         #region Fields (2)
@@ -28,7 +29,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
         public DownloadOpenSubtitlesViewModel()
         {
             DownloadOpenSubtitlesGuiData = new DownloadOpenSubtitlesGui();
-            DownloadOpenSubtitlesGuiData.PropertyChanged += downloadOpenSubtitlesGuiDataPropertyChanged;
             OsdbItemsData = new OsdbItems();
             setupCommands();
         }
@@ -68,9 +68,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Properties
 
-        #region Methods (18)
+        #region Methods (15)
 
-        // Private Methods (18) 
+        // Private Methods (15) 
 
         static bool canDoDebugDownloadSelectedItem(string data)
         {
@@ -118,20 +118,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
             new Thread(searchGetSubsInfo).Start();
         }
 
-        void doSelectFile()
-        {
-            if (string.IsNullOrWhiteSpace(DownloadOpenSubtitlesGuiData.MoviePath)) return;
-            enableButtons();
-        }
-
-        void downloadOpenSubtitlesGuiDataPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "MoviePath")
-            {
-                doSelectFile();
-            }
-        }
-
         private void downloadSelectedFiles()
         {
             if (_downloadSelectedFilesIsBusy)
@@ -151,7 +137,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
                     if (!sub.IsSelected) continue;
                     var localSub = sub;
                     osdb.DownloadSubtitle(
-                        sub.IDSubtitleFile.ToString(),
+                        sub.IDSubtitleFile.ToString(CultureInfo.InvariantCulture),
                         sub.SubFileName,
                         sub.LanguageName,
                         e => localSub.Progress = e
@@ -178,7 +164,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
                 var osdb = new OpenSubtitlesXmlRpc(DownloadOpenSubtitlesGuiData.MoviePath);
                 osdb.DownloadSubtitle(
-                    DownloadOpenSubtitlesGuiData.SelectedOsdbItem.IDSubtitleFile.ToString(),
+                    DownloadOpenSubtitlesGuiData.SelectedOsdbItem.IDSubtitleFile.ToString(CultureInfo.InvariantCulture),
                     DownloadOpenSubtitlesGuiData.SelectedOsdbItem.SubFileName,
                     DownloadOpenSubtitlesGuiData.SelectedOsdbItem.LanguageName,
                     e => DownloadOpenSubtitlesGuiData.SelectedOsdbItem.Progress = e,
@@ -192,15 +178,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
             }
         }
 
-        private void enableButtons()
-        {
-            DoDownloadSubtitle.CanExecute(DownloadOpenSubtitlesGuiData.MoviePath);
-            DoSearch.CanExecute(DownloadOpenSubtitlesGuiData.MoviePath);
-        }
-
         private string getIsoCode(SubtitleDataInfo item)
         {
-            var lang = SubLanguages.Where(l => l.LanguageName == item.LanguageName).FirstOrDefault();
+            var lang = SubLanguages.FirstOrDefault(l => l.LanguageName == item.LanguageName);
             var iso6393166_1 = string.Empty;
             if (lang != null)
             {
@@ -224,7 +204,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
                 var osdb = new OpenSubtitlesXmlRpc(DownloadOpenSubtitlesGuiData.MoviePath);
 
-                string subLanguageId = selectLang();
+                var subLanguageId = selectLang();
 
                 var result = osdb.GetListOfAllSubtitles(e => DownloadOpenSubtitlesGuiData.Progress = e, subLanguageId);
 

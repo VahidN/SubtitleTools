@@ -47,34 +47,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Properties
 
-        #region Methods (27)
+        #region Methods (22)
 
-        // Private Methods (27) 
-
-        static bool canClearSubtitle(string data)
-        {
-            return true;
-        }
-
-        static bool canDoAddSubtitle(string data)
-        {
-            return true;
-        }
-
-        static bool canDoPause(string data)
-        {
-            return true;
-        }
-
-        static bool canDoPlay(string data)
-        {
-            return true;
-        }
-
-        static bool canDoStop(string data)
-        {
-            return true;
-        }
+        // Private Methods (22) 
 
         private void clearCtrls()
         {
@@ -120,11 +95,11 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         private void initCommands()
         {
-            DoStop = new DelegateCommand<string>(doStop, canDoStop);
-            DoPlay = new DelegateCommand<string>(doPlay, canDoPlay);
-            DoPause = new DelegateCommand<string>(doPause, canDoPause);
-            DoAddSubtitle = new DelegateCommand<string>(doAddSubtitle, canDoAddSubtitle);
-            DoClearSubtitle = new DelegateCommand<string>(doClearSubtitle, canClearSubtitle);
+            DoStop = new DelegateCommand<string>(doStop);
+            DoPlay = new DelegateCommand<string>(doPlay);
+            DoPause = new DelegateCommand<string>(doPause);
+            DoAddSubtitle = new DelegateCommand<string>(doAddSubtitle);
+            DoClearSubtitle = new DelegateCommand<string>(doClearSubtitle);
         }
 
         private void initLocalItems()
@@ -143,6 +118,11 @@ namespace SubtitleTools.Infrastructure.ViewModels
         private void initMessenger()
         {
             App.Messenger.Register<SubtitleItems>("SubtitleItems", data => { _subtitleItems = data; });
+            App.Messenger.Register<TimeSpan>("doSetMediaPosition", data =>
+            {
+                if (PreviewModelData.PlayMedia) return;
+                PreviewModelData.MediaManualPosition = data;
+            });
         }
 
         void previewModelDataPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

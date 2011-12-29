@@ -151,7 +151,7 @@ namespace SubtitleTools.Common.Behaviors
         static void mediaElementLoaded(object sender, RoutedEventArgs e)
         {
             if (_mediaElement == null) return;
-            _mediaElement.Pause();
+            SetPlayMedia(_mediaElement, true);
         }
 
         static void mediaElementMediaEnded(object sender, RoutedEventArgs e)
@@ -163,13 +163,18 @@ namespace SubtitleTools.Common.Behaviors
 
         static void mediaElementMediaFailed(object sender, ExceptionRoutedEventArgs e)
         {
-            if (_mediaElement != null && _mediaElement.Source == new Uri(@"MediaFile://")) return;
+            if (_mediaElement != null && _mediaElement.Source == new Uri(@"MediaFile://"))
+            {
+                SetPlayMedia(_mediaElement, false);
+                return;
+            }
 
             var innerException = string.Empty;
             if (e.ErrorException.InnerException != null)
                 innerException = e.ErrorException.InnerException.Message;
 
             SetMediaError((DependencyObject)sender, string.Format("{0}: {1} {2}", e.ErrorException.GetType(), e.ErrorException.Message, innerException));
+            SetPlayMedia(_mediaElement, false);
         }
 
         static void mediaElementMediaOpened(object sender, RoutedEventArgs e)
@@ -208,7 +213,17 @@ namespace SubtitleTools.Common.Behaviors
                 throw new InvalidOperationException("This behavior can only be attached to a MediaElement.");
 
             SetMediaError(dependencyObject, string.Empty);
-            if (eventArgs.NewValue == null || (string)eventArgs.NewValue == string.Empty) return;
+            if (eventArgs.NewValue == null ||
+                (string)eventArgs.NewValue == string.Empty)
+            {
+                return;
+            }
+
+            if (_opened)
+            {
+                SetPlayMedia(_mediaElement, true);
+                return;
+            }
 
             if (!_opened)
             {
@@ -242,12 +257,12 @@ namespace SubtitleTools.Common.Behaviors
                                 DependencyPropertyChangedEventArgs eventArgs)
         {
             var pause = (bool)eventArgs.NewValue;
-            var mediaElement = dependencyObject as MediaElement;
-            if (mediaElement == null)
+            _mediaElement = dependencyObject as MediaElement;
+            if (_mediaElement == null)
                 throw new InvalidOperationException("This behavior can only be attached to a MediaElement.");
 
             if (pause)
-                mediaElement.Pause();
+                _mediaElement.Pause();
         }
 
         private static void onPlayMediaChanged(DependencyObject dependencyObject,

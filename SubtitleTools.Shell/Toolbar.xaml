@@ -155,7 +155,15 @@
 				</StackPanel>
 			</Button>
 
-			<Separator/>
+            <Button Margin="2" Command="{Binding DoRecalculate}"
+					ToolTip="Recalculate row numbers.">
+                <StackPanel HorizontalAlignment="Center" Margin="1">
+                    <Image Source="Images/calculator.png" Width="32" Height="32" HorizontalAlignment="Center" />
+                    <TextBlock Text="Recalculate" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+
+            <Separator/>
 		</ToolBar>
 	</Grid>
 </UserControl>

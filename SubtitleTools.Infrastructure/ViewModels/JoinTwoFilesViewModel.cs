@@ -29,9 +29,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Properties
 
-        #region Methods (9)
+        #region Methods (8)
 
-        // Private Methods (9) 
+        // Private Methods (8) 
 
         static bool canDoCloseJoinPopup(string data)
         {
@@ -82,12 +82,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 return;
 
             detectStartTime(firstFilePath);
-            enableButton();
-        }
-
-        private void enableButton()
-        {
-            DoJoin.CanExecute(JoinTwoFilesGuiData.SubtitlePath);
         }
 
         private void setupCommands()

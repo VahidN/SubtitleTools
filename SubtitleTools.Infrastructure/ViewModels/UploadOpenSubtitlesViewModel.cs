@@ -35,7 +35,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             get
             {
                 var lc = new LanguagesCodes();
-                var item = lc.Where(l => l.LanguageName == "*All Languages*").FirstOrDefault();
+                var item = lc.FirstOrDefault(l => l.LanguageName == "*All Languages*");
                 lc.Remove(item);
                 return lc.OrderBy(o => o.LanguageName).ToList();
             }
@@ -45,9 +45,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Properties
 
-        #region Methods (10)
+        #region Methods (8)
 
-        // Private Methods (10) 
+        // Private Methods (8) 
 
         bool canDoUploadOneFile(string data)
         {
@@ -64,13 +64,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
             var subFile = tryToFindSubFile(UploadItemData.MoviePath);
             if (!string.IsNullOrEmpty(subFile))
                 UploadItemData.SubtitlePath = subFile;
-
-            tryEnableButtons();
-        }
-
-        void doSelectSubtitleFile()
-        {
-            tryEnableButtons();
         }
 
         private void doUpload()
@@ -116,11 +109,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
             DoUploadOneFile = new DelegateCommand<string>(doUploadOneFile, canDoUploadOneFile);
         }
 
-        void tryEnableButtons()
-        {
-            DoUploadOneFile.CanExecute(string.Empty);
-        }
-
         static string tryToFindSubFile(string movieFile)
         {
             var subFile = Path.ChangeExtension(movieFile, ".srt");
@@ -133,12 +121,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
             {
                 case "MoviePath":
                     doSelectMovieFile();
-                    break;
-                case "SubtitlePath":
-                    doSelectSubtitleFile();
-                    break;
-                case "SelectedSubtitleLanguage":
-                    tryEnableButtons();
                     break;
             }
         }

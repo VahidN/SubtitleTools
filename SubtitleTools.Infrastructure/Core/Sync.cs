@@ -3,14 +3,34 @@ using System.IO;
 using System.Text;
 using SubtitleTools.Common.Regex;
 using SubtitleTools.Common.Toolkit;
+using SubtitleTools.Infrastructure.Models;
 
 namespace SubtitleTools.Infrastructure.Core
 {
     public class Sync
     {
-        #region Methods (3)
+        #region Methods (4)
 
-        // Public Methods (3) 
+        // Public Methods (4) 
+
+        public static void RecalculateRowNumbers(SubtitleItems data, string fileNameToSave)
+        {
+            if (data == null || string.IsNullOrWhiteSpace(fileNameToSave))
+            {
+                LogWindow.AddMessage(LogType.Alert, "Please open a file.");
+                return;
+            }
+
+            //fix numbers
+            for (var i = 0; i < data.Count; i++)
+            {
+                data[i].Number = i + 1;
+            }
+
+            //write data
+            File.WriteAllText(fileNameToSave, ParseSrt.SubitemsToString(data).ApplyUnifiedYeKe(), Encoding.UTF8);
+            LogWindow.AddMessage(LogType.Info, "Finished RecalculateRowNumbers.");
+        }
 
         public static string ShiftAllTimeLines(string[] lines, TimeSpan delta, bool add)
         {
