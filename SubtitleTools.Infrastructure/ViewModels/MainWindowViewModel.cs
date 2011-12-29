@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,15 +16,15 @@ using SubtitleTools.Common.Threading;
 using SubtitleTools.Common.Toolkit;
 using SubtitleTools.Infrastructure.Core;
 using SubtitleTools.Infrastructure.Models;
-using System.Text;
 
 namespace SubtitleTools.Infrastructure.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        #region Fields (2)
+        #region Fields (3)
 
         SortedSet<int> _changedRows;
+        TimeSpan _lastStartTs;
         SubtitleItems _subtitleItemsDataInternal;
 
         #endregion Fields
@@ -40,7 +41,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Constructors
 
-        #region Properties (9)
+        #region Properties (10)
 
         public DelegateCommand<string> DoConvertToUTF8 { set; get; }
 
@@ -49,6 +50,8 @@ namespace SubtitleTools.Infrastructure.ViewModels
         public DelegateCommand<string> DoInsertRLE { set; get; }
 
         public DelegateCommand<string> DoJoinFiles { set; get; }
+
+        public DelegateCommand<string> DoRecalculate { set; get; }
 
         public DelegateCommand<string> DoSaveChanges { set; get; }
 
@@ -77,41 +80,16 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Properties
 
-        #region Methods (38)
+        #region Methods (36)
 
-        // Private Methods (38) 
+        // Private Methods (36) 
 
-        bool canDoConvertToUTF8(string data)
+        private void clearSrtPanel()
         {
-            return !string.IsNullOrEmpty(MainWindowGuiData.OpenedFilePath);
+            subtitleItemsDataInternal = new SubtitleItems();
         }
 
-        bool canDoDelete(string data)
-        {
-            return !string.IsNullOrEmpty(MainWindowGuiData.OpenedFilePath);
-        }
-
-        bool canDoInsertRLE(string data)
-        {
-            return !string.IsNullOrEmpty(MainWindowGuiData.OpenedFilePath);
-        }
-
-        bool canDoJoinFiles(string data)
-        {
-            return !string.IsNullOrEmpty(MainWindowGuiData.OpenedFilePath);
-        }
-
-        bool canDoSaveChanges(string data)
-        {
-            return !string.IsNullOrEmpty(MainWindowGuiData.OpenedFilePath);
-        }
-
-        bool canDoSync(string data)
-        {
-            return !string.IsNullOrEmpty(MainWindowGuiData.OpenedFilePath);
-        }
-
-        private void createEmptySubtitleFile(string mediaPath)
+        private string createEmptySubtitleFile(string mediaPath)
         {
             var subtitleFilePath = Path.ChangeExtension(mediaPath, ".srt");
             if (!File.Exists(subtitleFilePath))
@@ -119,7 +97,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 File.WriteAllText(subtitleFilePath, string.Empty, Encoding.UTF8);
                 LogWindow.AddMessage(LogType.Info, "An empty subtitle file @" + subtitleFilePath + " has been created.");
             }
-            MainWindowGuiData.OpenedFilePath = subtitleFilePath;
+            return subtitleFilePath;
         }
 
         private void deleteRow()
@@ -153,12 +131,13 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         void doAddSubtitle(SubtitleItem subtitleItem)
         {
+            var subtitleFilePath = string.Empty;
             if (string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath))
             {
                 var mediaPath = MainWindowGuiData.MediaFilePath.LocalPath;
                 if (!string.IsNullOrWhiteSpace(mediaPath))
                 {
-                    createEmptySubtitleFile(mediaPath);
+                    subtitleFilePath = createEmptySubtitleFile(mediaPath);
                 }
                 else
                 {
@@ -169,8 +148,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
             subtitleItemsDataInternal = ParseSrt.AddSubtitleItemToList(subtitleItemsDataInternal, subtitleItem);
             setFlowDir(subtitleItem.Dialog.ContainsFarsi());
-            saveToFile();
+            saveToFile(subtitleFilePath);
             doScrollToIndex(subtitleItemsDataInternal.Count - 1);
+            if (!string.IsNullOrEmpty(subtitleFilePath)) MainWindowGuiData.OpenedFilePath = subtitleFilePath;
         }
 
         void doCloseConvertEncodingView()
@@ -264,7 +244,11 @@ namespace SubtitleTools.Infrastructure.ViewModels
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath)) return;
+                if (string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath))
+                {
+                    clearSrtPanel();
+                    return;
+                }
 
                 MainWindowGuiData.IsBusy = true;
 
@@ -297,6 +281,30 @@ namespace SubtitleTools.Infrastructure.ViewModels
             {
                 MainWindowGuiData.IsBusy = false;
             }
+        }
+
+        void doRecalculate(string data)
+        {
+            Task.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        if (string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath)) return;
+                        MainWindowGuiData.IsBusy = true;
+                        Sync.RecalculateRowNumbers(subtitleItemsDataInternal, MainWindowGuiData.OpenedFilePath);
+                        showConflicts();
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionLogger.LogExceptionToFile(ex);
+                        LogWindow.AddMessage(LogType.Error, ex.Message);
+                    }
+                    finally
+                    {
+                        DispatcherHelper.DispatchAction(enableButtons);
+                        MainWindowGuiData.IsBusy = false;
+                    }
+                });
         }
 
         void doSaveChanges(string data)
@@ -356,6 +364,15 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 };
         }
 
+        private void doSelectedItem()
+        {
+            if (MainWindowGuiData.SelectedItem == null) return;
+            var startTs = MainWindowGuiData.SelectedItem.StartTs;
+            if (_lastStartTs == startTs) return;
+            App.Messenger.NotifyColleagues("doSetMediaPosition", startTs);
+            _lastStartTs = startTs;
+        }
+
         void doSync(string data)
         {
             MainWindowGuiData.PopupDoSyncIsOpen = true;
@@ -363,14 +380,13 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         private void enableButtons()
         {
-            DoConvertToUTF8.CanExecute(MainWindowGuiData.OpenedFilePath);
-            DoSync.CanExecute(MainWindowGuiData.OpenedFilePath);
             MainWindowGuiData.DoMergeIsEnabled = !string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath);
             MainWindowGuiData.DoMixIsEnabled = !string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath);
-            DoJoinFiles.CanExecute(MainWindowGuiData.OpenedFilePath);
-            DoDelete.CanExecute(MainWindowGuiData.OpenedFilePath);
-            DoSaveChanges.CanExecute(MainWindowGuiData.OpenedFilePath);
-            DoInsertRLE.CanExecute(MainWindowGuiData.OpenedFilePath);
+        }
+
+        bool isFileOpen(string data)
+        {
+            return !string.IsNullOrEmpty(MainWindowGuiData.OpenedFilePath);
         }
 
         private void mainWidowIsLoaded()
@@ -401,12 +417,20 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 case "IsLoaded":
                     mainWidowIsLoaded();
                     break;
+                case "SelectedItem":
+                    doSelectedItem();
+                    break;
             }
         }
 
         private void openSubtitleFile()
         {
-            if (string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath)) return;
+            if (string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath))
+            {
+                clearSrtPanel();
+                MainWindowGuiData.HeaderText = string.Empty;
+                return;
+            }
             MainWindowGuiData.HeaderText = MainWindowGuiData.OpenedFilePath;
             if (new FileInfo(MainWindowGuiData.OpenedFilePath).Length == 0) return;
 
@@ -425,11 +449,12 @@ namespace SubtitleTools.Infrastructure.ViewModels
             new Thread(doOpenFile).Start();
         }
 
-        private void saveToFile()
+        private void saveToFile(string path = "")
         {
+            var savePath = string.IsNullOrEmpty(path) ? MainWindowGuiData.OpenedFilePath : path;
             var newContent = ParseSrt.SubitemsToString(subtitleItemsDataInternal);
-            File.WriteAllText(MainWindowGuiData.OpenedFilePath, newContent.ApplyUnifiedYeKe(), Encoding.UTF8);
-            LogWindow.AddMessage(LogType.Announcement, string.Format("Saved to:{0}", MainWindowGuiData.OpenedFilePath));
+            File.WriteAllText(savePath, newContent.ApplyUnifiedYeKe(), Encoding.UTF8);
+            LogWindow.AddMessage(LogType.Announcement, string.Format("Saved to:{0}", savePath));
             setFlowDir(newContent.ContainsFarsi());
         }
 
@@ -444,19 +469,24 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 string.IsNullOrWhiteSpace(MainWindowGuiData.MediaFilePath.LocalPath)) return;
 
             var subtitleFilePath = Path.ChangeExtension(MainWindowGuiData.MediaFilePath.LocalPath, ".srt");
-            if (!File.Exists(subtitleFilePath)) return;
+            if (!File.Exists(subtitleFilePath))
+            {
+                MainWindowGuiData.OpenedFilePath = string.Empty;
+                return;
+            }
 
             MainWindowGuiData.OpenedFilePath = subtitleFilePath;
         }
 
         private void setupCommands()
         {
-            DoConvertToUTF8 = new DelegateCommand<string>(doConvertToUTF8, canDoConvertToUTF8);
-            DoSync = new DelegateCommand<string>(doSync, canDoSync);
-            DoJoinFiles = new DelegateCommand<string>(doJoinFiles, canDoJoinFiles);
-            DoDelete = new DelegateCommand<string>(doDelete, canDoDelete);
-            DoSaveChanges = new DelegateCommand<string>(doSaveChanges, canDoSaveChanges);
-            DoInsertRLE = new DelegateCommand<string>(doInsertRLE, canDoInsertRLE);
+            DoConvertToUTF8 = new DelegateCommand<string>(doConvertToUTF8, isFileOpen);
+            DoSync = new DelegateCommand<string>(doSync, isFileOpen);
+            DoJoinFiles = new DelegateCommand<string>(doJoinFiles, isFileOpen);
+            DoDelete = new DelegateCommand<string>(doDelete, isFileOpen);
+            DoRecalculate = new DelegateCommand<string>(doRecalculate, isFileOpen);
+            DoSaveChanges = new DelegateCommand<string>(doSaveChanges, isFileOpen);
+            DoInsertRLE = new DelegateCommand<string>(doInsertRLE, isFileOpen);
         }
 
         private void setupItemsData()

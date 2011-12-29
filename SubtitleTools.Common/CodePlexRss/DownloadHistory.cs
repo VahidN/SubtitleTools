@@ -3,6 +3,7 @@ using System.Text;
 using SubtitleTools.Common.CodePlexRss.Model;
 using SubtitleTools.Common.Files;
 using SubtitleTools.Common.Regex;
+using System.Web;
 
 namespace SubtitleTools.Common.CodePlexRss
 {
@@ -59,7 +60,7 @@ namespace SubtitleTools.Common.CodePlexRss
             {
                 sb.AppendLine(line.Trim());
             }
-            return sb.ToString();
+            return HttpUtility.HtmlDecode(sb.ToString());
         }
 
         #endregion Methods

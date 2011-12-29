@@ -36,7 +36,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" MinHeight="30"/>
-                        <RowDefinition Height="Auto" />                        
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <MediaElement                         
                             Grid.Row="0" 
@@ -73,7 +73,7 @@
                     <StackPanel 
                         Grid.Row="2"
                         Orientation="Horizontal"  
-                        HorizontalAlignment="Center">                      
+                        HorizontalAlignment="Center">
                         <Button ToolTip="Play/Pause" 
                                 Margin="5" 
                                 Command="{Binding DoPlay}" Width="25" Height="25">

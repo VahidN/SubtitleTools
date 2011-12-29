@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using SubtitleTools.Common.EncodingHelper;
+﻿using SubtitleTools.Common.EncodingHelper;
 using SubtitleTools.Common.EncodingHelper.Model;
 using SubtitleTools.Common.MVVM;
 using SubtitleTools.Infrastructure.Core;
@@ -63,15 +62,14 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 if (value == null) return;
                 _selectedEncoding = value;
                 RaisePropertyChanged("SelectedEncoding");
-                enableButton();
             }
         }
 
         #endregion Properties
 
-        #region Methods (6)
+        #region Methods (5)
 
-        // Private Methods (6) 
+        // Private Methods (5) 
 
         static bool canDoCloseConvertEncodingView(string data)
         {
@@ -96,12 +94,6 @@ namespace SubtitleTools.Infrastructure.ViewModels
             {
                 App.Messenger.NotifyColleagues("reBind");
             }
-        }
-
-        private void enableButton()
-        {
-            if (SelectedEncoding == null) return;
-            DoConvertEncoding.CanExecute(SelectedEncoding.BodyName);
         }
 
         private void setupCommands()
