@@ -41,7 +41,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Constructors
 
-        #region Properties (10)
+        #region Properties (11)
 
         public DelegateCommand<string> DoConvertToUTF8 { set; get; }
 
@@ -54,6 +54,8 @@ namespace SubtitleTools.Infrastructure.ViewModels
         public DelegateCommand<string> DoRecalculate { set; get; }
 
         public DelegateCommand<string> DoSaveChanges { set; get; }
+
+        public DelegateCommand<string> DoStartSpeechRecognition { set; get; }
 
         public DelegateCommand<string> DoSync { set; get; }
 
@@ -80,9 +82,51 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Properties
 
-        #region Methods (36)
+        #region Methods (42)
 
-        // Private Methods (36) 
+        // Private Methods (42) 
+
+        private void addSubtitleToFile(SubtitleItem subtitleItem, string mediaPath)
+        {
+            if (string.IsNullOrWhiteSpace(subtitleItem.Dialog)) return;
+
+            var subtitleFilePath = string.Empty;
+            if (string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath))
+            {
+                if (!string.IsNullOrWhiteSpace(mediaPath))
+                {
+                    subtitleFilePath = createEmptySubtitleFile(mediaPath);
+                }
+                else
+                {
+                    LogWindow.AddMessage(LogType.Error, "Please open an empty subtitle file first.");
+                    return;
+                }
+            }
+
+            subtitleItemsDataInternal = ParseSrt.AddSubtitleItemToList(subtitleItemsDataInternal, subtitleItem);
+            setFlowDir(subtitleItem.Dialog.ContainsFarsi());
+            saveToFile(subtitleFilePath);
+            _lastStartTs = subtitleItem.StartTs;
+            doScrollToIndex(subtitleItemsDataInternal.Count - 1);
+            if (!string.IsNullOrEmpty(subtitleFilePath)) MainWindowGuiData.OpenedFilePath = subtitleFilePath;
+            App.Messenger.NotifyColleagues("doClearSubtitle");
+        }
+
+        private void backupSubtitleFile()
+        {
+            if (string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath)) return;
+            var backupFile = string.Format("{0}-{1}.bak", MainWindowGuiData.OpenedFilePath, Guid.NewGuid().ToString());
+            File.Copy(MainWindowGuiData.OpenedFilePath, backupFile, overwrite: true);
+            File.WriteAllText(MainWindowGuiData.OpenedFilePath, string.Empty);
+            openSubtitleFile();
+        }
+
+        bool canDoStartSpeechRecognition(string data)
+        {
+            return !string.IsNullOrWhiteSpace(MainWindowGuiData.WavFilePath) &&
+                    System.Speech.Recognition.SpeechRecognitionEngine.InstalledRecognizers().Any();
+        }
 
         private void clearSrtPanel()
         {
@@ -131,26 +175,12 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         void doAddSubtitle(SubtitleItem subtitleItem)
         {
-            var subtitleFilePath = string.Empty;
-            if (string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath))
-            {
-                var mediaPath = MainWindowGuiData.MediaFilePath.LocalPath;
-                if (!string.IsNullOrWhiteSpace(mediaPath))
-                {
-                    subtitleFilePath = createEmptySubtitleFile(mediaPath);
-                }
-                else
-                {
-                    LogWindow.AddMessage(LogType.Error, "Please open an empty subtitle file first.");
-                    return;
-                }
-            }
+            addSubtitleToFile(subtitleItem, MainWindowGuiData.MediaFilePath.LocalPath);
+        }
 
-            subtitleItemsDataInternal = ParseSrt.AddSubtitleItemToList(subtitleItemsDataInternal, subtitleItem);
-            setFlowDir(subtitleItem.Dialog.ContainsFarsi());
-            saveToFile(subtitleFilePath);
-            doScrollToIndex(subtitleItemsDataInternal.Count - 1);
-            if (!string.IsNullOrEmpty(subtitleFilePath)) MainWindowGuiData.OpenedFilePath = subtitleFilePath;
+        void doAddVoiceSubtitle(SubtitleItem subtitleItem)
+        {
+            addSubtitleToFile(subtitleItem, MainWindowGuiData.WavFilePath);
         }
 
         void doCloseConvertEncodingView()
@@ -373,6 +403,18 @@ namespace SubtitleTools.Infrastructure.ViewModels
             _lastStartTs = startTs;
         }
 
+        private void doSetWavFilePath()
+        {
+            MainWindowGuiData.MediaFilePath = new Uri(MainWindowGuiData.WavFilePath);
+            App.Messenger.NotifyColleagues("SpeechRecognitionFileChanged", MainWindowGuiData.WavFilePath);
+        }
+
+        void doStartSpeechRecognition(string data)
+        {
+            backupSubtitleFile();
+            App.Messenger.NotifyColleagues("StartSpeechRecognition", MainWindowGuiData.WavFilePath);
+        }
+
         void doSync(string data)
         {
             MainWindowGuiData.PopupDoSyncIsOpen = true;
@@ -420,6 +462,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 case "SelectedItem":
                     doSelectedItem();
                     break;
+                case "WavFilePath":
+                    doSetWavFilePath();
+                    break;
             }
         }
 
@@ -432,7 +477,11 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 return;
             }
             MainWindowGuiData.HeaderText = MainWindowGuiData.OpenedFilePath;
-            if (new FileInfo(MainWindowGuiData.OpenedFilePath).Length == 0) return;
+            if (new FileInfo(MainWindowGuiData.OpenedFilePath).Length == 0)
+            {
+                clearSrtPanel();
+                return;
+            }
 
             new Thread(doOpenFile).Start();
         }
@@ -487,6 +536,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             DoRecalculate = new DelegateCommand<string>(doRecalculate, isFileOpen);
             DoSaveChanges = new DelegateCommand<string>(doSaveChanges, isFileOpen);
             DoInsertRLE = new DelegateCommand<string>(doInsertRLE, isFileOpen);
+            DoStartSpeechRecognition = new DelegateCommand<string>(doStartSpeechRecognition, canDoStartSpeechRecognition);
         }
 
         private void setupItemsData()
@@ -508,6 +558,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             App.Messenger.Register("doCloseConvertEncodingView", doCloseConvertEncodingView);
             App.Messenger.Register<SubtitleItem>("doAddSubtitle", doAddSubtitle);
             App.Messenger.Register<int>("doScrollToIndex", doScrollToIndex);
+            App.Messenger.Register<SubtitleItem>("doAddVoiceSubtitle", doAddVoiceSubtitle);
         }
 
         private void showConflicts()

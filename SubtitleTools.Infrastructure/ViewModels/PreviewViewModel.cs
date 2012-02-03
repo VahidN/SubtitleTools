@@ -123,6 +123,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
                 if (PreviewModelData.PlayMedia) return;
                 PreviewModelData.MediaManualPosition = data;
             });
+            App.Messenger.Register("doClearSubtitle", () => doClearSubtitle(string.Empty));
         }
 
         void previewModelDataPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

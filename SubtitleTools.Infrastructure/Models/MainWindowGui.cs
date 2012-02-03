@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows;
 using SubtitleTools.Common.MVVM;
 
@@ -7,7 +6,7 @@ namespace SubtitleTools.Infrastructure.Models
 {
     public class MainWindowGui : ViewModelBase
     {
-        #region Fields (16)
+        #region Fields
 
         bool _doMergeIsEnabled;
         bool _doMixIsEnabled;
@@ -25,10 +24,21 @@ namespace SubtitleTools.Infrastructure.Models
         string _searchText;
         SubtitleItem _selectedItem;
         FlowDirection _tableFlowDirection = FlowDirection.LeftToRight;
+        string _wavFilePath;
 
         #endregion Fields
 
         #region Properties (16)
+
+        public string WavFilePath
+        {
+            get { return _wavFilePath; }
+            set
+            {
+                _wavFilePath = value;
+                RaisePropertyChanged("WavFilePath");
+            }
+        }
 
         public bool DoMergeIsEnabled
         {

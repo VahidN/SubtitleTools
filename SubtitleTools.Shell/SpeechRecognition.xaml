@@ -1,0 +1,149 @@
+﻿<UserControl x:Class="SubtitleTools.Shell.SpeechRecognition"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:vm="clr-namespace:SubtitleTools.Infrastructure.ViewModels;assembly=SubtitleTools.Infrastructure"
+             xmlns:conv="clr-namespace:SubtitleTools.Common.Converters;assembly=SubtitleTools.Common"
+			 mc:Ignorable="d" 
+             Name="ThisUserControl"
+			 d:DesignHeight="500" d:DesignWidth="600">
+	<UserControl.Resources>
+		<vm:SpeechRecognitionViewModel x:Key="vmSpeechRecognitionViewModel" />
+        <conv:FileNameConverter x:Key="convFileNameConverter" />
+        <conv:TimeSpanConverter x:Key="convTimeSpanConverter" />
+
+		<DataTemplate x:Key="comboRow">
+			<StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+				<TextBlock HorizontalAlignment="Left" Text="{Binding Name}" Margin="1" />
+			</StackPanel>
+		</DataTemplate>
+	</UserControl.Resources>
+	<Grid DataContext="{Binding Source={StaticResource vmSpeechRecognitionViewModel}}">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<GroupBox Margin="1" Header="Installed Speech Recognition Engines" Grid.Row="0">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+
+				<TextBlock VerticalAlignment="Center" Text="Engine:" Grid.Column="0" Grid.Row="0" Margin="2" />
+				<ComboBox 
+					ItemsSource="{Binding SpeechRecognitionModelData.SpeechRecognitionEnginesData, Mode=TwoWay}"
+					SelectedValue="{Binding SpeechRecognitionModelData.SelectedEngine, Mode=TwoWay}"
+					ItemTemplate="{StaticResource comboRow}" 
+					IsSynchronizedWithCurrentItem="True"
+					Grid.Column="1" Grid.Row="0" Margin="2" />
+				<TextBlock VerticalAlignment="Center" Text="Supported Audio Formats:" Grid.ColumnSpan="2" Grid.Row="1" Margin="2" />
+				<ListView 
+					ItemsSource="{Binding SpeechRecognitionModelData.AudioFormatsData, Mode=TwoWay}"
+					Margin="2" Grid.ColumnSpan="2" Grid.Row="2">
+					<ListView.View>
+						<GridView>
+							<GridViewColumn DisplayMemberBinding="{Binding Path=Encodingformat}"
+											Header="Encoding Format" Width="100" />
+							<GridViewColumn DisplayMemberBinding="{Binding Path=BitsPerSample}"
+											Header="Bits Per Sample" Width="100" />
+							<GridViewColumn DisplayMemberBinding="{Binding Path=BlockAlign}"
+											Header="Blocks Align" Width="100" />
+							<GridViewColumn DisplayMemberBinding="{Binding Path=ChannelCount}"
+											Header="Channels Count" Width="100" />
+							<GridViewColumn DisplayMemberBinding="{Binding Path=SamplesPerSecond}"                                             
+											Header="Samples Per Second" Width="115" />
+						</GridView>
+					</ListView.View>
+				</ListView>
+			</Grid>
+		</GroupBox>
+
+        <GroupBox Grid.Row="1" Margin="1" Header="Recognition Timeouts">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />                   
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Babble Timeout:" Grid.Row="0" Grid.Column="0" Margin="2" VerticalAlignment="Center"/>
+                <TextBox Width="105" Text="{Binding SpeechRecognitionModelData.SilenceTimeoutData.BabbleTimeout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource convTimeSpanConverter}}" Grid.Row="0" Grid.Column="1"  Margin="2" VerticalAlignment="Center"/>
+
+                <TextBlock Text="End Silence Timeout:" Grid.Row="1" Grid.Column="0" Margin="2" VerticalAlignment="Center"/>
+                <TextBox Width="105" Text="{Binding SpeechRecognitionModelData.SilenceTimeoutData.EndSilenceTimeout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource convTimeSpanConverter}, ValidatesOnExceptions=True}" Grid.Row="1" Grid.Column="1"  Margin="2" VerticalAlignment="Center"/>
+
+                <TextBlock Text="End Silence Timeout Ambiguous:" Grid.Row="2" Grid.Column="0" Margin="2" VerticalAlignment="Center"/>
+                <TextBox Width="105" Text="{Binding SpeechRecognitionModelData.SilenceTimeoutData.EndSilenceTimeoutAmbiguous, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource convTimeSpanConverter}, ValidatesOnExceptions=True}" Grid.Row="2" Grid.Column="1"  Margin="2" VerticalAlignment="Center"/>
+
+                <TextBlock Text="Initial Silence Timeout:" Grid.Row="3" Grid.Column="0" Margin="2" VerticalAlignment="Center"/>
+                <TextBox Width="105" Text="{Binding SpeechRecognitionModelData.SilenceTimeoutData.InitialSilenceTimeout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource convTimeSpanConverter}}" Grid.Row="3" Grid.Column="1"  Margin="2" VerticalAlignment="Center"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Row="2" Margin="1" Header="Recognition Progress">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+
+                <TextBlock Text="File Name:" Grid.Row="0" Grid.Column="0" Margin="2" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding SpeechRecognitionModelData.FileName, Converter={StaticResource convFileNameConverter}}" Grid.Row="0" Grid.Column="1"  Margin="2" VerticalAlignment="Center" />
+                <Button Content="Start" 
+						Command="{Binding DataContext.DoStartSpeechRecognition, ElementName=ThisUserControl}" 
+						VerticalAlignment="Center" Width="50" HorizontalAlignment="Left" Height="22"
+						Grid.Row="0" Grid.Column="2" Margin="2" />
+
+                <TextBlock Text="Audio Position:" Grid.Row="1" Grid.Column="0" Margin="2" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding SpeechRecognitionModelData.AudioPosition}" Grid.Row="1" Grid.Column="1"  Margin="2" VerticalAlignment="Center"/>
+
+                <TextBlock Text="Recognizer Audio Position:" Grid.Row="2" Grid.Column="0"  Margin="2" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding SpeechRecognitionModelData.RecognizerAudioPosition}" Grid.Row="2" Grid.Column="1"   Margin="2" VerticalAlignment="Center"/>
+
+                <TextBlock Text="Audio Length:" Grid.Row="3" Grid.Column="0"  Margin="2" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding SpeechRecognitionModelData.AudioLength}" Grid.Row="3" Grid.Column="1"   Margin="2" VerticalAlignment="Center"/>
+
+                <TextBlock Text="Average Confidence:" Grid.Row="4" Grid.Column="0"  Margin="2" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding SpeechRecognitionModelData.Confidence}" Grid.Row="4" Grid.Column="1"   Margin="2" VerticalAlignment="Center"/>
+
+                <TextBlock Text="Progress:" Grid.Row="5" Grid.Column="0"  Margin="2" VerticalAlignment="Center"/>
+				<ProgressBar Grid.Column="1" 
+							 HorizontalAlignment="Stretch" 
+							 Grid.Row="5"
+							 Value="{Binding SpeechRecognitionModelData.Progress}"
+                             VerticalAlignment="Center"
+							 Height="5"
+							 Margin="2" Width="Auto" />
+				<Button Content="Stop" 
+						Command="{Binding DoStopEngine}"
+						VerticalAlignment="Center" Width="50" HorizontalAlignment="Left" Height="22"
+						Grid.Row="5" Grid.Column="2" Margin="2" />
+
+            </Grid>
+		</GroupBox>
+	</Grid>
+</UserControl>

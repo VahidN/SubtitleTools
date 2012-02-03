@@ -19,7 +19,7 @@ namespace SubtitleTools.Common.Behaviors
            typeof(OpenFileDialogBoxBehavior), null);
         public static readonly DependencyProperty FileDialogDialogResultCommandProperty =
             DependencyProperty.Register("FileDialogDialogResultCommand",
-            typeof(object), typeof(OpenFileDialogBoxBehavior), null);        
+            typeof(object), typeof(OpenFileDialogBoxBehavior), null);
 
         #endregion Fields
 
@@ -69,6 +69,9 @@ namespace SubtitleTools.Common.Behaviors
                         break;
                     case "Subtitle":
                         objOpenFileDialog.Filter = Filters.SrtFilter;
+                        break;
+                    case "Wav":
+                        objOpenFileDialog.Filter = Filters.WavFilter;
                         break;
                 }
             }

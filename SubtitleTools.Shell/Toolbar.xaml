@@ -39,7 +39,30 @@
                 </i:Interaction.Triggers>
             </Button>
 
-			<Separator />
+            <Separator />
+
+            <Button ToolTip="Open a WAV file" Margin="2">
+                <StackPanel HorizontalAlignment="Center" Margin="1">
+                    <Image Source="Images/voice_chat.png" Width="32" Height="32" HorizontalAlignment="Center" />
+                    <TextBlock Text="Open WAV" HorizontalAlignment="Center" />
+                </StackPanel>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <b:OpenFileDialogBoxBehavior 
+									DialogFilterType="Wav"
+									FileDialogDialogResultCommand="{Binding MainWindowGuiData.WavFilePath, Mode=TwoWay}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+
+            <Button ToolTip="Start Speech Recognition" Command="{Binding DoStartSpeechRecognition}" Margin="2">
+                <StackPanel HorizontalAlignment="Center" Margin="1">
+                    <Image Source="Images/speech_recognition.png" Width="32" Height="32" HorizontalAlignment="Center" />
+                    <TextBlock Text="Recognize" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+
+            <Separator />
 
             <Button ToolTip="Save" Command="{Binding DoSaveChanges}" Margin="2">
                 <StackPanel HorizontalAlignment="Center" Margin="1">

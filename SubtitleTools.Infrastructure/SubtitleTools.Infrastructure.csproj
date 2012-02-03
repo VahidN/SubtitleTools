@@ -45,6 +45,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Speech" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -79,8 +80,11 @@
     <Compile Include="Core\OpenSubtitlesOrg\Helper\UploadData.cs" />
     <Compile Include="Core\OpenSubtitlesOrg\OpenSubtitlesXmlRpc.cs" />
     <Compile Include="Core\ParseSrt.cs" />
+    <Compile Include="Core\Sre.cs" />
     <Compile Include="Core\Sync.cs" />
     <Compile Include="Core\UnicodeRle.cs" />
+    <Compile Include="Models\AudioFormat.cs" />
+    <Compile Include="Models\AudioFormats.cs" />
     <Compile Include="Models\DownloadOpenSubtitlesGui.cs" />
     <Compile Include="Models\JoinTwoFilesGui.cs" />
     <Compile Include="Models\Log.cs" />
@@ -89,6 +93,10 @@
     <Compile Include="Models\OsdbItem.cs" />
     <Compile Include="Models\OsdbItems.cs" />
     <Compile Include="Models\PreviewModel.cs" />
+    <Compile Include="Models\SilenceTimeout.cs" />
+    <Compile Include="Models\SpeechRecognitionEngine.cs" />
+    <Compile Include="Models\SpeechRecognitionEngines.cs" />
+    <Compile Include="Models\SpeechRecognitionModel.cs" />
     <Compile Include="Models\SubtitleItem.cs" />
     <Compile Include="Models\SubtitleItems.cs" />
     <Compile Include="Models\SyncModel.cs" />
@@ -101,6 +109,7 @@
     <Compile Include="ViewModels\LogsViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\PreviewViewModel.cs" />
+    <Compile Include="ViewModels\SpeechRecognitionViewModel.cs" />
     <Compile Include="ViewModels\SyncViewModel.cs" />
     <Compile Include="ViewModels\UploadOpenSubtitlesViewModel.cs" />
   </ItemGroup>
