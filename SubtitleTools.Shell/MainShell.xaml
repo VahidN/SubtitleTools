@@ -20,7 +20,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="130" />
+                <RowDefinition Height="100" />
             </Grid.RowDefinitions>
             <TabControl Margin="7" Grid.Row="0" Name="tabControl1" TabStripPlacement="Left">
                 <TabItem>
@@ -40,9 +40,27 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Views:Toolbar Grid.Row="0" Grid.ColumnSpan="2" Margin="7" />
-                                <Views:Preview
-                                    Grid.Row="1" Grid.Column="0"
-                                    FilePath="{Binding Path=MainWindowGuiData.MediaFilePath, Mode=TwoWay}"/>
+                        <TabControl Grid.Row="1" Grid.Column="0" Margin="7,1,7,7">
+                            <TabItem>
+                                <TabItem.Header>
+                                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Margin="1">
+                                        <Image Source="Images/note_add.png" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="1" />
+                                        <TextBlock Text="Add Subtitle" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1"/>
+                                    </StackPanel>
+                                </TabItem.Header>
+                             <Views:Preview                                    
+                                  FilePath="{Binding Path=MainWindowGuiData.MediaFilePath, Mode=TwoWay}"/>
+                            </TabItem>
+                            <TabItem>
+                                <TabItem.Header>
+                                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Margin="1">
+                                        <Image Source="Images/speech_recognition.png" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="1" />
+                                        <TextBlock Text="Speech Recognition" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1"/>
+                                    </StackPanel>
+                                </TabItem.Header>
+                                <Views:SpeechRecognition /> 
+                            </TabItem>
+                        </TabControl>
                         <GridSplitter                            
                             Grid.Column="0"
                             ShowsPreview="true"

@@ -92,6 +92,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="SpeechRecognition.xaml.cs">
+      <DependentUpon>SpeechRecognition.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SubtitleView.xaml.cs">
       <DependentUpon>SubtitleView.xaml</DependentUpon>
     </Compile>
@@ -146,6 +149,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Preview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SpeechRecognition.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -519,6 +526,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\calculator.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\speech_recognition.png" />
+    <Resource Include="Images\voice_chat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\clipping_sound.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\note_add.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,22 +1,48 @@
-﻿using System.ComponentModel;
-using SubtitleTools.Common.ISO639;
+﻿using SubtitleTools.Common.ISO639;
 using SubtitleTools.Common.MVVM;
 
 namespace SubtitleTools.Infrastructure.Models
 {
     public class DownloadOpenSubtitlesGui : ViewModelBase
     {
-        #region Fields (4)
+        #region Fields (10)
 
+        string _imdbRating;
+        string _imdbUrl;
         bool _isBusy;
+        string _movieName;
         string _moviePath;
+        string _movieYear;
+        string _osdbUrl;
         int _progress;
-        Language _subLanguageId;
         OsdbItem _selectedOsdbItem;
+        Language _subLanguageId;
 
         #endregion Fields
 
-        #region Properties (4)
+        #region Properties (10)
+
+        public string ImdbRating
+        {
+            set
+            {
+                if (_imdbRating == value) return;
+                _imdbRating = value;
+                RaisePropertyChanged("ImdbRating");
+            }
+            get { return _imdbRating; }
+        }
+
+        public string ImdbUrl
+        {
+            set
+            {
+                if (_imdbUrl == value) return;
+                _imdbUrl = value;
+                RaisePropertyChanged("ImdbUrl");
+            }
+            get { return _imdbUrl; }
+        }
 
         public bool IsBusy
         {
@@ -29,14 +55,15 @@ namespace SubtitleTools.Infrastructure.Models
             }
         }
 
-        public OsdbItem SelectedOsdbItem
+        public string MovieName
         {
-            get { return _selectedOsdbItem; }
             set
             {
-                _selectedOsdbItem = value;
-                RaisePropertyChanged("SelectedOsdbItem");
+                if (_movieName == value) return;
+                _movieName = value;
+                RaisePropertyChanged("MovieName");
             }
+            get { return _movieName; }
         }
 
         public string MoviePath
@@ -50,6 +77,28 @@ namespace SubtitleTools.Infrastructure.Models
             get { return _moviePath; }
         }
 
+        public string MovieYear
+        {
+            set
+            {
+                if (_movieYear == value) return;
+                _movieYear = value;
+                RaisePropertyChanged("MovieYear");
+            }
+            get { return _movieYear; }
+        }
+
+        public string OsdbUrl
+        {
+            set
+            {
+                if (_osdbUrl == value) return;
+                _osdbUrl = value;
+                RaisePropertyChanged("OsdbUrl");
+            }
+            get { return _osdbUrl; }
+        }
+
         public int Progress
         {
             get { return _progress; }
@@ -58,6 +107,16 @@ namespace SubtitleTools.Infrastructure.Models
                 if (_progress == value) return;
                 _progress = value;
                 RaisePropertyChanged("Progress");
+            }
+        }
+
+        public OsdbItem SelectedOsdbItem
+        {
+            get { return _selectedOsdbItem; }
+            set
+            {
+                _selectedOsdbItem = value;
+                RaisePropertyChanged("SelectedOsdbItem");
             }
         }
 
@@ -70,66 +129,6 @@ namespace SubtitleTools.Infrastructure.Models
                 RaisePropertyChanged("SubLanguageId");
             }
             get { return _subLanguageId; }
-        }
-
-        string _movieName;
-        public string MovieName
-        {
-            set
-            {
-                if (_movieName == value) return;
-                _movieName = value;
-                RaisePropertyChanged("MovieName");
-            }
-            get { return _movieName; }
-        }
-
-        string _movieYear;
-        public string MovieYear
-        {
-            set
-            {
-                if (_movieYear == value) return;
-                _movieYear = value;
-                RaisePropertyChanged("MovieYear");
-            }
-            get { return _movieYear; }
-        }
-
-        string _imdbRating;
-        public string ImdbRating
-        {
-            set
-            {
-                if (_imdbRating == value) return;
-                _imdbRating = value;
-                RaisePropertyChanged("ImdbRating");
-            }
-            get { return _imdbRating; }
-        }
-
-        string _osdbUrl;
-        public string OsdbUrl
-        {
-            set
-            {
-                if (_osdbUrl == value) return;
-                _osdbUrl = value;
-                RaisePropertyChanged("OsdbUrl");
-            }
-            get { return _osdbUrl; }
-        }
-
-        string _imdbUrl;
-        public string ImdbUrl
-        {
-            set
-            {
-                if (_imdbUrl == value) return;
-                _imdbUrl = value;
-                RaisePropertyChanged("ImdbUrl");
-            }
-            get { return _imdbUrl; }
         }
 
         #endregion Properties
