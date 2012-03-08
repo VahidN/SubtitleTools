@@ -6,7 +6,7 @@ namespace SubtitleTools.Infrastructure.Models
 {
     public class MainWindowGui : ViewModelBase
     {
-        #region Fields
+        #region Fields (18)
 
         bool _doMergeIsEnabled;
         bool _doMixIsEnabled;
@@ -25,20 +25,11 @@ namespace SubtitleTools.Infrastructure.Models
         SubtitleItem _selectedItem;
         FlowDirection _tableFlowDirection = FlowDirection.LeftToRight;
         string _wavFilePath;
+        string[] _wavFilesPath;
 
         #endregion Fields
 
-        #region Properties (16)
-
-        public string WavFilePath
-        {
-            get { return _wavFilePath; }
-            set
-            {
-                _wavFilePath = value;
-                RaisePropertyChanged("WavFilePath");
-            }
-        }
+        #region Properties (18)
 
         public bool DoMergeIsEnabled
         {
@@ -212,6 +203,26 @@ namespace SubtitleTools.Infrastructure.Models
                 if (_tableFlowDirection == value) return;
                 _tableFlowDirection = value;
                 RaisePropertyChanged("TableFlowDirection");
+            }
+        }
+
+        public string WavFilePath
+        {
+            get { return _wavFilePath; }
+            set
+            {
+                _wavFilePath = value;
+                RaisePropertyChanged("WavFilePath");
+            }
+        }
+
+        public string[] WavFilesPath
+        {
+            get { return _wavFilesPath; }
+            set
+            {
+                _wavFilesPath = value;
+                RaisePropertyChanged("WavFilesPath");
             }
         }
 

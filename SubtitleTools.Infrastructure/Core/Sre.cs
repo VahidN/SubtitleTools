@@ -29,7 +29,7 @@ namespace SubtitleTools.Infrastructure.Core
 
         #endregion Constructors
 
-        #region Properties (9)
+        #region Properties (11)
 
         public Action<TimeSpan> AudioPositionChanged { set; get; }
 
@@ -65,7 +65,11 @@ namespace SubtitleTools.Infrastructure.Core
 
         public Action<int> Progress { set; get; }
 
+        public bool RecognizeAsync { set; get; }
+
         public Action<string> RecognizeCompleted { set; get; }
+
+        public Action<string> RecognizeEnd { set; get; }
 
         public Action<TimeSpan> RecognizerAudioPositionChanged { set; get; }
 
@@ -73,7 +77,7 @@ namespace SubtitleTools.Infrastructure.Core
 
         #endregion Properties
 
-        #region Methods (9)
+        #region Methods (11)
 
         // Public Methods (3) 
 
@@ -94,7 +98,10 @@ namespace SubtitleTools.Infrastructure.Core
             _confidenceSum = 0;
             _number = 1;
             setSilenceTimeouts(silenceTimeouts);
-            _sre.RecognizeAsync(RecognizeMode.Multiple);
+            if (RecognizeAsync)
+                _sre.RecognizeAsync(RecognizeMode.Multiple);
+            else
+                _sre.Recognize();
         }
 
         public void StopRecognition()
@@ -103,11 +110,12 @@ namespace SubtitleTools.Infrastructure.Core
             if (_sre == null) return;
             _sre.RecognizeAsyncCancel();
         }
-        // Private Methods (6) 
+        // Private Methods (8) 
 
         void recognizeCompleted(object sender, RecognizeCompletedEventArgs e)
         {
             IsRunning = false;
+            RecognizeEnd("Recognize Completed.");
             updatePosition();
             if (RecognizeCompleted == null) return;
 
@@ -162,6 +170,15 @@ namespace SubtitleTools.Infrastructure.Core
             updatePosition();
         }
 
+        private TimeSpan tryGetMediaLength()
+        {
+            if (_mediaLength.TotalSeconds == 0)
+            {
+                _mediaLength = MediaLength;
+            }
+            return _mediaLength;
+        }
+
         private void updateAverageConfidence()
         {
             if (AverageConfidence == null) return;
@@ -189,15 +206,6 @@ namespace SubtitleTools.Infrastructure.Core
             var mediaLen = tryGetMediaLength();
             if (mediaLen.TotalSeconds == 0) return;
             if (Progress != null) Progress((int)((_sre.RecognizerAudioPosition.TotalSeconds / _mediaLength.TotalSeconds) * 100));
-        }
-
-        private TimeSpan tryGetMediaLength()
-        {
-            if (_mediaLength.TotalSeconds == 0)
-            {
-                _mediaLength = MediaLength;
-            }
-            return _mediaLength;
         }
 
         #endregion Methods

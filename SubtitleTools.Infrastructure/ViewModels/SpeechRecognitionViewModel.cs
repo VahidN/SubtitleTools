@@ -11,8 +11,11 @@ namespace SubtitleTools.Infrastructure.ViewModels
 {
     public class SpeechRecognitionViewModel
     {
-        #region Fields (1)
+        #region Fields (4)
 
+        bool _doStartAll;
+        int _fileId;
+        string[] _files;
         private Sre _sre;
 
         #endregion Fields
@@ -27,7 +30,11 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Constructors
 
-        #region Properties (2)
+        #region Properties (4)
+
+        public DelegateCommand<string[]> DoStartAll { set; get; }
+
+        public DelegateCommand<string> DoStopAll { set; get; }
 
         public DelegateCommand<string> DoStopEngine { set; get; }
 
@@ -35,14 +42,29 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Properties
 
-        #region Methods (13)
+        #region Methods (17)
 
-        // Private Methods (13) 
+        // Private Methods (17) 
 
         private bool canDoStopEngine(string data)
         {
             return SpeechRecognitionModelData.SelectedEngine != null &&
                  !string.IsNullOrWhiteSpace(SpeechRecognitionModelData.FileName);
+        }
+
+        private bool canStartTheLoop()
+        {
+            return _doStartAll && _files != null && _fileId < _files.Length;
+        }
+
+        private void doStartAll(string[] files)
+        {
+            if (files == null || !files.Any()) return;
+            _files = files;
+            _fileId = 0;
+            _doStartAll = true;
+            App.Messenger.NotifyColleagues("doChangeWavFilePath", files[_fileId]);
+            doStartSpeechRecognition(files[_fileId++]);
         }
 
         void doStartSpeechRecognition(string path)
@@ -55,7 +77,13 @@ namespace SubtitleTools.Infrastructure.ViewModels
             }
 
             startEngine(path);
-            LogWindow.AddMessage(LogType.Info, "Engine has started.");
+            LogWindow.AddMessage(LogType.Info, string.Format("Engine has started. Wav File: {0}", path));
+        }
+
+        private void doStopAll(string data)
+        {
+            _doStartAll = false;
+            if (_sre != null) _sre.StopRecognition();
         }
 
         private RecognizerInfo getSelectedEngineRecognizerInfo()
@@ -70,6 +98,8 @@ namespace SubtitleTools.Infrastructure.ViewModels
             SpeechRecognitionModelData.PropertyChanged += speechRecognitionModelDataPropertyChanged;
             App.Messenger.Register<string>("StartSpeechRecognition", doStartSpeechRecognition);
             DoStopEngine = new DelegateCommand<string>(data => { if (_sre != null) _sre.StopRecognition(); }, canDoStopEngine);
+            DoStartAll = new DelegateCommand<string[]>(doStartAll, data => !string.IsNullOrWhiteSpace(SpeechRecognitionModelData.FileName));
+            DoStopAll = new DelegateCommand<string>(doStopAll, data => !string.IsNullOrWhiteSpace(SpeechRecognitionModelData.FileName));
             App.Messenger.Register<string>("SpeechRecognitionFileChanged", speechRecognitionFileChanged);
         }
 
@@ -79,12 +109,14 @@ namespace SubtitleTools.Infrastructure.ViewModels
             _sre = new Sre(filePath, SpeechRecognitionModelData.SelectedEngine.Id)
             {
                 RecognizeCompleted = message => LogWindow.AddMessage(LogType.Info, message),
+                RecognizeEnd = recognizeEnd,
                 SpeechRecognized = subtitleItem => App.Messenger.NotifyColleagues("doAddVoiceSubtitle", subtitleItem),
                 AudioPositionChanged = data => SpeechRecognitionModelData.AudioPosition = data,
                 RecognizerAudioPositionChanged =
                     data => SpeechRecognitionModelData.RecognizerAudioPosition = data,
                 Progress = data => SpeechRecognitionModelData.Progress = data,
-                AverageConfidence = data => SpeechRecognitionModelData.Confidence = data
+                AverageConfidence = data => SpeechRecognitionModelData.Confidence = data,
+                RecognizeAsync = true
             };
             _sre.InitEngine();
         }
@@ -126,6 +158,15 @@ namespace SubtitleTools.Infrastructure.ViewModels
                             Encodingformat = item.EncodingFormat.ToString(),
                             SamplesPerSecond = item.SamplesPerSecond
                         });
+            }
+        }
+
+        private void recognizeEnd(string message)
+        {
+            if (canStartTheLoop())
+            {
+                App.Messenger.NotifyColleagues("doChangeWavFilePath", _files[_fileId]);
+                doStartSpeechRecognition(_files[_fileId++]);
             }
         }
 
