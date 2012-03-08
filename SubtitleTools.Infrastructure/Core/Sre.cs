@@ -175,14 +175,29 @@ namespace SubtitleTools.Infrastructure.Core
             {
                 if (AudioPositionChanged != null) AudioPositionChanged(_sre.AudioPosition);
                 if (RecognizerAudioPositionChanged != null) RecognizerAudioPositionChanged(_sre.RecognizerAudioPosition);
-                if (_mediaLength.TotalSeconds == 0) return;
-                if (Progress != null) Progress((int)((_sre.RecognizerAudioPosition.TotalSeconds / _mediaLength.TotalSeconds) * 100));
+                updateProgress();
             }
             catch (Exception ex)
             {
                 ExceptionLogger.LogExceptionToFile(ex);
                 LogWindow.AddMessage(LogType.Error, ex.Message);
             }
+        }
+
+        private void updateProgress()
+        {
+            var mediaLen = tryGetMediaLength();
+            if (mediaLen.TotalSeconds == 0) return;
+            if (Progress != null) Progress((int)((_sre.RecognizerAudioPosition.TotalSeconds / _mediaLength.TotalSeconds) * 100));
+        }
+
+        private TimeSpan tryGetMediaLength()
+        {
+            if (_mediaLength.TotalSeconds == 0)
+            {
+                _mediaLength = MediaLength;
+            }
+            return _mediaLength;
         }
 
         #endregion Methods

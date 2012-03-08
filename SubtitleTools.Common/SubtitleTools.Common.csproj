@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\AutoScrollListView.cs" />
+    <Compile Include="Behaviors\FolderBrowserDialogBehavior.cs" />
     <Compile Include="Behaviors\LoadedBehavior.cs" />
     <Compile Include="Behaviors\MediaElementBehavior.cs" />
     <Compile Include="Behaviors\OpenFileDialogBoxBehavior.cs" />

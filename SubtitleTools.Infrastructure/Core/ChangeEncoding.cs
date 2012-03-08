@@ -63,7 +63,7 @@ namespace SubtitleTools.Infrastructure.Core
 
         public bool ToUTF8(string path, string fromEnc)
         {
-            LogWindow.AddMessage(LogType.Info, "ChangeEncoding Start.");
+            LogWindow.AddMessage(LogType.Info, string.Format("ChangeEncoding ({0}) Start.", path));
             if (IsUTF8(path))
             {
                 LogWindow.AddMessage(LogType.Alert, "This file IsUTF8!");
@@ -82,6 +82,14 @@ namespace SubtitleTools.Infrastructure.Core
             IsRtl = File.ReadAllText(path).ContainsFarsi();
             LogWindow.AddMessage(LogType.Info, "ChangeEncoding End.");
             return true;
+        }
+
+        public void ConvertAllFilesEncodings(string folder, string fromEnc)
+        {
+            foreach (var file in Directory.GetFiles(folder, "*.srt"))
+            {
+                ToUTF8(file, fromEnc);
+            }
         }
 
         public string TryReduceRtlLargeFileContent(string fileName)
