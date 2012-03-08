@@ -9,21 +9,38 @@ namespace SubtitleTools.Common.Behaviors
 {
     public class OpenFileDialogBoxBehavior : TargetedTriggerAction<Button>
     {
-        #region Fields (4)
+        #region Fields
 
         public static readonly DependencyProperty DialogFilterProperty =
            DependencyProperty.Register("DialogFilter", typeof(string),
            typeof(OpenFileDialogBoxBehavior), null);
+
         public static readonly DependencyProperty DialogFilterTypeProperty =
            DependencyProperty.Register("DialogFilterType", typeof(string),
            typeof(OpenFileDialogBoxBehavior), null);
+
         public static readonly DependencyProperty FileDialogDialogResultCommandProperty =
             DependencyProperty.Register("FileDialogDialogResultCommand",
-            typeof(object), typeof(OpenFileDialogBoxBehavior), null);
+            typeof(string), typeof(OpenFileDialogBoxBehavior), null);
+
+        public static readonly DependencyProperty FileDialogMultiselectProperty =
+            DependencyProperty.Register("FileDialogMultiselect",
+            typeof(bool), typeof(OpenFileDialogBoxBehavior), new PropertyMetadata(false));
+
+        public static readonly DependencyProperty FileDialogDialogResultCommandsProperty =
+            DependencyProperty.Register("FileDialogDialogResultCommands",
+            typeof(string[]), typeof(OpenFileDialogBoxBehavior), null);
+
 
         #endregion Fields
 
-        #region Properties (3)
+        #region Properties
+
+        public bool FileDialogMultiselect
+        {
+            get { return (bool)GetValue(FileDialogMultiselectProperty); }
+            set { SetValue(FileDialogMultiselectProperty, value); }
+        }
 
         public string DialogFilter
         {
@@ -37,10 +54,16 @@ namespace SubtitleTools.Common.Behaviors
             set { SetValue(DialogFilterTypeProperty, value); }
         }
 
-        public object FileDialogDialogResultCommand
+        public string FileDialogDialogResultCommand
         {
-            get { return GetValue(FileDialogDialogResultCommandProperty); }
+            get { return (string)GetValue(FileDialogDialogResultCommandProperty); }
             set { SetValue(FileDialogDialogResultCommandProperty, value); }
+        }
+
+        public string[] FileDialogDialogResultCommands
+        {
+            get { return (string[])GetValue(FileDialogDialogResultCommandsProperty); }
+            set { SetValue(FileDialogDialogResultCommandsProperty, value); }
         }
 
         #endregion Properties
@@ -82,10 +105,13 @@ namespace SubtitleTools.Common.Behaviors
             if (!string.IsNullOrWhiteSpace(App.StartupFileName))
                 objOpenFileDialog.InitialDirectory = System.IO.Path.GetDirectoryName(App.StartupFileName);
 
+            objOpenFileDialog.Multiselect = FileDialogMultiselect;
+
             var result = objOpenFileDialog.ShowDialog();
             if (!result.Value) return;
 
             FileDialogDialogResultCommand = objOpenFileDialog.FileName;
+            FileDialogDialogResultCommands = objOpenFileDialog.FileNames;
         }
 
         #endregion Methods

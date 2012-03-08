@@ -8,65 +8,68 @@
 			 mc:Ignorable="d" 
              Name="ThisUserControl"
 			 d:DesignHeight="500" d:DesignWidth="600">
-	<UserControl.Resources>
-		<vm:SpeechRecognitionViewModel x:Key="vmSpeechRecognitionViewModel" />
+    <UserControl.Resources>
+        <vm:SpeechRecognitionViewModel x:Key="vmSpeechRecognitionViewModel" />
         <conv:FileNameConverter x:Key="convFileNameConverter" />
         <conv:TimeSpanConverter x:Key="convTimeSpanConverter" />
 
-		<DataTemplate x:Key="comboRow">
-			<StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-				<TextBlock HorizontalAlignment="Left" Text="{Binding Name}" Margin="1" />
-			</StackPanel>
-		</DataTemplate>
-	</UserControl.Resources>
-	<Grid DataContext="{Binding Source={StaticResource vmSpeechRecognitionViewModel}}">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
+        <DataTemplate x:Key="comboRow">
+            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                <TextBlock HorizontalAlignment="Left" Text="{Binding Name}" Margin="1" />
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid DataContext="{Binding Source={StaticResource vmSpeechRecognitionViewModel}}">
+        <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-		</Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-		<GroupBox Margin="1" Header="Installed Speech Recognition Engines" Grid.Row="0">
-			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="*" />
-				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
+        <GroupBox Margin="1" Header="Installed Speech Recognition Engines" Grid.Row="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-				<TextBlock VerticalAlignment="Center" Text="Engine:" Grid.Column="0" Grid.Row="0" Margin="2" />
-				<ComboBox 
+                <TextBlock VerticalAlignment="Center" Text="Engine:" Grid.Column="0" Grid.Row="0" Margin="2" />
+                <ComboBox 
 					ItemsSource="{Binding SpeechRecognitionModelData.SpeechRecognitionEnginesData, Mode=TwoWay}"
 					SelectedValue="{Binding SpeechRecognitionModelData.SelectedEngine, Mode=TwoWay}"
 					ItemTemplate="{StaticResource comboRow}" 
 					IsSynchronizedWithCurrentItem="True"
 					Grid.Column="1" Grid.Row="0" Margin="2" />
-				<TextBlock VerticalAlignment="Center" Text="Supported Audio Formats:" Grid.ColumnSpan="2" Grid.Row="1" Margin="2" />
-				<ListView 
+                <TextBlock VerticalAlignment="Center" Text="Supported Audio Formats:" Grid.ColumnSpan="2" Grid.Row="1" Margin="2" />
+                <ListView 
 					ItemsSource="{Binding SpeechRecognitionModelData.AudioFormatsData, Mode=TwoWay}"
 					Margin="2" Grid.ColumnSpan="2" Grid.Row="2">
-					<ListView.View>
-						<GridView>
-							<GridViewColumn DisplayMemberBinding="{Binding Path=Encodingformat}"
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Encodingformat}"
 											Header="Encoding Format" Width="100" />
-							<GridViewColumn DisplayMemberBinding="{Binding Path=BitsPerSample}"
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=BitsPerSample}"
 											Header="Bits Per Sample" Width="100" />
-							<GridViewColumn DisplayMemberBinding="{Binding Path=BlockAlign}"
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=BlockAlign}"
 											Header="Blocks Align" Width="100" />
-							<GridViewColumn DisplayMemberBinding="{Binding Path=ChannelCount}"
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=ChannelCount}"
 											Header="Channels Count" Width="100" />
-							<GridViewColumn DisplayMemberBinding="{Binding Path=SamplesPerSecond}"                                             
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=SamplesPerSecond}"                                             
 											Header="Samples Per Second" Width="115" />
-						</GridView>
-					</ListView.View>
-				</ListView>
-			</Grid>
-		</GroupBox>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </GroupBox>
 
         <GroupBox Grid.Row="1" Margin="1" Header="Recognition Timeouts">
             <Grid>
@@ -74,7 +77,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />                   
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -95,21 +99,48 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Grid.Row="2" Margin="1" Header="Recognition Progress">
-			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
+        <GroupBox Grid.Row="2" Margin="1" MaxHeight="170" Header="Selected File(s)">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <ListView x:Name="ListViewWavFiles" 
+                          ItemsSource="{Binding DataContext.MainWindowGuiData.WavFilesPath, ElementName=ThisUserControl}" 
+					      SelectedValue="{Binding DataContext.MainWindowGuiData.WavFilePath, ElementName=ThisUserControl}"
+					      Margin="3">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="500" Header="WAV File"  
+                                        DisplayMemberBinding="{Binding}"  />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Start All" Margin="2" 
+                            Command="{Binding DoStartAll}"
+                            CommandParameter="{Binding ElementName=ListViewWavFiles, Path=ItemsSource}"
+                            VerticalAlignment="Center" HorizontalAlignment="Left" Width="70" Height="25" />
+                        <Button Content="Stop All" Margin="2" 
+                            Command="{Binding DoStopAll}"
+                            VerticalAlignment="Center" HorizontalAlignment="Left" Width="70" Height="25"/>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </GroupBox>
+
+        <GroupBox Grid.Row="3" Margin="1" Header="Recognition Progress">
+            <Grid>
+                <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
                 <TextBlock Text="File Name:" Grid.Row="0" Grid.Column="0" Margin="2" VerticalAlignment="Center" />
                 <TextBlock Text="{Binding SpeechRecognitionModelData.FileName, Converter={StaticResource convFileNameConverter}}" Grid.Row="0" Grid.Column="1"  Margin="2" VerticalAlignment="Center" />
@@ -131,19 +162,21 @@
                 <TextBlock Text="{Binding SpeechRecognitionModelData.Confidence}" Grid.Row="4" Grid.Column="1"   Margin="2" VerticalAlignment="Center"/>
 
                 <TextBlock Text="Progress:" Grid.Row="5" Grid.Column="0"  Margin="2" VerticalAlignment="Center"/>
-				<ProgressBar Grid.Column="1" 
+                <ProgressBar Grid.Column="1" 
 							 HorizontalAlignment="Stretch" 
 							 Grid.Row="5"
 							 Value="{Binding SpeechRecognitionModelData.Progress}"
                              VerticalAlignment="Center"
 							 Height="5"
 							 Margin="2" Width="Auto" />
-				<Button Content="Stop" 
+                <Button Content="Stop" 
 						Command="{Binding DoStopEngine}"
 						VerticalAlignment="Center" Width="50" HorizontalAlignment="Left" Height="22"
 						Grid.Row="5" Grid.Column="2" Margin="2" />
 
             </Grid>
-		</GroupBox>
-	</Grid>
+        </GroupBox>
+
+
+    </Grid>
 </UserControl>

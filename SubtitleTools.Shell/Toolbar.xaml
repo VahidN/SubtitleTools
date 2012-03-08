@@ -41,7 +41,7 @@
 
             <Separator />
 
-            <Button ToolTip="Open a WAV file" Margin="2">
+            <Button ToolTip="Open WAV file(s)" Margin="2">
                 <StackPanel HorizontalAlignment="Center" Margin="1">
                     <Image Source="Images/voice_chat.png" Width="32" Height="32" HorizontalAlignment="Center" />
                     <TextBlock Text="Open WAV" HorizontalAlignment="Center" />
@@ -50,7 +50,10 @@
                     <i:EventTrigger EventName="Click">
                         <b:OpenFileDialogBoxBehavior 
 									DialogFilterType="Wav"
-									FileDialogDialogResultCommand="{Binding MainWindowGuiData.WavFilePath, Mode=TwoWay}"/>
+                                    FileDialogMultiselect="True"
+									FileDialogDialogResultCommand="{Binding MainWindowGuiData.WavFilePath, Mode=TwoWay}"
+                                    FileDialogDialogResultCommands="{Binding MainWindowGuiData.WavFilesPath, Mode=TwoWay}"
+                            />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>

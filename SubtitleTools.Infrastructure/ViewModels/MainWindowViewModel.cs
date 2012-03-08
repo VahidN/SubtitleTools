@@ -82,9 +82,9 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #endregion Properties
 
-        #region Methods (42)
+        #region Methods (43)
 
-        // Private Methods (42) 
+        // Private Methods (43) 
 
         private void addSubtitleToFile(SubtitleItem subtitleItem, string mediaPath)
         {
@@ -181,6 +181,11 @@ namespace SubtitleTools.Infrastructure.ViewModels
         void doAddVoiceSubtitle(SubtitleItem subtitleItem)
         {
             addSubtitleToFile(subtitleItem, MainWindowGuiData.WavFilePath);
+        }
+
+        void doChangeWavFilePath(string path)
+        {
+            MainWindowGuiData.WavFilePath = path;
         }
 
         void doCloseConvertEncodingView()
@@ -559,6 +564,8 @@ namespace SubtitleTools.Infrastructure.ViewModels
             App.Messenger.Register<SubtitleItem>("doAddSubtitle", doAddSubtitle);
             App.Messenger.Register<int>("doScrollToIndex", doScrollToIndex);
             App.Messenger.Register<SubtitleItem>("doAddVoiceSubtitle", doAddVoiceSubtitle);
+            App.Messenger.Register<string>("doChangeWavFilePath", doChangeWavFilePath);
+
         }
 
         private void showConflicts()
