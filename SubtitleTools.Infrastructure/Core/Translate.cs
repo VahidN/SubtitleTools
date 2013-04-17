@@ -11,14 +11,16 @@ using SubtitleTools.Infrastructure.Models;
 
 namespace SubtitleTools.Infrastructure.Core
 {
-    public static class Translate
+    public class Translate
     {
         private const string AccountKey = "PKWTH4J8g2xmPGTHmQOAlyQsi/aJmef+u5iiuu7rwjo=";
-        private static readonly Uri ServiceUri = new Uri("https://api.datamarket.azure.com/Bing/MicrosoftTranslator/");
-        private static readonly object _locker = new object();
-        private static bool _isRunning;
+        private readonly Uri ServiceUri = new Uri("https://api.datamarket.azure.com/Bing/MicrosoftTranslator/");
+        private bool _isRunning;
+        private string _sourceLanguage;
+        private string _targetLanguage;
+        private SubtitleItems _data;
 
-        public static IList<SubtitleTools.Common.ISO639.Language> GetSupportedLanguages()
+        public IList<SubtitleTools.Common.ISO639.Language> GetSupportedLanguages()
         {
             var translatorContainer = new TranslatorContainer(ServiceUri)
             {
@@ -43,20 +45,17 @@ namespace SubtitleTools.Infrastructure.Core
             return supportedLanguages;
         }
 
-        public static bool StopTranslation { set; get; }
+        public bool StopTranslation { set; get; }
 
-        public static void TranslateAll(string fileName, string sourceLanguage, string targetLanguage)
+        public void TranslateAll(string fileName, string sourceLanguage, string targetLanguage)
         {
-            lock (_locker)
+            if (_isRunning)
             {
-                if (_isRunning)
-                {
-                    LogWindow.AddMessage(LogType.Alert, "Translation is in progress...");
-                    return;
-                }
-                _isRunning = true;
-                StopTranslation = false;
+                LogWindow.AddMessage(LogType.Alert, "Translation is in progress...");
+                return;
             }
+            _isRunning = true;
+            StopTranslation = false;
 
             try
             {
@@ -66,22 +65,25 @@ namespace SubtitleTools.Infrastructure.Core
                     return;
                 }
 
-                var data = new ParseSrt().ToObservableCollectionFromFile(fileName);
-                if (data == null || !data.Any())
+                _data = new ParseSrt().ToObservableCollectionFromFile(fileName);
+                if (_data == null || !_data.Any())
                 {
                     LogWindow.AddMessage(LogType.Alert, "Please open a file.");
                     return;
                 }
 
-                for (var itemId = 0; itemId < data.Count; itemId++)
+                _sourceLanguage = sourceLanguage;
+                _targetLanguage = targetLanguage;
+
+                for (var itemId = 0; itemId < _data.Count; itemId++)
                 {
                     if (StopTranslation)
                         break;
-                    translateItem(sourceLanguage, targetLanguage, data, itemId);
+                    translateItem(itemId);
                 }
 
-                var saveToFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + targetLanguage + Path.GetExtension(fileName);
-                File.WriteAllText(saveToFileName, ParseSrt.SubitemsToString(data).ApplyUnifiedYeKe(), Encoding.UTF8);
+                var saveToFileName = getSaveToFileName(fileName);
+                File.WriteAllText(saveToFileName, ParseSrt.SubitemsToString(_data).ApplyUnifiedYeKe(), Encoding.UTF8);
                 LogWindow.AddMessage(LogType.Info, "Finished Translating. Saved to " + saveToFileName);
             }
             finally
@@ -90,26 +92,32 @@ namespace SubtitleTools.Infrastructure.Core
             }
         }
 
-        private static void translateItem(string sourceLanguage, string targetLanguage, SubtitleItems data, int itemId)
+        private string getSaveToFileName(string fileName)
+        {
+            var saveToFileName = Path.GetFileNameWithoutExtension(fileName) + "." + _targetLanguage + Path.GetExtension(fileName);
+            return Path.Combine(Path.GetDirectoryName(fileName), saveToFileName);
+        }
+
+        private void translateItem(int itemId)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(data[itemId].Dialog))
+                if (string.IsNullOrWhiteSpace(_data[itemId].Dialog))
                     return;
 
-                LogWindow.AddMessage(LogType.Info, "Translating: " + data[itemId].Dialog);
+                LogWindow.AddMessage(LogType.Info, "Translating: " + _data[itemId].Dialog);
 
                 var translatorContainer = new TranslatorContainer(ServiceUri)
                 {
                     Credentials = new NetworkCredential(AccountKey, AccountKey)
                 };
-                var result = translatorContainer.Translate(data[itemId].Dialog.Trim(), targetLanguage, sourceLanguage).Execute().ToList().FirstOrDefault();
+                var result = translatorContainer.Translate(_data[itemId].Dialog.Trim(), _targetLanguage, _sourceLanguage).Execute().ToList().FirstOrDefault();
                 if (result == null)
                     return;
 
-                data[itemId].Dialog = result.Text;
+                _data[itemId].Dialog = result.Text;
 
-                LogWindow.AddMessage(LogType.Info, "Result: " + data[itemId].Dialog);
+                LogWindow.AddMessage(LogType.Info, "Result: " + _data[itemId].Dialog);
             }
             catch (Exception ex)
             {

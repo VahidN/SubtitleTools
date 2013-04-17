@@ -8,6 +8,8 @@ namespace SubtitleTools.Infrastructure.ViewModels
 {
     public class TranslatorViewModel
     {
+        private readonly Translate _translate = new Translate();
+
         public TranslatorViewModel()
         {
             TranslatorData = new TranslatorModel();
@@ -22,7 +24,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         void doStopTranslation(string data)
         {
-            Translate.StopTranslation = true;
+            _translate.StopTranslation = true;
         }
 
         bool canDoStopTranslation(string data)
@@ -59,7 +61,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             {
                 try
                 {
-                    Translate.TranslateAll(filePath, TranslatorData.FromLanguage.ISO639, TranslatorData.ToLanguage.ISO639);
+                    _translate.TranslateAll(filePath, TranslatorData.FromLanguage.ISO639, TranslatorData.ToLanguage.ISO639);
                 }
                 catch (Exception ex)
                 {
