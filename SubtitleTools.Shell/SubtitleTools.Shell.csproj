@@ -104,6 +104,9 @@
     <Compile Include="Toolbar.xaml.cs">
       <DependentUpon>Toolbar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TranslatorView.xaml.cs">
+      <DependentUpon>TranslatorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UploadOpenSubtitles.xaml.cs">
       <DependentUpon>UploadOpenSubtitles.xaml</DependentUpon>
     </Compile>
@@ -174,6 +177,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="TranslatorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UploadOpenSubtitles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -536,6 +543,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\note_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\translate.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,5 +1,7 @@
-﻿namespace SubtitleTools.Common.ISO639
+﻿using System.Diagnostics;
+namespace SubtitleTools.Common.ISO639
 {
+    [DebuggerDisplay("{LanguageName}|{ISO639}")]
     public class Language
     {
         public string IdSubLanguage { set; get; }

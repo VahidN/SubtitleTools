@@ -59,6 +59,8 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         public DelegateCommand<string> DoSync { set; get; }
 
+        public DelegateCommand<string> DoTranslate { set; get; }
+
         public MainWindowGui MainWindowGuiData { set; get; }
 
         private SubtitleItems subtitleItemsDataInternal
@@ -201,6 +203,11 @@ namespace SubtitleTools.Infrastructure.ViewModels
         void doCloseSyncView()
         {
             MainWindowGuiData.PopupDoSyncIsOpen = false;
+        }
+
+        void doCloseTranslateView()
+        {
+            MainWindowGuiData.TranslatorIsOpen = false;
         }
 
         void doConvertToUTF8(string data)
@@ -425,6 +432,11 @@ namespace SubtitleTools.Infrastructure.ViewModels
             MainWindowGuiData.PopupDoSyncIsOpen = true;
         }
 
+        void doTranslate(string data)
+        {
+            MainWindowGuiData.TranslatorIsOpen = true;
+        }
+
         private void enableButtons()
         {
             MainWindowGuiData.DoMergeIsEnabled = !string.IsNullOrWhiteSpace(MainWindowGuiData.OpenedFilePath);
@@ -536,6 +548,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
         {
             DoConvertToUTF8 = new DelegateCommand<string>(doConvertToUTF8, isFileOpen);
             DoSync = new DelegateCommand<string>(doSync, isFileOpen);
+            DoTranslate = new DelegateCommand<string>(doTranslate, isFileOpen);
             DoJoinFiles = new DelegateCommand<string>(doJoinFiles, isFileOpen);
             DoDelete = new DelegateCommand<string>(doDelete, isFileOpen);
             DoRecalculate = new DelegateCommand<string>(doRecalculate, isFileOpen);
@@ -565,7 +578,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             App.Messenger.Register<int>("doScrollToIndex", doScrollToIndex);
             App.Messenger.Register<SubtitleItem>("doAddVoiceSubtitle", doAddVoiceSubtitle);
             App.Messenger.Register<string>("doChangeWavFilePath", doChangeWavFilePath);
-
+            App.Messenger.Register("doCloseTranslateView", doCloseTranslateView);
         }
 
         private void showConflicts()

@@ -6,8 +6,9 @@ namespace SubtitleTools.Infrastructure.Models
 {
     public class MainWindowGui : ViewModelBase
     {
-        #region Fields (18)
+        #region Fields
 
+        bool _translatorIsOpen;
         bool _doMergeIsEnabled;
         bool _doMixIsEnabled;
         string _headerText;
@@ -29,7 +30,7 @@ namespace SubtitleTools.Infrastructure.Models
 
         #endregion Fields
 
-        #region Properties (18)
+        #region Properties
 
         public bool DoMergeIsEnabled
         {
@@ -223,6 +224,17 @@ namespace SubtitleTools.Infrastructure.Models
             {
                 _wavFilesPath = value;
                 RaisePropertyChanged("WavFilesPath");
+            }
+        }
+
+        public bool TranslatorIsOpen
+        {
+            get { return _translatorIsOpen; }
+            set
+            {
+                if (_translatorIsOpen == value) return;
+                _translatorIsOpen = value;
+                RaisePropertyChanged("TranslatorIsOpen");
             }
         }
 
