@@ -190,6 +190,23 @@
             </Button>
 
             <Separator/>
-		</ToolBar>
+
+            <Button ToolTip="Translator" Margin="2" Command="{Binding DoTranslate}">
+                <StackPanel HorizontalAlignment="Center" Margin="1">
+                    <Image Source="Images/translate.png" Width="32" Height="32" HorizontalAlignment="Center" />
+                    <TextBlock Text="Translator" HorizontalAlignment="Center" />
+                    <Ctrls:BetterPopup VerticalAlignment="Top" AllowsTransparency="True" 
+						   StaysOpen="True"
+						   IsOpen="{Binding MainWindowGuiData.TranslatorIsOpen}"
+						   IsTopmost="False"
+						   PopupAnimation="Slide" Margin="5">
+                        <Border Background="Gray" 
+								BorderThickness="2" CornerRadius="6" BorderBrush="Black">
+                            <Views:TranslatorView FilePath="{Binding MainWindowGuiData.OpenedFilePath}" />
+                        </Border>
+                    </Ctrls:BetterPopup>
+                </StackPanel>
+            </Button>
+        </ToolBar>
 	</Grid>
 </UserControl>

@@ -32,19 +32,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CookComputing.XmlRpcV2">
-      <HintPath>..\..\..\Libs\xml-rpc\bin\CookComputing.XmlRpcV2.dll</HintPath>
+      <HintPath>bin\Release\CookComputing.XmlRpcV2.dll</HintPath>
     </Reference>
     <Reference Include="EncodingTools, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\OthersPpl\DetectEncoding_src\DetectEncoding_src\EncodingTools\bin\Release\EncodingTools.dll</HintPath>
+      <HintPath>bin\Release\EncodingTools.dll</HintPath>
     </Reference>
     <Reference Include="PersianProofWriter.Lib">
-      <HintPath>..\..\..\1390\PersianProofWriter\PersianProofWriter.Lib\bin\Release\PersianProofWriter.Lib.dll</HintPath>
+      <HintPath>bin\Release\PersianProofWriter.Lib.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Speech" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -82,6 +83,7 @@
     <Compile Include="Core\ParseSrt.cs" />
     <Compile Include="Core\Sre.cs" />
     <Compile Include="Core\Sync.cs" />
+    <Compile Include="Core\Translate.cs" />
     <Compile Include="Core\UnicodeRle.cs" />
     <Compile Include="Models\AudioFormat.cs" />
     <Compile Include="Models\AudioFormats.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="Models\SubtitleItem.cs" />
     <Compile Include="Models\SubtitleItems.cs" />
     <Compile Include="Models\SyncModel.cs" />
+    <Compile Include="Models\TranslatorModel.cs" />
     <Compile Include="Models\UploadItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
@@ -111,6 +114,7 @@
     <Compile Include="ViewModels\PreviewViewModel.cs" />
     <Compile Include="ViewModels\SpeechRecognitionViewModel.cs" />
     <Compile Include="ViewModels\SyncViewModel.cs" />
+    <Compile Include="ViewModels\TranslatorViewModel.cs" />
     <Compile Include="ViewModels\UploadOpenSubtitlesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

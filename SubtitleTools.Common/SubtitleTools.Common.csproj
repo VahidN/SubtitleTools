@@ -32,10 +32,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EncodingTools">
-      <HintPath>..\..\OthersPpl\DetectEncoding_src\DetectEncoding_src\EncodingTools\bin\Release\EncodingTools.dll</HintPath>
+      <HintPath>bin\Release\EncodingTools.dll</HintPath>
     </Reference>
     <Reference Include="Ionic.Zlib">
-      <HintPath>..\..\..\Libs\ZLib\Ionic.Zlib.dll</HintPath>
+      <HintPath>bin\Release\Ionic.Zlib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationCore" />
@@ -43,6 +43,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
@@ -114,6 +115,7 @@
     <Compile Include="Toolkit\Memory.cs" />
     <Compile Include="Toolkit\Rtl.cs" />
     <Compile Include="Toolkit\SafeClipboard.cs" />
+    <Compile Include="Translators\TranslatorContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Themes\ExpressionDark.xaml">
