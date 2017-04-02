@@ -1,6 +1,6 @@
 
 
-SubtitleTools is a small utility that helps modifying existing subtitles or downloading new ones based on the digital signatures of your movie files from opensubtitles.org site.
+[SubtitleTools](https://github.com/VahidN/SubtitleTools/releases) is a small utility that helps modifying existing subtitles or downloading new ones based on the digital signatures of your movie files from opensubtitles.org site.
 
 ![SubtitleTools](/Setup/st.png)
  
@@ -27,10 +27,14 @@ Features
 
 Supported Operating Systems
 ---
-Windows 7;Windows Server 2003 Service Pack 2;Windows Server 2008;Windows Server 2008 R2;Windows Vista Service Pack 1+;Windows XP Service Pack 3
+Windows XP Service Pack 3+
 
+Download
+---
+   - [Releases](https://github.com/VahidN/SubtitleTools/releases)
  
 
 Prerequisites
 ---
-   - Microsoft .NET Framework 4
+   - [Microsoft .NET Framework 4](https://www.microsoft.com/en-us/download/details.aspx?id=17718)
+
