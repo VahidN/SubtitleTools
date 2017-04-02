@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using SubtitleTools.Common.MVVM;
+﻿using SubtitleTools.Common.MVVM;
 
 namespace SubtitleTools.Common.EncodingHelper.Model
 {

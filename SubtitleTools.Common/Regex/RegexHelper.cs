@@ -20,13 +20,7 @@ namespace SubtitleTools.Common.Regex
 
         #region Methods (5)
 
-        // Public Methods (5) 
-
-        public static bool ContainsFarsi(this string txt)
-        {
-            return !string.IsNullOrEmpty(txt) &&
-                    System.Text.RegularExpressions.Regex.IsMatch(txt, @"[\u0600-\u06FF]");
-        }
+        // Public Methods (5)
 
         public static string GetUploadUrl(string xml)
         {
@@ -42,11 +36,6 @@ namespace SubtitleTools.Common.Regex
         public static bool IsTimeLine(this string value)
         {
             return RgIsTime.Match(value).Success;
-        }
-
-        public static string StripHtmlTags(this string text)
-        {
-            return RegexStrip.Replace(text, string.Empty).Trim();
         }
 
         #endregion Methods

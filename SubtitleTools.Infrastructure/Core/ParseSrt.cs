@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DNTPersianUtils.Core;
 using Microsoft.Win32;
 using SubtitleTools.Common.Files;
 using SubtitleTools.Common.Regex;

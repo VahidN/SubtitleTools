@@ -1,0 +1,1 @@
+From [Detect Encoding for In- and Outgoing Text](https://www.codeproject.com/Articles/17201/Detect-Encoding-for-In-and-Outgoing-Text)

@@ -2,8 +2,8 @@
 using System.Text;
 using SubtitleTools.Common.CodePlexRss.Model;
 using SubtitleTools.Common.Files;
-using SubtitleTools.Common.Regex;
 using System.Web;
+using DNTPersianUtils.Core;
 
 namespace SubtitleTools.Common.CodePlexRss
 {
@@ -11,7 +11,7 @@ namespace SubtitleTools.Common.CodePlexRss
     {
         #region Methods (2)
 
-        // Public Methods (1) 
+        // Public Methods (1)
 
         public static VersionsInfo ParseInfo(string rssXml)
         {
@@ -45,7 +45,7 @@ namespace SubtitleTools.Common.CodePlexRss
 
             return result;
         }
-        // Private Methods (1) 
+        // Private Methods (1)
 
         private static string fixDescription(rssChannelItem item)
         {

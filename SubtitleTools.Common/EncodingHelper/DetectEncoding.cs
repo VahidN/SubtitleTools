@@ -13,7 +13,7 @@ namespace SubtitleTools.Common.EncodingHelper
     {
         #region Methods (2)
 
-        // Public Methods (1) 
+        // Public Methods (1)
 
         public static EncodingsInf DetectProbableFileCodepages(string filePath)
         {
@@ -47,7 +47,7 @@ namespace SubtitleTools.Common.EncodingHelper
             return result;
         }
 
-        // Private Methods (2) 
+        // Private Methods (2)
 
         private static void addWindows1256IfNotExists(EncodingsInf result)
         {

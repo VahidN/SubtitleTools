@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using SubtitleTools.Common.ISO639;
+﻿using SubtitleTools.Common.ISO639;
 using SubtitleTools.Common.MVVM;
 
 namespace SubtitleTools.Infrastructure.Models

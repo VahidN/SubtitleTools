@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
+using DNTPersianUtils.Core;
 using SubtitleTools.Common.MVVM;
-using SubtitleTools.Common.Regex;
 using SubtitleTools.Infrastructure.Core;
 using SubtitleTools.Infrastructure.Models;
 

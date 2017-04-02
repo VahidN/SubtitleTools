@@ -13,15 +13,6 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -31,15 +22,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CookComputing.XmlRpcV2">
-      <HintPath>bin\Release\CookComputing.XmlRpcV2.dll</HintPath>
+    <Reference Include="CookComputing.XmlRpcV2, Version=3.0.0.0, Culture=neutral, PublicKeyToken=a7d6e17aa302004d, processorArchitecture=MSIL">
+      <HintPath>..\packages\xmlrpcnet.3.0.0.266\lib\net20\CookComputing.XmlRpcV2.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="EncodingTools, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Release\EncodingTools.dll</HintPath>
-    </Reference>
-    <Reference Include="PersianProofWriter.Lib">
-      <HintPath>bin\Release\PersianProofWriter.Lib.dll</HintPath>
+    <Reference Include="DNTPersianUtils.Core, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DNTPersianUtils.Core.1.9.1\lib\net40\DNTPersianUtils.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -58,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Core\ChangeEncoding.cs" />
     <Compile Include="Core\DeleteRow.cs" />
+    <Compile Include="Core\FixRle.cs" />
     <Compile Include="Core\JoinFiles.cs" />
     <Compile Include="Core\LogWindow.cs" />
     <Compile Include="Core\Merge.cs" />
@@ -118,10 +108,17 @@
     <Compile Include="ViewModels\UploadOpenSubtitlesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\3rdparty\EncodingTools\EncodingTools.csproj">
+      <Project>{ca19d4de-b232-491a-92bf-7bf3a2758694}</Project>
+      <Name>EncodingTools</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SubtitleTools.Common\SubtitleTools.Common.csproj">
       <Project>{D2CB3DCA-B77E-44A0-9015-C5385AEB4AA6}</Project>
       <Name>SubtitleTools.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -13,15 +13,6 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -31,11 +22,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EncodingTools">
-      <HintPath>bin\Release\EncodingTools.dll</HintPath>
+    <Reference Include="DNTPersianUtils.Core, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DNTPersianUtils.Core.1.9.1\lib\net40\DNTPersianUtils.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Ionic.Zlib">
-      <HintPath>bin\Release\Ionic.Zlib.dll</HintPath>
+    <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationCore" />
@@ -129,11 +122,19 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Themes\Images\error-info.png" />
     <Resource Include="Themes\Images\error.png" />
     <Resource Include="Themes\Images\warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\3rdparty\EncodingTools\EncodingTools.csproj">
+      <Project>{ca19d4de-b232-491a-92bf-7bf3a2758694}</Project>
+      <Name>EncodingTools</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

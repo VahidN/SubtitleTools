@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Microsoft.Windows.Controls
+﻿namespace Microsoft.Windows.Controls
 {
     public static partial class VisualStates
     {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace SubtitleTools.Common.Toolkit
+﻿namespace SubtitleTools.Common.Toolkit
 {
     public static class Rtl
     {

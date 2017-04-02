@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Windows.Data;
 using SubtitleTools.Common.ResourceFiles;
-using SubtitleTools.Common.ISO639;
 
 namespace SubtitleTools.Common.Converters
 {

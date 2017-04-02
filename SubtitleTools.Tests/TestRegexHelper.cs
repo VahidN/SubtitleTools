@@ -1,9 +1,10 @@
 ﻿using NUnit.Framework;
 using SubtitleTools.Common.Regex;
+using DNTPersianUtils.Core;
 
 namespace SubtitleTools.Tests
 {
-    [TestFixture] 
+    [TestFixture]
     public class TestRegexHelper
     {
         [Test]
@@ -11,7 +12,7 @@ namespace SubtitleTools.Tests
         {
             Assert.That("1234".IsNumeric());
         }
-        
+
         [Test]
         public void TestIsNumeric2()
         {
@@ -23,7 +24,7 @@ namespace SubtitleTools.Tests
         {
             Assert.That("00:03:28,417 --> 00:03:31,544".IsTimeLine());
         }
-        
+
         [Test]
         public void TestIsTimeLine2()
         {
@@ -35,7 +36,7 @@ namespace SubtitleTools.Tests
         {
             Assert.That("Hello<=>سلام".ContainsFarsi());
         }
-        
+
         [Test]
         public void TestContainsFarsi2()
         {
@@ -45,7 +46,7 @@ namespace SubtitleTools.Tests
         [Test]
         public void TestGetUploadUrl()
         {
-            const string response = 
+            const string response =
                 @"<?xml version=""1.0"" encoding=""utf-8""?>
                     <methodResponse>
                     <params>

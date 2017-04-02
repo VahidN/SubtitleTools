@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows;
 using SubtitleTools.Infrastructure.Core;
 using SubtitleTools.Common.MVVM;

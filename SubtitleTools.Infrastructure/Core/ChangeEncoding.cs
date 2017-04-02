@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
+using DNTPersianUtils.Core;
 using href.Utils;
-using SubtitleTools.Common.Regex;
 using SubtitleTools.Common.Toolkit;
 
 namespace SubtitleTools.Infrastructure.Core
