@@ -36,7 +36,7 @@ namespace SubtitleTools.Common.Behaviors
 
         #region Methods (1)
 
-        // Protected Methods (1) 
+        // Protected Methods (1)
 
         protected override void Invoke(object parameter)
         {

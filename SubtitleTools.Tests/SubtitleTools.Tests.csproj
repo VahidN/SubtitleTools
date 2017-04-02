@@ -32,10 +32,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -51,10 +47,6 @@
     <ProjectReference Include="..\SubtitleTools.Infrastructure\SubtitleTools.Infrastructure.csproj">
       <Project>{987CEE47-955A-4BD1-B854-5BC0F852DAD4}</Project>
       <Name>SubtitleTools.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SubtitleTools\SubtitleTools.csproj">
-      <Project>{D2E2A848-ADF9-4996-B82C-6AAECA6AF752}</Project>
-      <Name>SubtitleTools</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
