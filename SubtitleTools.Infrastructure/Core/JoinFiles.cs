@@ -2,8 +2,8 @@
 using System.IO;
 using System.Linq;
 using SubtitleTools.Infrastructure.Models;
-using SubtitleTools.Common.Toolkit;
 using System.Text;
+using DNTPersianUtils.Core;
 
 namespace SubtitleTools.Infrastructure.Core
 {
@@ -11,7 +11,7 @@ namespace SubtitleTools.Infrastructure.Core
     {
         #region Methods (4)
 
-        // Public Methods (4) 
+        // Public Methods (4)
 
         public static Tuple<SubtitleItem, SubtitleItem, TimeSpan> DetectStartTimeOfSecondFile(string file1, string file2)
         {
@@ -57,8 +57,8 @@ namespace SubtitleTools.Infrastructure.Core
             //Create a single file
             var fileName = string.Format("{0}\\JoinedFile{1}", Path.GetDirectoryName(file1), Path.GetExtension(file1));
             var file1Content = File.ReadAllText(file1);
-            File.WriteAllText(fileName, file1Content.ApplyUnifiedYeKe(), Encoding.UTF8);
-            File.AppendAllText(fileName, newShiftedFile2.ApplyUnifiedYeKe(), Encoding.UTF8);
+            File.WriteAllText(fileName, file1Content.ApplyCorrectYeKe(), Encoding.UTF8);
+            File.AppendAllText(fileName, newShiftedFile2.ApplyCorrectYeKe(), Encoding.UTF8);
             LogWindow.AddMessage(LogType.Announcement, string.Format("Saved to:  {0}", fileName));
         }
 

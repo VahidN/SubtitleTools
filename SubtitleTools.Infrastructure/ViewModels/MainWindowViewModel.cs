@@ -13,7 +13,6 @@ using DNTPersianUtils.Core;
 using SubtitleTools.Common.Logger;
 using SubtitleTools.Common.MVVM;
 using SubtitleTools.Common.Threading;
-using SubtitleTools.Common.Toolkit;
 using SubtitleTools.Infrastructure.Core;
 using SubtitleTools.Infrastructure.Models;
 
@@ -86,7 +85,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         #region Methods (43)
 
-        // Private Methods (43) 
+        // Private Methods (43)
 
         private void addSubtitleToFile(SubtitleItem subtitleItem, string mediaPath)
         {
@@ -459,7 +458,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
             switch (e.PropertyName)
             {
                 case "SearchText":
-                    doSearch(MainWindowGuiData.SearchText.ApplyUnifiedYeKe());
+                    doSearch(MainWindowGuiData.SearchText.ApplyCorrectYeKe());
                     break;
                 case "OpenedFilePath":
                     openSubtitleFile();
@@ -519,7 +518,7 @@ namespace SubtitleTools.Infrastructure.ViewModels
         {
             var savePath = string.IsNullOrEmpty(path) ? MainWindowGuiData.OpenedFilePath : path;
             var newContent = ParseSrt.SubitemsToString(subtitleItemsDataInternal);
-            File.WriteAllText(savePath, newContent.ApplyUnifiedYeKe(), Encoding.UTF8);
+            File.WriteAllText(savePath, newContent.ApplyCorrectYeKe(), Encoding.UTF8);
             LogWindow.AddMessage(LogType.Announcement, string.Format("Saved to:{0}", savePath));
             setFlowDir(newContent.ContainsFarsi());
         }
@@ -583,13 +582,14 @@ namespace SubtitleTools.Infrastructure.ViewModels
 
         private void showConflicts()
         {
-            var conflicts = ParseSrt.FindConflicts(_subtitleItemsDataInternal);
+            // it's not necessary
+            /*var conflicts = ParseSrt.FindConflicts(_subtitleItemsDataInternal);
             if (!conflicts.Any()) return;
 
             foreach (var item in conflicts)
             {
                 LogWindow.AddMessage(LogType.Alert, item);
-            }
+            }*/
         }
 
         void subtitleItemsDataInternalCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

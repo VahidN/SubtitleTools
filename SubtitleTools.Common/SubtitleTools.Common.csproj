@@ -106,7 +106,6 @@
     <Compile Include="Threading\DispatcherHelper.cs" />
     <Compile Include="Toolkit\Imdb.cs" />
     <Compile Include="Toolkit\Memory.cs" />
-    <Compile Include="Toolkit\Rtl.cs" />
     <Compile Include="Toolkit\SafeClipboard.cs" />
     <Compile Include="Translators\TranslatorContainer.cs" />
   </ItemGroup>

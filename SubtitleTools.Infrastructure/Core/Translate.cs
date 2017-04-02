@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using DNTPersianUtils.Core;
 using Microsoft;
 using SubtitleTools.Common.ISO639;
-using SubtitleTools.Common.Toolkit;
 using SubtitleTools.Infrastructure.Models;
 
 namespace SubtitleTools.Infrastructure.Core
@@ -83,7 +83,7 @@ namespace SubtitleTools.Infrastructure.Core
                 }
 
                 var saveToFileName = getSaveToFileName(fileName);
-                File.WriteAllText(saveToFileName, ParseSrt.SubitemsToString(_data).ApplyUnifiedYeKe(), Encoding.UTF8);
+                File.WriteAllText(saveToFileName, ParseSrt.SubitemsToString(_data).ApplyCorrectYeKe(), Encoding.UTF8);
                 LogWindow.AddMessage(LogType.Info, "Finished Translating. Saved to " + saveToFileName);
             }
             finally

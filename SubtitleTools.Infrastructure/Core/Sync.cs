@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using DNTPersianUtils.Core;
 using SubtitleTools.Common.Regex;
-using SubtitleTools.Common.Toolkit;
 using SubtitleTools.Infrastructure.Models;
 
 namespace SubtitleTools.Infrastructure.Core
@@ -11,7 +11,7 @@ namespace SubtitleTools.Infrastructure.Core
     {
         #region Methods (4)
 
-        // Public Methods (4) 
+        // Public Methods (4)
 
         public static void RecalculateRowNumbers(SubtitleItems data, string fileNameToSave)
         {
@@ -28,7 +28,7 @@ namespace SubtitleTools.Infrastructure.Core
             }
 
             //write data
-            File.WriteAllText(fileNameToSave, ParseSrt.SubitemsToString(data).ApplyUnifiedYeKe(), Encoding.UTF8);
+            File.WriteAllText(fileNameToSave, ParseSrt.SubitemsToString(data).ApplyCorrectYeKe(), Encoding.UTF8);
             LogWindow.AddMessage(LogType.Info, "Finished RecalculateRowNumbers.");
         }
 
@@ -72,7 +72,7 @@ namespace SubtitleTools.Infrastructure.Core
             var delta = new TimeSpan(0, hour, minutes, seconds, milliseconds);
             var lines = File.ReadAllLines(srtFile);
             var newContent = ShiftAllTimeLines(lines, delta, add);
-            File.WriteAllText(srtFile, newContent.ApplyUnifiedYeKe(), Encoding.UTF8);
+            File.WriteAllText(srtFile, newContent.ApplyCorrectYeKe(), Encoding.UTF8);
 
             LogWindow.AddMessage(LogType.Info, "ShiftFileTimeLines End.");
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 using SubtitleTools.Common.CodePlexRss.Model;
 using SubtitleTools.Common.Files;
@@ -37,7 +38,7 @@ namespace SubtitleTools.Common.CodePlexRss
                             Author = author,
                             Description = desc.UnescapeXml(),
                             Link = item.link.StripHtmlTags(),
-                            PubDate = DateTime.Parse(item.pubDate),
+                            PubDate = DateTime.Parse(item.pubDate, CultureInfo.InvariantCulture),
                             Title = item.title.StripHtmlTags().UnescapeXml()
                         });
                 }

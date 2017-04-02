@@ -134,6 +134,8 @@ namespace SubtitleTools.Infrastructure.Core
             var i = 1;
             foreach (var item in mainItems.OrderBy(x => x.StartTs))
             {
+                item.FixMinReadTime();
+
                 sb.AppendLine(i.ToString(CultureInfo.InvariantCulture));
                 sb.AppendLine(item.Time);
                 sb.AppendLine(item.Dialog.Trim());

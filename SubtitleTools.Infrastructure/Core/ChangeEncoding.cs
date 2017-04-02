@@ -2,7 +2,6 @@
 using System.Text;
 using DNTPersianUtils.Core;
 using href.Utils;
-using SubtitleTools.Common.Toolkit;
 
 namespace SubtitleTools.Infrastructure.Core
 {
@@ -16,7 +15,7 @@ namespace SubtitleTools.Infrastructure.Core
 
         #region Methods (4)
 
-        // Public Methods (4) 
+        // Public Methods (4)
 
         public bool FixWindows1256(string path)
         {
@@ -34,7 +33,7 @@ namespace SubtitleTools.Infrastructure.Core
 
             //convert
             var data = File.ReadAllText(path, Encoding.GetEncoding("windows-1256"));
-            File.WriteAllText(path, data.ApplyUnifiedYeKe(), Encoding.UTF8);
+            File.WriteAllText(path, data.ApplyCorrectYeKe(), Encoding.UTF8);
             //set flowDir
             IsRtl = File.ReadAllText(path).ContainsFarsi();
             LogWindow.AddMessage(LogType.Info, "ChangeEncoding End.");
@@ -77,7 +76,7 @@ namespace SubtitleTools.Infrastructure.Core
 
             //convert
             var data = File.ReadAllText(path, Encoding.GetEncoding(fromEnc));
-            File.WriteAllText(path, data.ApplyUnifiedYeKe(), Encoding.UTF8);
+            File.WriteAllText(path, data.ApplyCorrectYeKe(), Encoding.UTF8);
             //set flowDir
             IsRtl = File.ReadAllText(path).ContainsFarsi();
             LogWindow.AddMessage(LogType.Info, "ChangeEncoding End.");
@@ -96,7 +95,7 @@ namespace SubtitleTools.Infrastructure.Core
         {
             // OSDB's PHP server can't accept subtitle files larger than 100KB!
             // LTR languages are fine (most of the times), but RTL languages with utf-8 encoding have problems,
-            // because utf-8 means larger files than original windows-1256 files.               
+            // because utf-8 means larger files than original windows-1256 files.
             if (new FileInfo(fileName).Length < 102400)
             {
                 //it's fine for OSDB upload

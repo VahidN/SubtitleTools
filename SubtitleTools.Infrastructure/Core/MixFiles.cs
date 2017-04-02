@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using SubtitleTools.Common.Toolkit;
 using SubtitleTools.Infrastructure.Models;
 using System.Text;
+using DNTPersianUtils.Core;
 
 namespace SubtitleTools.Infrastructure.Core
 {
@@ -44,7 +44,7 @@ namespace SubtitleTools.Infrastructure.Core
             //toString
             var content = ParseSrt.SubitemsToString(mainItems);
             //write to file
-            File.WriteAllText(mainFilePath, content.ApplyUnifiedYeKe(), Encoding.UTF8);
+            File.WriteAllText(mainFilePath, content.ApplyCorrectYeKe(), Encoding.UTF8);
             LogWindow.AddMessage(LogType.Info, "WriteMixedList End.");
         }
     }

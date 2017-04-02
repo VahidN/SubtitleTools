@@ -2,6 +2,7 @@
 
 SubtitleTools is a small utility that helps modifying existing subtitles or downloading new ones based on the digital signatures of your movie files from opensubtitles.org site.
 
+![SubtitleTools](/Setup/st.png)
  
 
 Features
